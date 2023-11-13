@@ -1,9 +1,11 @@
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            NEXT_PUBLIC_W3M_PROJECT_ID: string;
-            NEXT_PUBLIC_ALCHEMY_API_KEY: string;
-            MONGO: string;
+            NEXT_PUBLIC_PRIVY_APP_ID: string;
+            NEXT_PUBLIC_BICONOMY_BUNDLER_URL: string;
+            NEXT_PUBLIC_BICONOMY_PAYMASTER_URL: string;
+            NEXT_PUBLIC_MAGIC_API_KEY: string;
+            NEXT_PUBLIC_BLOCKCHAIN_NETWORK: string;
 
         }
     }
