@@ -29,7 +29,7 @@ export default function Home() {
 
 
   const Lougot = async () => {
-    await magic.user.logout();
+    await magic?.user.logout();
   }
 
   return (
