@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import connectDB from '@/utils/mongodb'
+import connectDB from '@/utils/db/mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
 import Withdraw from '@/model/withdraw'
 import Pooler from '@/model/pooler'
