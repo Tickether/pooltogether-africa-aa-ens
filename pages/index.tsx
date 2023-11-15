@@ -19,13 +19,19 @@ export default function Home() {
       console.log(error)
     }
   }
-  const Lougot = async () => {
+  const showUI = async () => {
     try {
       await magic?.wallet.showUI()
     } catch (error) {
       console.log(error)
     }
   }
+
+
+  const Lougot = async () => {
+    await magic.user.logout();
+  }
+
   return (
     <>
       <Head>
@@ -37,6 +43,7 @@ export default function Home() {
       <main className={`${styles.main} ${inter.className}`}>
         <>PoolTogether Africa</>
         <button onClick={Login}>login</button>
+        <button onClick={showUI}>showUI</button>
         <button onClick={Lougot}>logout</button>
       </main>
     </>
