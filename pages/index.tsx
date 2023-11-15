@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { useMagic } from '@/hooks/MagicProvider'
+import { useBiconomy } from '@/hooks/BiconomyContext'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -11,6 +12,7 @@ export default function Home() {
   
   // Initialize the Magic instance
   const { magic } = useMagic();
+  const { smartAccount, smartAccountAddress } = useBiconomy()
  
   const Login = async () => {
     try {
@@ -32,6 +34,11 @@ export default function Home() {
     await magic?.user.logout();
   }
 
+  const Lougotinfo = async () => {
+    console.log(smartAccountAddress, )
+  }
+  
+
   return (
     <>
       <Head>
@@ -44,6 +51,7 @@ export default function Home() {
         <>PoolTogether Africa</>
         <button onClick={Login}>login</button>
         <button onClick={showUI}>showUI</button>
+        <button onClick={Lougotinfo}>logout INfo</button>
         <button onClick={Lougot}>logout</button>
       </main>
     </>
