@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   
   // Initialize the Magic instance
-  const { magic } = useMagic();
+  const { magic, ethersProvider } = useMagic();
   const { smartAccount, smartAccountAddress } = useBiconomy()
  
   const Login = async () => {
@@ -35,6 +35,8 @@ export default function Home() {
   }
 
   const Lougotinfo = async () => {
+    console.log(ethersProvider, )
+    console.log(smartAccount, )
     console.log(smartAccountAddress, )
   }
   
@@ -48,7 +50,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <>PoolTogether Africa</>
+        <>Welcome to PoolTogether Africa</>
+        {
+          smartAccountAddress
+          ? <p>This is Smart Account Address: {smartAccountAddress}</p>
+          : <p>Click the Login below to get your wallet address</p>
+        }
         <button onClick={Login}>login</button>
         <button onClick={showUI}>showUI</button>
         <button onClick={Lougotinfo}>logout INfo</button>

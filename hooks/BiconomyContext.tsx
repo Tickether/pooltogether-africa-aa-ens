@@ -7,7 +7,6 @@ import { ChainId } from "@biconomy/core-types";
 import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS  } from "@biconomy/account";
 import { ECDSAOwnershipValidationModule, DEFAULT_ECDSA_OWNERSHIP_MODULE } from "@biconomy/modules";
 import { useMagic } from "./MagicProvider";
-import { ethers } from "ethers";
 
 
 interface BiconomyInterface {
@@ -25,10 +24,21 @@ export const useBiconomy = () => {
 };
 
 export const BiconomyProvider = ({ children }: { children: ReactNode }) => {
-    const { magic } = useMagic();
+    const { magic, ethersProvider } = useMagic();
     const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | undefined>();
     const [smartAccountAddress, setSmartAccountAddress] = useState<string | undefined>();
+    const [connected, setConnected] = useState<boolean | undefined>();
 
+    useEffect(() => {
+        let geHexTimeOut : NodeJS.Timeout
+        const doHex = async() => {
+            const isLoggedIn = await magic?.user.isLoggedIn();
+            setConnected(isLoggedIn)
+            geHexTimeOut = setTimeout(doHex, 1000);
+        }
+        doHex()
+        return () => clearTimeout(geHexTimeOut);
+    }, []);
 
     const bundler: IBundler = useMemo(() => new Bundler({
         bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL,
@@ -42,41 +52,43 @@ export const BiconomyProvider = ({ children }: { children: ReactNode }) => {
 
     
     const createBiconomyAccount = async () => {
-        
-        await magic?.wallet.connectWithUI()
-        
-        const provider =  new ethers.providers.Web3Provider(
-            (magic as any)?.rpcProvider,
-            "any"
-        );
+        if(ethersProvider) {
+            await magic?.wallet.connectWithUI()
 
-        const validationModule = await ECDSAOwnershipValidationModule.create({
-            signer: provider.getSigner(),
-            moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE
-        });
-
-        const biconomySmartAccount = await BiconomySmartAccountV2.create({
-            provider: provider,
-            chainId: ChainId.OPTIMISM_MAINNET,
-            bundler: bundler,
-            paymaster: paymaster,
-            entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
-            defaultValidationModule: validationModule,
-            activeValidationModule: validationModule,
-            rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
-        });
-
-
-        setSmartAccount(biconomySmartAccount);
-        const address = await biconomySmartAccount.getAccountAddress();
-        setSmartAccountAddress(address);
-    }
+            const validationModule = await ECDSAOwnershipValidationModule.create({
+                signer: ethersProvider!.getSigner()!,
+                moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE
+            });
     
+            const biconomySmartAccount = await BiconomySmartAccountV2.create({
+                provider: ethersProvider!,
+                chainId: ChainId.OPTIMISM_MAINNET,
+                bundler: bundler,
+                paymaster: paymaster,
+                entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+                defaultValidationModule: validationModule,
+                activeValidationModule: validationModule,
+                rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
+            });
+    
+    
+            setSmartAccount(biconomySmartAccount);
+            const address = await biconomySmartAccount.getAccountAddress();
+            setSmartAccountAddress(address);
+        }
+    }
+    const logoutBiconomyAccount = async () => {
+        setSmartAccount(undefined);
+        setSmartAccountAddress(undefined);
+    }
     useEffect(() => {
-        //if (!ready || !authenticated) return;
-        //const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
-        if (!smartAccount) createBiconomyAccount();
-    }, []);
+        if (connected && !smartAccount) createBiconomyAccount()
+        if(!connected && smartAccount) logoutBiconomyAccount()
+    }, [connected]);
+
+    
+    
+    
     
 
     return (
