@@ -47,23 +47,14 @@ export const MagicBiconomyProvider = ({ children }: { children: ReactNode }) => 
                     rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
                     chainId: 10, // or preferred chain
                 },
-              });
+            });
             setMagic(magic)
-            
+            if (magic) {
+                setEthers(new ethers.providers.Web3Provider((magic as any)?.rpcProvider))
+            }
         }
     }, [])
 
-    const initEthers = () => {
-        if (magic) {
-            setEthers(new ethers.providers.Web3Provider((magic as any)?.rpcProvider))
-        }
-    }
-    useEffect(() => {
-        initEthers()
-    }, [magic])
-    const toggleLogoff = () => {
-        logoutBiconomyAccount()
-    }
     
     const bundler: IBundler = useMemo(() => new Bundler({
         bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL,
@@ -78,7 +69,6 @@ export const MagicBiconomyProvider = ({ children }: { children: ReactNode }) => 
     
     const createBiconomyAccount = async () => {
         await magic?.wallet.connectWithUI()
-        initEthers()
         if(ethersProvider) {
 
             const validationModule = await ECDSAOwnershipValidationModule.create({
@@ -104,14 +94,7 @@ export const MagicBiconomyProvider = ({ children }: { children: ReactNode }) => 
     const logoutBiconomyAccount = async () => {
         setSmartAccount(undefined);
         setSmartAccountAddress(undefined);
-    }
-
-    /*
-    useEffect(() => {    
-        if (!smartAccount) createBiconomyAccount()
-    }, [smartAccount]);
-    */
-    
+    }    
     
     const value = useMemo(() => {
         return {
@@ -121,7 +104,7 @@ export const MagicBiconomyProvider = ({ children }: { children: ReactNode }) => 
           logoutBiconomyAccount,
           createBiconomyAccount
         };
-      }, [magic, smartAccount, smartAccountAddress, toggleLogoff, createBiconomyAccount]);
+    }, [magic, smartAccount, smartAccountAddress, logoutBiconomyAccount, createBiconomyAccount]);
     
 
     return (

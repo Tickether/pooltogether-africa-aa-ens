@@ -30,8 +30,12 @@ export default function Home() {
 
 
   const Lougot = async () => {
+    try {
+      logoutBiconomyAccount()
     await magic?.user.logout();
-    logoutBiconomyAccount()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const Lougotinfo = async () => {
