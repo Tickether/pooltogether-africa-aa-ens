@@ -64,8 +64,7 @@ const paymaster: IPaymaster = useMemo(() => new BiconomyPaymaster({
 
 const createBiconomyAccount = async () => {
     await magic?.wallet.connectWithUI()
-    if(ethersProvider) {
-
+  
         const validationModule = await ECDSAOwnershipValidationModule.create({
             signer: ethersProvider!.getSigner()!,
             moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE
@@ -84,7 +83,7 @@ const createBiconomyAccount = async () => {
         setSmartAccount(biconomySmartAccount);
         const address = await biconomySmartAccount.getAccountAddress();
         setSmartAccountAddress(address);
-    }
+    
 }
 const logoutBiconomyAccount = async () => {
     setSmartAccount(undefined);
