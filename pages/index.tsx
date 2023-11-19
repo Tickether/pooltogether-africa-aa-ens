@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   
   // Initialize the Magic x Biconomy instance
-  const { magic } = useMagic()
+  const { magic, provider } = useMagic()
   //const { magic, smartAccount, smartAccountAddress, createBiconomyAccount, logoutBiconomyAccount } = useMagicBiconomy()
  
   const Login = async () => {
@@ -41,7 +41,7 @@ export default function Home() {
   }
 
   const Lougotinfo = async () => {
-    //console.log(smartAccount, )
+    console.log(await provider.getSigner() )
     //console.log(smartAccountAddress, )
   }
   
