@@ -23,7 +23,7 @@ const MagicProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MAGIC_API_KEY) {
-      const magic = new MagicBase(process.env.NEXT_PUBLIC_MAGIC_API_KEY as string, {
+      const magic = new MagicBase(process.env.NEXT_PUBLIC_MAGIC_API_KEY, {
         network: {
           rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
           chainId: 10, // or preferred chain
