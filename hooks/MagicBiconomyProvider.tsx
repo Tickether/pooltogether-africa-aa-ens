@@ -37,8 +37,7 @@ export const MagicBiconomyProvider = ({ children }: { children: ReactNode }) => 
     const [ethersProvider, setEthers] = useState<any | null>(null)
     const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | undefined>(undefined);
     const [smartAccountAddress, setSmartAccountAddress] = useState<string | undefined>(undefined);
-    //const[connected, setConnected] = useState<boolean | undefined>(undefined);
-
+    
     
     useEffect(() => {
         if (process.env.NEXT_PUBLIC_MAGIC_API_KEY) {
