@@ -2,21 +2,20 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import { useMagic } from '@/hooks/MagicProvider'
-import { useBiconomy } from '@/hooks/BiconomyContext'
+import { useMagicBiconomy } from '@/hooks/MagicBiconomyProvider'
 
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   
-  // Initialize the Magic instance
-  const { magic, ethersProvider } = useMagic();
-  const { smartAccount, smartAccountAddress } = useBiconomy()
+  // Initialize the Magic x Biconomy instance
+
+  const { magic, smartAccount, smartAccountAddress, createBiconomyAccount, logoutBiconomyAccount } = useMagicBiconomy()
  
   const Login = async () => {
     try {
-      const log = await magic?.wallet.connectWithUI()
+      createBiconomyAccount()
     } catch (error) {
       console.log(error)
     }
@@ -32,10 +31,10 @@ export default function Home() {
 
   const Lougot = async () => {
     await magic?.user.logout();
+    logoutBiconomyAccount()
   }
 
   const Lougotinfo = async () => {
-    console.log(ethersProvider, )
     console.log(smartAccount, )
     console.log(smartAccountAddress, )
   }

@@ -1,16 +1,15 @@
-import { BiconomyProvider } from '@/hooks/BiconomyContext'
-import { MagicProvider } from '@/hooks/MagicProvider'
+import { MagicBiconomyProvider } from '@/hooks/MagicBiconomyProvider'
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 
 export default function App({ Component, pageProps }: AppProps) {
   return ( 
     <>
-      <MagicProvider>
-        <BiconomyProvider>
+      
+        <MagicBiconomyProvider>
           <Component {...pageProps} />
-        </BiconomyProvider>
-      </MagicProvider>
+        </MagicBiconomyProvider>
+      
     </>
   )
 }
