@@ -1,6 +1,6 @@
 
 import { Magic as MagicBase } from 'magic-sdk';
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { IBundler, Bundler } from '@biconomy/bundler';
 import { IPaymaster, BiconomyPaymaster } from '@biconomy/paymaster';
 import { ChainId } from "@biconomy/core-types";
@@ -28,11 +28,11 @@ const MagicContext = createContext<MagicContextType>({
 
 export const useMagic = () => useContext(MagicContext);
 
-const MagicProvider = ({ children }: { children: ReactNode }) => {
+const MagicProvider = ({ children }: { children: React.ReactNode }) => {
   const [magic, setMagic] = useState<Magic | null>(null)
   const [ethersProvider, setEthers] = useState<any | null>(null)
-  const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | undefined>(undefined);
-  const [smartAccountAddress, setSmartAccountAddress] = useState<string | undefined>(undefined);
+  const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | undefined>();
+  const [smartAccountAddress, setSmartAccountAddress] = useState<string | undefined>();
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MAGIC_API_KEY) {
@@ -51,15 +51,16 @@ const MagicProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const bundler: IBundler = new Bundler({
-    bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL,
-    chainId: ChainId.OPTIMISM_MAINNET,
-    entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
-})
 
-const paymaster: IPaymaster = new BiconomyPaymaster({
-    paymasterUrl: process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_URL,
-})
+const bundler: IBundler = useMemo(() => new Bundler({
+  bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL,
+  chainId: ChainId.OPTIMISM_MAINNET,
+  entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+}), []);
+
+const paymaster: IPaymaster = useMemo(() => new BiconomyPaymaster({
+  paymasterUrl: process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_URL,
+}), []);
 
 
 const createBiconomyAccount = async () => {
@@ -71,7 +72,7 @@ const createBiconomyAccount = async () => {
       });
 
       const biconomySmartAccount = await BiconomySmartAccountV2.create({
-          provider: ethersProvider!,
+          provider: ethersProvider,
           chainId: ChainId.OPTIMISM_MAINNET,
           bundler: bundler,
           paymaster: paymaster,
@@ -96,7 +97,7 @@ const logoutBiconomyAccount = async () => {
       
     }
 }
-
+  /*
   const value = useMemo(() => {
     return {
       magic,
@@ -106,8 +107,8 @@ const logoutBiconomyAccount = async () => {
       createBiconomyAccount
     };
   }, [magic, smartAccount, smartAccountAddress, logoutBiconomyAccount, createBiconomyAccount]);
-
-  return <MagicContext.Provider value={value}>{children}</MagicContext.Provider>;
+  */
+  return <MagicContext.Provider value={{magic: magic, smartAccount: smartAccount, smartAccountAddress: smartAccountAddress, logoutBiconomyAccount: logoutBiconomyAccount, createBiconomyAccount: createBiconomyAccount}}>{children}</MagicContext.Provider>;
 };
 
 export default MagicProvider;
