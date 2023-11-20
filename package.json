@@ -9,26 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@biconomy/account": "^3.1.0",
-    "@biconomy/bundler": "^3.1.0",
-    "@biconomy/common": "^3.1.0",
-    "@biconomy/core-types": "^3.1.0",
-    "@biconomy/paymaster": "^3.1.0",
-    "axios": "^1.6.1",
-    "ethers": "^5.7.2",
-    "magic-sdk": "^21.2.0",
-    "mongoose": "^8.0.0",
-    "next": "14.0.2",
-    "react": "^18",
-    "react-dom": "^18",
-    "viem": "^1.19.1"
-  },
-  "devDependencies": {
+    "@biconomy/account": "^3.1.1",
+    "@biconomy/bundler": "^3.1.1",
+    "@biconomy/common": "^3.1.1",
+    "@biconomy/core-types": "^3.1.1",
+    "@biconomy/modules": "^3.1.1",
+    "@biconomy/paymaster": "^3.1.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "axios": "^1.6.1",
     "eslint": "^8",
-    "eslint-config-next": "14.0.2",
-    "typescript": "^5"
+    "eslint-config-next": "13.4.12",
+    "ethers": "^5.7.2",
+    "magic-sdk": "^21.2.1",
+    "mongoose": "^8.0.0",
+    "next": "13.4.12",
+    "react": "^18",
+    "react-dom": "^18",
+    "typescript": "^5",
+    "viem": "^1.19.1"
   }
 }

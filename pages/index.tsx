@@ -2,8 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-//import { useMagicBiconomy } from '@/hooks/MagicBiconomyProvider'
-import { useMagic } from '@/hooks/MagicProvider'
+import { useMagicBiconomy } from '@/hooks/MagicBiconomyProvider'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -11,13 +10,11 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   
   // Initialize the Magic x Biconomy instance
-  const { magic/*, smartAccount, smartAccountAddress, createBiconomyAccount, logoutBiconomyAccount */} = useMagic()
-  //const { magic, smartAccount, smartAccountAddress, createBiconomyAccount, logoutBiconomyAccount } = useMagicBiconomy()
+  const { magic, smartAccount, smartAccountAddress, createBiconomyAccount, logoutBiconomyAccount } = useMagicBiconomy()
  
   const Login = async () => {
     try {
-      await magic?.wallet.connectWithUI()
-      //createBiconomyAccount()
+      createBiconomyAccount()
     } catch (error) {
       console.log(error)
     }
@@ -33,16 +30,15 @@ export default function Home() {
 
   const Lougot = async () => {
     try {
-      //logoutBiconomyAccount()
-      await magic?.user.logout();
+      logoutBiconomyAccount()
     } catch (error) {
       console.log(error)
     }
   }
 
   const Lougotinfo = async () => {
-    //console.log(smartAccount )
-    //console.log(smartAccountAddress, )
+    console.log(smartAccount )
+    console.log(smartAccountAddress, )
   }
   
 
@@ -57,8 +53,8 @@ export default function Home() {
       <main className={`${styles.main} ${inter.className}`}>
         <>Welcome to PoolTogether Africa</>
         {
-          0
-          ? <p>This is Smart Account Address: {0}</p>
+          smartAccountAddress
+          ? <p>This is Smart Account Address: {smartAccountAddress}</p>
           : <p>Click the Login below to get your wallet address</p>
         }
         <button onClick={Login}>login</button>
