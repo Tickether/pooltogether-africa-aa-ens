@@ -51,43 +51,50 @@ const MagicProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const bundler: IBundler = useMemo(() => new Bundler({
+  const bundler: IBundler = new Bundler({
     bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL,
     chainId: ChainId.OPTIMISM_MAINNET,
     entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
-}), []);
+})
 
-const paymaster: IPaymaster = useMemo(() => new BiconomyPaymaster({
+const paymaster: IPaymaster = new BiconomyPaymaster({
     paymasterUrl: process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_URL,
-}), []);
+})
 
 
 const createBiconomyAccount = async () => {
-    await magic?.wallet.connectWithUI()
-  
-        const validationModule = await ECDSAOwnershipValidationModule.create({
-            signer: ethersProvider!.getSigner()!,
-            moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE
-        });
+    try {
+      await magic?.wallet.connectWithUI()
+      const validationModule = await ECDSAOwnershipValidationModule.create({
+          signer: ethersProvider!.getSigner(),
+          moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE
+      });
 
-        const biconomySmartAccount = await BiconomySmartAccountV2.create({
-            provider: ethersProvider!,
-            chainId: ChainId.OPTIMISM_MAINNET,
-            bundler: bundler,
-            paymaster: paymaster,
-            entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
-            defaultValidationModule: validationModule,
-            activeValidationModule: validationModule,
-            rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
-        });
-        setSmartAccount(biconomySmartAccount);
-        const address = await biconomySmartAccount.getAccountAddress();
-        setSmartAccountAddress(address);
-    
+      const biconomySmartAccount = await BiconomySmartAccountV2.create({
+          provider: ethersProvider!,
+          chainId: ChainId.OPTIMISM_MAINNET,
+          bundler: bundler,
+          paymaster: paymaster,
+          entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+          defaultValidationModule: validationModule,
+          activeValidationModule: validationModule,
+          rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
+      });
+      setSmartAccount(biconomySmartAccount);
+      const address = await biconomySmartAccount.getAccountAddress();
+      setSmartAccountAddress(address);
+    } catch (error) {
+      console.error(error);
+    }
 }
 const logoutBiconomyAccount = async () => {
-    setSmartAccount(undefined);
-    setSmartAccountAddress(undefined);
+    try {
+      setSmartAccount(undefined);
+      setSmartAccountAddress(undefined);
+    } catch (error) {
+      console.error(error);
+      
+    }
 }
 
   const value = useMemo(() => {
