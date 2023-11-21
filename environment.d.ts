@@ -5,6 +5,7 @@ declare global {
             NEXT_PUBLIC_BICONOMY_BUNDLER_URL: string;
             NEXT_PUBLIC_BICONOMY_PAYMASTER_URL: string;
             NEXT_PUBLIC_MAGIC_API_KEY: string;
+            NEXT_PUBLIC_FLUTTERWAVE_KEY: string;
             MONGO: string;
         }
     }
