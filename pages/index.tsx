@@ -1,10 +1,8 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import { useBiconomy } from '@/providers/BiconomyProvider'
-import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3'
 import { useMagic } from '@/providers/MagicProvider'
+import { useRouter } from 'next/router'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -13,58 +11,25 @@ export default function Home() {
   
   // Initialize the Magic x Biconomy instance
   const {magic} = useMagic()
-  const { smartAccount, smartAccountAddress } = useBiconomy()
-
-  const config = {
-    public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
-    tx_ref: '0',
-    amount: 1,
-    currency: 'GHS',
-    payment_options: 'mobilemoney',
-    customer: {
-      email: 'tickether@gmail.com',
-       phone_number: '233531616924',
-      name: 'john doe',
-    },
-    customizations: {
-      title: 'PoolTogether Africa',
-      description: 'Payment for items in cart',
-      logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
-    },
-  }
- 
+  const route = useRouter()
+  
+  
   const Login = async () => {
     try {
-      await magic?.wallet.connectWithUI()
+      let isLoggedIn = await magic?.user.isLoggedIn()
+      if (isLoggedIn) {
+        route.push('/susu')
+      } else {
+        await magic?.wallet.connectWithUI()
+        isLoggedIn = await magic?.user.isLoggedIn()
+        if (isLoggedIn) route.push('/susu')
+      }   
       //createBiconomyAccount if connected
     } catch (error) {
       console.log(error)
     }
   }
 
-  const handleFlutterPayment = useFlutterwave(config)
-
-  const doLocalPay = () => {
-    handleFlutterPayment({
-      callback: (response) => {
-        console.log(response)
-        closePaymentModal() // this will close the modal programmatically
-      },
-      onClose: () => {},
-    })
-  }
-
-
-  const Lougot = async () => {
-    try {
-      await magic?.user.logout()
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  
-  
 
   return (
     <>
@@ -75,16 +40,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <>Welcome to PoolTogether Africa</>
-        {
-          smartAccountAddress!
-          ? <p>This is Smart Account Address: {smartAccountAddress}</p>
-          : <p>Click the Login below to get your wallet address</p>
-        }
-        <button onClick={Login}>login</button>
-        <button onClick={doLocalPay}>pay</button>
-        <button onClick={Lougot}>logout</button>
-        
+        <h1>Welcome to PoolTogether Africa</h1>
+        <p>Join millions of Africans saving at least a dollar a day & winning prizes daily!!!</p>
+        <p>Click below to check your susu wallet balance or Sign up!</p>
+        <button onClick={Login}>Check Susu</button>
       </main>
     </>
   )
