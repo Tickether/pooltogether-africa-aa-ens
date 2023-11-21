@@ -2,8 +2,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import { useMagicBiconomy } from '@/hooks/MagicBiconomyProvider'
+import { useBiconomy } from '@/providers/BiconomyProvider'
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3'
+import { useMagic } from '@/providers/MagicProvider'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -11,13 +12,15 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   
   // Initialize the Magic x Biconomy instance
-  const { magic, smartAccount, smartAccountAddress, createBiconomyAccount, logoutBiconomyAccount } = useMagicBiconomy()
+  const {magic} = useMagic()
+  const { smartAccount, smartAccountAddress } = useBiconomy()
+
   const config = {
     public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
     tx_ref: '0',
     amount: 1,
     currency: 'GHS',
-    payment_options: 'card,mobilemoney,ussd',
+    payment_options: 'mobilemoney',
     customer: {
       email: 'tickether@gmail.com',
        phone_number: '233531616924',
@@ -32,18 +35,13 @@ export default function Home() {
  
   const Login = async () => {
     try {
-      createBiconomyAccount()
+      await magic?.wallet.connectWithUI()
+      //createBiconomyAccount if connected
     } catch (error) {
       console.log(error)
     }
   }
-  const showUI = async () => {
-    try {
-      await magic?.wallet.showUI()
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
   const handleFlutterPayment = useFlutterwave(config)
 
   const doLocalPay = () => {
@@ -59,17 +57,13 @@ export default function Home() {
 
   const Lougot = async () => {
     try {
-      logoutBiconomyAccount()
       await magic?.user.logout()
     } catch (error) {
       console.log(error)
     }
   }
 
-  const Lougotinfo = async () => {
-    console.log(smartAccount )
-    console.log(smartAccountAddress, )
-  }
+  
   
 
   return (
@@ -83,15 +77,14 @@ export default function Home() {
       <main className={`${styles.main} ${inter.className}`}>
         <>Welcome to PoolTogether Africa</>
         {
-          smartAccountAddress
+          smartAccountAddress!
           ? <p>This is Smart Account Address: {smartAccountAddress}</p>
           : <p>Click the Login below to get your wallet address</p>
         }
         <button onClick={Login}>login</button>
-        <button onClick={showUI}>showUI</button>
-        <button onClick={Lougotinfo}>logout INfo</button>
-        <button onClick={Lougot}>logout</button>
         <button onClick={doLocalPay}>pay</button>
+        <button onClick={Lougot}>logout</button>
+        
       </main>
     </>
   )
