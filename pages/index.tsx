@@ -28,7 +28,7 @@ export default function Home() {
       description: 'Payment for items in cart',
       logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
     },
-  };
+  }
  
   const Login = async () => {
     try {
@@ -44,16 +44,16 @@ export default function Home() {
       console.log(error)
     }
   }
-  const handleFlutterPayment = useFlutterwave(config);
+  const handleFlutterPayment = useFlutterwave(config)
 
   const doLocalPay = () => {
     handleFlutterPayment({
       callback: (response) => {
-        console.log(response);
+        console.log(response)
         closePaymentModal() // this will close the modal programmatically
       },
       onClose: () => {},
-    });
+    })
   }
 
 

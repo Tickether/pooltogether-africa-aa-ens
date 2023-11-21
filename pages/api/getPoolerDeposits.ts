@@ -15,9 +15,9 @@ export default async function GetPoolerDeposits(
         const pooler = await Pooler.findOne({ address: address })
         const poolerDeposits = await Promise.all(
             pooler.deposits.map((deposit: string) =>{
-                return Deposit.findById(deposit);
+                return Deposit.findById(deposit)
             })
-        );
+        )
         return res.json(poolerDeposits)
     } catch (error) {
         return res.json(error)

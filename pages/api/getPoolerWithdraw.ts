@@ -16,9 +16,9 @@ export default async function GetPoolerWithdraw(
         const pooler = await Pooler.findOne({ address: address })
         const poolerWithdraws = await Promise.all(
             pooler.withdraws.map((withdraw: string) =>{
-                return Withdraw.findById(withdraw);
+                return Withdraw.findById(withdraw)
             })
-        );
+        )
         return res.json(poolerWithdraws)
     } catch (error) {
         return res.json(error)
