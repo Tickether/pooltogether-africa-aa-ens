@@ -33,8 +33,8 @@ export default function Susu() {
                 <div className={styles.saving}>
                     {
                         smartAccountAddress
-                        ? <>{Number(0)}</>
-                        : <>'loading'</>
+                        ? <div>{Number(ptAfricaBalance?.data!)}</div>
+                        : <div>{'loading'}</div>
                     }
                 </div>
                 <div className={styles.winnings}>
