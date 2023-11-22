@@ -15,6 +15,7 @@
     "@biconomy/core-types": "^3.1.1",
     "@biconomy/modules": "^3.1.1",
     "@biconomy/paymaster": "^3.1.1",
+    "@openzeppelin/contracts": "^4.9.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
