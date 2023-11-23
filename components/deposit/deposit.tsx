@@ -1,7 +1,13 @@
-
+import { Inter } from 'next/font/google'
+import styles from '@/styles/Deposit.module.css'
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3'
 
-export default function Deposit() {
+
+interface DepositProps {
+    smartAccountAddress : string
+    setOpenDepositModal: (openDepositModal : boolean) => void
+}
+export default function Deposit({smartAccountAddress, setOpenDepositModal,} : DepositProps) {
     const config = {
         public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
         tx_ref: '0',
@@ -31,8 +37,30 @@ export default function Deposit() {
     }
     return(
         <>
-            <main>
-                <button onClick={doLocalPay}>Save to Susu</button>
+            <main className={styles.main}>
+                <div className={styles.wrapper}>
+                    <div onClick={() => setOpenDepositModal(false)} className={styles.close}>
+                        close
+                    </div>
+                    <div >
+                        <div  className={styles.saving}>
+                            <span>I have</span>
+                            <div>
+                                <input type="number" />
+                                <span>GHS</span>
+                            </div>
+                        </div>
+                        <div>
+                            <span>I want</span>
+                            <div>
+                                <input type="number" />
+                                <span>USD</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onClick={doLocalPay}>Save to Susu</button>
+                </div>
+                
             </main>
         </>
     )

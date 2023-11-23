@@ -1,10 +1,11 @@
 import { useGet } from '@/hooks/useGet'
-
+import styles from '@/styles/Profile.module.css'
 interface ProfileProps {
     smartAccountAddress: string
+    setOpenProfiletModal: (openDepositModal : boolean) => void
 }
 
-export default function Profile({smartAccountAddress} : ProfileProps) {
+export default function Profile({smartAccountAddress, setOpenProfiletModal} : ProfileProps) {
 
     const {data, loading, getBack} = useGet('api/getPooler', smartAccountAddress)
 
@@ -27,8 +28,15 @@ export default function Profile({smartAccountAddress} : ProfileProps) {
     //update
     return(
         <>
-            <main>
-                
+            <main className={styles.main}>
+                <div className={styles.wrapper}>
+                    <div onClick={() => setOpenProfiletModal(false)} className={styles.close}>
+                        close
+                    </div>
+                    <div >
+
+                    </div>
+                </div>
             </main>
         </>
     )

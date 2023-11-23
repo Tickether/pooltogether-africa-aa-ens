@@ -3,9 +3,13 @@ import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { useBiconomy } from '@/providers/BiconomyProvider'
 import { erc20ABI, useContractRead } from 'wagmi'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useMagic } from '@/providers/MagicProvider'
 import { useRouter } from 'next/router'
+import Deposit from '@/components/deposit/deposit'
+import Profile from '@/components/profile/profile'
+import Transactions from '@/components/transactions/transactions'
+import Withdraw from '@/components/withdraw/withdraw'
 
 
 
@@ -16,6 +20,12 @@ export default function Susu() {
     const route = useRouter()
     const {magic} = useMagic()
     const { smartAccount, smartAccountAddress, connected } = useBiconomy()
+
+    const [openDepositModal, setOpenDepositModal] = useState<boolean>(false) 
+    const [openProfileModal, setOpenProfiletModal] = useState<boolean>(false) 
+    const [openTransactionsModal, setOpenTransactionsModal] = useState<boolean>(false) 
+    const [openWithdrawModal, setOpenWithdrawModal] = useState<boolean>(false) 
+
     
     //const {data, loading, getBack} = useGet('api/getPooler', smartAccountAddress!)
 
@@ -89,8 +99,15 @@ export default function Susu() {
                     
                 </div>
                 <div>
-                    <button>Deposit to Susu</button>
+                    <button onClick={()=> setOpenDepositModal(true)}>Deposit to Susu</button>
+                    <button onClick={()=> setOpenProfiletModal(true)}>Profile</button>
+                    <button onClick={()=> setOpenTransactionsModal(true)}>Transactions</button>
+                    <button onClick={()=> setOpenWithdrawModal(true)}>Withdraw from Susu</button>
                 </div>
+                {openDepositModal && <Deposit smartAccountAddress ={smartAccountAddress!} setOpenDepositModal ={setOpenDepositModal} />}
+                {openProfileModal && <Profile smartAccountAddress ={smartAccountAddress!} setOpenProfiletModal ={setOpenProfiletModal} />}
+                {openTransactionsModal && <Transactions setOpenTransactionsModal ={setOpenTransactionsModal} />}
+                {openWithdrawModal && <Withdraw setOpenWithdrawModal ={setOpenWithdrawModal} />}
             </main>
         </>
     )
