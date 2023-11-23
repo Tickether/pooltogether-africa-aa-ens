@@ -10,11 +10,13 @@ import { useMagic } from "./MagicProvider"
 interface BiconomyInterface {
     smartAccount?: BiconomySmartAccountV2
     smartAccountAddress?: string
+    connected?: boolean
 }
 
 const BiconomyContext = createContext<BiconomyInterface>({
     smartAccount: undefined,
     smartAccountAddress: undefined,
+    connected: undefined
 })
 
 export const useBiconomy = () => {
@@ -25,7 +27,7 @@ export const BiconomyProvider = ({ children }: { children: ReactNode }) => {
     const {magic, ethersProvider} = useMagic()
     const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | undefined>()
     const [smartAccountAddress, setSmartAccountAddress] = useState<string | undefined>()
-    const [connected, setConnected] = useState<boolean | null>(null)
+    const [connected, setConnected] = useState<boolean | undefined>()
     
     let getHexTimeOut : NodeJS.Timeout
     const doHex = async () => {
@@ -93,9 +95,10 @@ export const BiconomyProvider = ({ children }: { children: ReactNode }) => {
     const value = useMemo(() => {
         return {
           smartAccount, 
-          smartAccountAddress
+          smartAccountAddress,
+          connected
         }
-    }, [ smartAccount, smartAccountAddress ])
+    }, [ smartAccount, smartAccountAddress, connected ])
     
 
     return (

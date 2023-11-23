@@ -1,8 +1,8 @@
-import axios from "axios"
-import { useState, useEffect } from "react"
+import axios from 'axios'
+import { useState, useEffect } from 'react'
 
 export const useGet = (url: string, address: string) => {
-    const [data, setData] = useState<any | null>()
+    const [data, setData] = useState<any | null>(null)
     const [loading, setLoading] = useState<boolean | null>(null)
     const [error, setError] = useState<any | null>(null)
 
@@ -10,16 +10,17 @@ export const useGet = (url: string, address: string) => {
         const fetchData = async ()=>{
             setLoading(true)
             try {
-                const res = await axios.post(url ,{
+                const res = await fetch(url, {
+                    method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    method: 'post',
-                    data: {
+                    body: JSON.stringify({
                         address: address,
-                    }
+                    })
                 })
-                setData(res.data)
+                const data = await res.json()
+                setData(data)
             } catch(err){
                 setError(err)
             }
@@ -31,16 +32,17 @@ export const useGet = (url: string, address: string) => {
     const getBack = async ()=>{
         setLoading(true);
         try {
-            const res = await axios.post(url ,{
+            const res = await fetch(url ,{
+                method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
                 },
-                method: 'post',
-                data: {
+                body: JSON.stringify({
                     address: address,
-                }
+                })
             })
-            setData(res.data)
+            const data = await res.json()
+            setData(data)
         } catch(err){
             setError(err)
         }

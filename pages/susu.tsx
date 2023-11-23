@@ -6,38 +6,44 @@ import { erc20ABI, useContractRead } from 'wagmi'
 import { useEffect } from 'react'
 import { useMagic } from '@/providers/MagicProvider'
 import { useRouter } from 'next/router'
-import { useGet } from '@/hooks/useGet'
+
 
 
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Susu() {
-    const {magic} = useMagic()
-    const { smartAccount, smartAccountAddress } = useBiconomy()
     const route = useRouter()
-    const {data, loading, getBack} = useGet('api/getPooler', smartAccountAddress!)
-    console.log(data)
+    const {magic} = useMagic()
+    const { smartAccount, smartAccountAddress, connected } = useBiconomy()
+    
+    //const {data, loading, getBack} = useGet('api/getPooler', smartAccountAddress!)
+
+ 
+
     const goLanding = async() => {
         try {
-            let isLoggedIn = await magic?.user.isLoggedIn()
-            if(!isLoggedIn) route.push('/')
+            const isLoggedIn = await magic?.user.isLoggedIn()
+            console.log(isLoggedIn)
+            if( isLoggedIn === false ) route.push('/')
         } catch (error) {
             console.log(error)
         }
     }
-
+    
+    
 
     useEffect(()=>{
         goLanding()
-    },[])
+    },[smartAccountAddress, connected])
+    
 
-
+    const smartWallet = smartAccountAddress ? smartAccountAddress! : '0xdEAD000000000000000042069420694206942069'
     const ptAfricaBalance = useContractRead({
         address: '0xE3B3a464ee575E8E25D2508918383b89c832f275', //pUSDC.e
         abi: erc20ABI,
         functionName: 'balanceOf',
-        args:[(`0x${smartAccountAddress?.slice(2)}`)],
+        args:[(`0x${smartWallet?.slice(2)}`)],
         chainId: 10,
         watch: true
     })

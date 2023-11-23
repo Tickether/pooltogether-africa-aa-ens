@@ -11,9 +11,21 @@ const PoolerSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
+    phone: {
+        type: Number,
+   
+    },
     ens: {
         type: String,
         unique: true,
+
+    },
+    country: {
+        type: String,
+        
+    },
+    currency: {
+        type: String,
     },
     deposits: {
         type: [String]
