@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import styles from '@/styles/Susu.module.css'
 import { useBiconomy } from '@/providers/BiconomyProvider'
 import { erc20ABI, useContractRead } from 'wagmi'
 import { useEffect, useState } from 'react'
