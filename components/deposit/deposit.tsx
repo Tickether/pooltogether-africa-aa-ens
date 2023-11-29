@@ -2,27 +2,32 @@ import { Inter } from 'next/font/google'
 import styles from '@/styles/Deposit.module.css'
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3'
 import { useState } from 'react'
+import { Pooler } from '@/hooks/useGetPooler'
+import { Countries, Country } from '@/utils/constants/countries'
 
 
 interface DepositProps {
+    pooler: Pooler
     smartAccountAddress : string
     setOpenDepositModal: (openDepositModal : boolean) => void
 }
-export default function Deposit({smartAccountAddress, setOpenDepositModal} : DepositProps) {
+export default function Deposit({pooler, smartAccountAddress, setOpenDepositModal} : DepositProps) {
+    const country : Country =( Countries as any )[pooler.country];
+    console.log(country)
     const [amountLocal, setAmountLocal] = useState<string | null>(null)
     const [amountDollar, setAmountDollar] = useState<string | null>(null)
 
     const config = {
         public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
-        tx_ref: `0`,//currency x timestaamp/datestamp
+        tx_ref: `${country.code}${Date.now()}`,//currency x timestaamp/datestamp
         amount: Number(amountLocal!),//amount local value inout
-        currency: 'EGP',//select on page defaults to selected from db
+        currency: country.code,//select on page defaults to selected from db
         payment_options: 'card,mobilemoney,ussd',
         customer: {
             //get from db info
-            email: 'tickether@gmail.com',
-            phone_number: '233531616924',
-            name: 'john doe',
+            email: pooler.email,
+            phone_number: pooler.phone,
+            name: `${pooler.first} ${pooler.last}`,
         },
         customizations: {
             title: 'PoolTogether Africa',
@@ -32,13 +37,15 @@ export default function Deposit({smartAccountAddress, setOpenDepositModal} : Dep
     }
     const handleFlutterPayment = useFlutterwave(config)
     const doLocalPay = () => {
-        handleFlutterPayment({
-            callback: (response) => {
-                console.log(response)
-                closePaymentModal() // this will close the modal programmatically
-            },
-            onClose: () => {},
-        })
+        if (amountLocal != null) {
+            handleFlutterPayment({
+                callback: (response) => {
+                    console.log(response)
+                    closePaymentModal() // this will close the modal programmatically
+                },
+                onClose: () => {},
+            })
+        }
     }
     const handleLocalChange = (e: any) => {
         // Allow only numbers and a maximum of two decimal places
@@ -47,7 +54,7 @@ export default function Deposit({smartAccountAddress, setOpenDepositModal} : Dep
 
         if (regex.test(inputValue) || inputValue === '') {
             setAmountLocal(inputValue === '' ? '' : inputValue);
-            const dollarRate = parseFloat(inputValue) / 12.20;
+            const dollarRate = parseFloat(inputValue) / Number(country.$rate);
             setAmountDollar(inputValue === ''? '' : String(dollarRate.toFixed(2)));
         }
     }
@@ -57,9 +64,9 @@ export default function Deposit({smartAccountAddress, setOpenDepositModal} : Dep
         const inputValue = e.target.value;
 
         if (regex.test(inputValue) || inputValue === '') {
-            setAmountDollar(inputValue === '' ? '' : inputValue);
-            const localRate = parseFloat(inputValue) * 12.20;
-            setAmountLocal(inputValue === ''? '' : String(localRate.toFixed(2)));
+            setAmountDollar(inputValue === '' ? '' : inputValue)
+            const localRate = parseFloat(inputValue) * Number(country.$rate)
+            setAmountLocal(inputValue === ''? '' : String(localRate.toFixed(2)))
         }
     }
     return(
@@ -93,7 +100,7 @@ export default function Deposit({smartAccountAddress, setOpenDepositModal} : Dep
                             </div>
                         </div>
                     </div>
-                    <button onClick={doLocalPay}>Save to Susu</button>
+                    <button disabled={amountLocal == null || amountLocal == '' || amountLocal < country.$rate} onClick={doLocalPay}>Save to Susu</button>
                 </div>
                 
             </main>

@@ -1,8 +1,6 @@
-
-import axios from 'axios'
 import { useState, useEffect } from 'react'
 
-interface Pooler {
+export interface Pooler {
     address: string
     email: string 
     first: string
@@ -40,7 +38,7 @@ export const useGet = (url: string, address: string) => {
             setLoading(false)
         }
         getPooler()
-    },[url, address])
+    },[ address ])
 
     const getBackPooler = async ()=>{
         setLoading(true);

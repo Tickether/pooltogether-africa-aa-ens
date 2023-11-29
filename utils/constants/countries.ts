@@ -13,7 +13,7 @@
     }
 */
    
-interface Country {
+export interface Country {
     currency: string
     code: string
     $rate: string

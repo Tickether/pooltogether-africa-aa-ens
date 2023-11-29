@@ -1,4 +1,4 @@
-import { useGet } from '@/hooks/useGetPooler'
+import { Pooler, useGet } from '@/hooks/useGetPooler'
 import { useMagic } from '@/providers/MagicProvider'
 import styles from '@/styles/Profile.module.css'
 import { Countries } from '@/utils/constants/countries'
@@ -6,8 +6,10 @@ import { useState } from 'react'
 import { normalize } from 'viem/ens'
 
 interface ProfileProps {
+    pooler: Pooler | null
     smartAccountAddress: string
     setOpenProfiletModal: (openDepositModal : boolean) => void
+    onClose: () => void
 }
 interface SusuProfile {
     firstname: string
@@ -17,9 +19,9 @@ interface SusuProfile {
     country: string
 }
 
-export default function Profile({smartAccountAddress, setOpenProfiletModal} : ProfileProps) {
+export default function Profile({pooler, smartAccountAddress, setOpenProfiletModal, onClose} : ProfileProps) {
     const {magic} = useMagic()
-    const {pooler, loading, getBackPooler} = useGet('api/getPooler', smartAccountAddress)
+    const { getBackPooler } = useGet('api/getPooler', smartAccountAddress)
     const countries = Object.keys(Countries);
     const susuProfileDefaults = {
         firstname: '',
@@ -97,7 +99,13 @@ export default function Profile({smartAccountAddress, setOpenProfiletModal} : Pr
         <>
             <main className={styles.main}>
                 <div className={styles.wrapper}>
-                    <div onClick={() => setOpenProfiletModal(false)} className={styles.close}>
+                    <div 
+                        className={styles.close}
+                        onClick={() => {
+                            setOpenProfiletModal(false)
+                            onClose()
+                        }} 
+                    >
                         close
                     </div>
                     {
@@ -166,6 +174,7 @@ export default function Profile({smartAccountAddress, setOpenProfiletModal} : Pr
                                         value={susuProfile.country}
                                         onChange={handleChange}
                                     >
+                                        <option value="" disabled>Select a country</option>
                                         {countries.map((country) => (
                                             <option key={country} value={country}>
                                             {country}

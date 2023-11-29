@@ -57,7 +57,12 @@ export default function Susu() {
         watch: true
     })
     
-
+    // Function to be called when the profile modal is closed
+    const onClose = async() => {
+        console.log('Modal is closed! Do something...');
+        // reloaad data from db
+        await getBackPooler()
+    };
     
     const Lougot = async () => {
         try {
@@ -109,15 +114,15 @@ export default function Susu() {
                     
                 </div>
                 <div>
-                    <button disabled={!pooler} onClick={()=> setOpenDepositModal(true)}>Deposit to Susu</button>
+                    <button disabled={!pooler || pooler == undefined} onClick={()=> setOpenDepositModal(true)}>Deposit to Susu</button>
                     <button onClick={()=> setOpenProfiletModal(true)}>Profile</button>
-                    <button disabled={!pooler} onClick={()=> setOpenTransactionsModal(true)}>Transactions</button>
-                    <button disabled={!pooler} onClick={()=> setOpenWithdrawModal(true)}>Withdraw from Susu</button>
+                    <button disabled={!pooler || pooler == undefined} onClick={()=> setOpenTransactionsModal(true)}>Transactions</button>
+                    <button disabled={!pooler || pooler == undefined} onClick={()=> setOpenWithdrawModal(true)}>Withdraw from Susu</button>
                 </div>
-                {openDepositModal && <Deposit smartAccountAddress ={smartAccountAddress!} setOpenDepositModal ={setOpenDepositModal} />}
-                {openProfileModal && <Profile smartAccountAddress ={smartAccountAddress!} setOpenProfiletModal ={setOpenProfiletModal} />}
-                {openTransactionsModal && <Transactions setOpenTransactionsModal ={setOpenTransactionsModal} />}
-                {openWithdrawModal && <Withdraw setOpenWithdrawModal ={setOpenWithdrawModal} />}
+                {openDepositModal && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress!} setOpenDepositModal={setOpenDepositModal} />}
+                {openProfileModal && <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} setOpenProfiletModal={setOpenProfiletModal} onClose={onClose}/>}
+                {openTransactionsModal && <Transactions pooler={pooler!} setOpenTransactionsModal={setOpenTransactionsModal} />}
+                {openWithdrawModal && <Withdraw pooler={pooler!} setOpenWithdrawModal={setOpenWithdrawModal} />}
             </main>
         </>
     )

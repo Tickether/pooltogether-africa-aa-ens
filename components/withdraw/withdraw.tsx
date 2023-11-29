@@ -1,10 +1,12 @@
+import { Pooler } from '@/hooks/useGetPooler'
 import styles from '@/styles/Withdraw.module.css'
 
 
 interface WithdrawProfileProps {
+    pooler: Pooler
     setOpenWithdrawModal: (openDepositModal : boolean) => void
 }
-export default function Withdraw({setOpenWithdrawModal} : WithdrawProfileProps) {
+export default function Withdraw({pooler, setOpenWithdrawModal} : WithdrawProfileProps) {
     return(
         <>
             <main className={styles.main}>

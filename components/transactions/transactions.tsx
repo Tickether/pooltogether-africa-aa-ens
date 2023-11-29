@@ -1,9 +1,11 @@
+import { Pooler } from '@/hooks/useGetPooler'
 import styles from '@/styles/Transactions.module.css'
 
 interface TransactionsProfileProps {
+    pooler: Pooler
     setOpenTransactionsModal: (openDepositModal : boolean) => void
 }
-export default function Transactions({setOpenTransactionsModal} : TransactionsProfileProps) {
+export default function Transactions({pooler, setOpenTransactionsModal} : TransactionsProfileProps) {
     return(
         <>
             <main className={styles.main}>
