@@ -9,13 +9,18 @@ export default async function PostPooler(
     res: NextApiResponse,
 ) {
     console.log('is doing..')
-    const { address, email } = req.body
+    const { address, email, first, last, phone, ens, country } = req.body
     console.log(address, email)
     try {
         await connectDB()
         const pooler = await Pooler.create({ 
             address: address,
             email: email, 
+            first: first, 
+            last: last, 
+            phone: phone, 
+            ens: ens, 
+            country: country, 
         })
         return res.json(pooler)
     } catch (error) {

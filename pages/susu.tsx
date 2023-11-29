@@ -10,6 +10,7 @@ import Deposit from '@/components/deposit/deposit'
 import Profile from '@/components/profile/profile'
 import Transactions from '@/components/transactions/transactions'
 import Withdraw from '@/components/withdraw/withdraw'
+import { useGet } from '@/hooks/useGetPooler'
 
 
 
@@ -27,9 +28,10 @@ export default function Susu() {
     const [openWithdrawModal, setOpenWithdrawModal] = useState<boolean>(false) 
 
     
-    //const {data, loading, getBack} = useGet('api/getPooler', smartAccountAddress!)
+    const {pooler, loading, getBackPooler} = useGet('api/getPooler', smartAccountAddress!)
+    console.log(pooler?.address)
 
- 
+
 
     const goLanding = async() => {
         try {
@@ -40,9 +42,6 @@ export default function Susu() {
             console.log(error)
         }
     }
-    
-    
-
     useEffect(()=>{
         goLanding()
     },[smartAccountAddress, connected])
@@ -88,6 +87,17 @@ export default function Susu() {
                     : <p>loading</p>
                     }
                 </div>
+                <div>
+                    {
+                        smartAccountAddress! && !pooler
+                        ?(
+                            <div>
+                                <p>Setup your profile & Make your first Deposit</p>
+                            </div>
+                        )
+                        :<></>
+                    }
+                </div>
                 <div className={styles.saving}>
                     {
                         smartAccountAddress
@@ -99,10 +109,10 @@ export default function Susu() {
                     
                 </div>
                 <div>
-                    <button onClick={()=> setOpenDepositModal(true)}>Deposit to Susu</button>
+                    <button disabled={!pooler} onClick={()=> setOpenDepositModal(true)}>Deposit to Susu</button>
                     <button onClick={()=> setOpenProfiletModal(true)}>Profile</button>
-                    <button onClick={()=> setOpenTransactionsModal(true)}>Transactions</button>
-                    <button onClick={()=> setOpenWithdrawModal(true)}>Withdraw from Susu</button>
+                    <button disabled={!pooler} onClick={()=> setOpenTransactionsModal(true)}>Transactions</button>
+                    <button disabled={!pooler} onClick={()=> setOpenWithdrawModal(true)}>Withdraw from Susu</button>
                 </div>
                 {openDepositModal && <Deposit smartAccountAddress ={smartAccountAddress!} setOpenDepositModal ={setOpenDepositModal} />}
                 {openProfileModal && <Profile smartAccountAddress ={smartAccountAddress!} setOpenProfiletModal ={setOpenProfiletModal} />}

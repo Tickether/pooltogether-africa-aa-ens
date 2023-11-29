@@ -7,12 +7,12 @@ export default async function UpdatePooler(
     req: NextApiRequest,
     res: NextApiResponse,
 ) {
-    const { address, email, ens } = req.body
+    const { address, country } = req.body
     try {
         await connectDB()
         const pooler = await Pooler.findOneAndUpdate(
             { address: address }, 
-            { email: email, ens: ens }, 
+            { country: country }, 
             { new: true }
         )        
         return res.json(pooler)

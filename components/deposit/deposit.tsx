@@ -11,18 +11,7 @@ interface DepositProps {
 export default function Deposit({smartAccountAddress, setOpenDepositModal} : DepositProps) {
     const [amountLocal, setAmountLocal] = useState<string | null>(null)
     const [amountDollar, setAmountDollar] = useState<string | null>(null)
-    /*
-    Top 10 Countdown - ones I cant gate for except (DRC)
-    Uganda
-    Morocco
-    Ghana
-    Ethiopia
-    Tanzania 
-    Egypt 
-    Kenya 
-    South Africa
-    Nigeria
-    */
+
     const config = {
         public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
         tx_ref: `0`,//currency x timestaamp/datestamp
