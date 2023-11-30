@@ -4,6 +4,7 @@ import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3'
 import { useState } from 'react'
 import { Pooler } from '@/hooks/useGetPooler'
 import { Countries, Country } from '@/utils/constants/countries'
+import { dripSusuPool, dripSusuPools } from '@/utils/viem/useDripSusuPool'
 
 
 interface DepositProps {
@@ -12,16 +13,18 @@ interface DepositProps {
     setOpenDepositModal: (openDepositModal : boolean) => void
 }
 export default function Deposit({pooler, smartAccountAddress, setOpenDepositModal} : DepositProps) {
-    const country : Country =( Countries as any )[pooler.country];
+
+    const country : Country = ( Countries as any )[pooler.country];
     console.log(country)
+
     const [amountLocal, setAmountLocal] = useState<string | null>(null)
     const [amountDollar, setAmountDollar] = useState<string | null>(null)
 
     const config = {
         public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
-        tx_ref: `${country.code}${Date.now()}`,//currency x timestaamp/datestamp
-        amount: Number(amountLocal!),//amount local value inout
-        currency: country.code,//select on page defaults to selected from db
+        tx_ref: `${country.code}${Date.now()}`, //currency x timestaamp/datestamp
+        amount: Number(amountLocal!), //amount local value inout
+        currency: country.code, //select on page defaults to selected from db
         payment_options: 'card,mobilemoney,ussd',
         customer: {
             //get from db info
@@ -43,7 +46,9 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
                     console.log(response)
                     closePaymentModal() // this will close the modal programmatically
                 },
-                onClose: () => {},
+                onClose: () => {
+                    //amount Dollars sent to smart address
+                },
             })
         }
     }
@@ -80,7 +85,7 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
                         <div  className={styles.saving}>
                             <span>I have</span>
                             <div>
-                                <label>GHS</label>
+                                <label>{country.code}</label>
                                 <input 
                                     type="text" 
                                     value={amountLocal!}
@@ -101,6 +106,14 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
                         </div>
                     </div>
                     <button disabled={amountLocal == null || amountLocal == '' || amountLocal < country.$rate} onClick={doLocalPay}>Save to Susu</button>
+                    <button 
+                        onClick={() => {
+                            dripSusuPool(`0x${smartAccountAddress!.slice(2)}`, '10000000000')
+                            //save offchain depo info
+                        }}
+                    >
+                        chainon
+                    </button>
                 </div>
                 
             </main>
