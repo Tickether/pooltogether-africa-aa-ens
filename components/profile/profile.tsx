@@ -87,7 +87,7 @@ export default function Profile({pooler, smartAccountAddress, setOpenProfiletMod
             console.log(error)
         }
     }// new new profile get email, wallet and formdata
-    const handleNewProfile = async(e: any) =>{
+    const handleNewPooler = async(e: any) =>{
         e.preventDefault()
         const email = await getEmail()
         await postPooler( smartAccountAddress!, email, susuProfile.firstname, susuProfile.lastname, susuProfile.phone, susuProfile.susuTag, susuProfile.country )
@@ -186,7 +186,7 @@ export default function Profile({pooler, smartAccountAddress, setOpenProfiletMod
                         )
                     }
                     <div className={styles.buttons}>
-                        <button onClick={handleNewProfile}>Save Susu Profile</button>
+                        <button onClick={handleNewPooler}>Save Susu Profile</button>
                     </div>
                 </div>
             </main>

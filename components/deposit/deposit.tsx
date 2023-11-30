@@ -4,7 +4,8 @@ import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3'
 import { useState } from 'react'
 import { Pooler } from '@/hooks/useGetPooler'
 import { Countries, Country } from '@/utils/constants/countries'
-import { dripSusuPool, dripSusuPools } from '@/utils/viem/useDripSusuPool'
+import { dripSusuPool } from '@/utils/viem/useDripSusuPool'
+import { parseUnits } from 'viem'
 
 
 interface DepositProps {
@@ -47,7 +48,8 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
                     closePaymentModal() // this will close the modal programmatically
                 },
                 onClose: () => {
-                    //amount Dollars sent to smart address
+                    //amount Dollars sent to smart address and offchain store
+                    handleNewPoolerDeposit()
                 },
             })
         }
@@ -74,6 +76,38 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
             setAmountLocal(inputValue === ''? '' : String(localRate.toFixed(2)))
         }
     }
+
+    const postPoolerDeposit = async (address: string, txn: string, prizeAmount: string, localAmount: string, currency: string, rate: string) => {
+        try {
+            const res = await fetch('api/postPoolerDeposit  ', {
+                method: 'POST',
+                headers: {
+                'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    address,
+                    txn,
+                    prizeAmount, 
+                    localAmount, 
+                    currency,  
+                    rate,
+                })
+            }) 
+            const data =  await res.json()
+        console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleNewPoolerDeposit = async() => {
+        const amountParsed = parseUnits(amountDollar!, 6)
+        const txnHash = await dripSusuPool(`0x${smartAccountAddress!.slice(2)}`, amountParsed!)
+        //save offchain depo info
+        await postPoolerDeposit( smartAccountAddress!, txnHash!, amountDollar!, amountLocal!, country.code, country.$rate )
+        
+    }
+
     return(
         <>
             <main className={styles.main}>
@@ -107,10 +141,7 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
                     </div>
                     <button disabled={amountLocal == null || amountLocal == '' || amountLocal < country.$rate} onClick={doLocalPay}>Save to Susu</button>
                     <button 
-                        onClick={() => {
-                            dripSusuPool(`0x${smartAccountAddress!.slice(2)}`, '10000000000')
-                            //save offchain depo info
-                        }}
+                        onClick={handleNewPoolerDeposit}
                     >
                         chainon
                     </button>

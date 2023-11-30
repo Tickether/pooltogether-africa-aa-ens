@@ -8,18 +8,7 @@ const DepositSchema = new mongoose.Schema({
     },
     txn: {
         type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-    },
-    ens: {
-        type: String,
-        required: true,
-    },
-    status: {
-        type: String,
+        unique: true,
         required: true,
     },
     prizeAmount: {
@@ -33,10 +22,10 @@ const DepositSchema = new mongoose.Schema({
     currency: {
         type: String,
         required: true,
-
     },
     rate: {
         type: Number,
+        required: true,
     },
 })
 
