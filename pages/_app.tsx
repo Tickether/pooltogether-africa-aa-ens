@@ -1,5 +1,5 @@
 import { WagmiConfig, createConfig, configureChains } from 'wagmi'
-import { optimism } from 'wagmi/chains'
+import { optimism, optimismGoerli } from 'wagmi/chains'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { BiconomyProvider } from '@/providers/BiconomyProvider'
 import '@/styles/globals.css'
@@ -8,7 +8,7 @@ import { MagicProvider } from '@/providers/MagicProvider'
 
 export default function App({ Component, pageProps }: AppProps) {
   const { publicClient } = configureChains(
-    [optimism],
+    [optimism, optimismGoerli],
     [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY })],
   )
   const config = createConfig({

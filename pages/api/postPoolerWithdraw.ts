@@ -9,16 +9,14 @@ export default async function PostPoolerWithdraw(
     req: NextApiRequest,
     res: NextApiResponse,
 ) {
-    const { address, txn, email, ens, status, prizeAmount, localAmount, currency, rate } = req.body
+    const { address, txn, ref, prizeAmount, localAmount, currency, rate } = req.body
     try {
         await connectDB()
           
         const withdraw = await Withdraw.create({ 
             address: address,
             txn: txn,
-            email: email, 
-            ens: ens, 
-            status: status, 
+            ref: ref,
             prizeAmount: prizeAmount, 
             localAmount: localAmount, 
             currency: currency,  
@@ -26,7 +24,7 @@ export default async function PostPoolerWithdraw(
         })
         await Pooler.findOneAndUpdate(
             { address: address }, 
-            { deposits: [withdraw._id] }, 
+            { $push: { withdrawals: txn } },
             { new: true }
         )  
         return res.json(withdraw)

@@ -12,7 +12,7 @@ export const dripSusuPool = async(to: `0x${string}`, amount: bigint) => {
         })
         const hash = await client.sendTransaction({
             data: data,
-            to: '0x0b22b04470f9d605d571f8501687ffc5d637e9f2',
+            to: '0x9d7C4Ea7B93699EC0FE1b28776082E297A015734',
             value: BigInt(0)
         })
         console.log(hash!)

@@ -9,7 +9,7 @@ export default async function PostPoolerDeposit(
     req: NextApiRequest,
     res: NextApiResponse,
 ) {
-    const { address, txn, prizeAmount, localAmount, currency, rate } = req.body
+    const { address, txn, ref, prizeAmount, localAmount, currency, rate } = req.body
 
     try {
         await connectDB()
@@ -17,6 +17,7 @@ export default async function PostPoolerDeposit(
         const deposit = await Deposit.create({ 
             address: address, 
             txn: txn,
+            ref: ref,
             prizeAmount: prizeAmount, 
             localAmount: localAmount, 
             currency: currency,  

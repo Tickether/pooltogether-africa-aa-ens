@@ -6,8 +6,8 @@ import { ReactNode, createContext, useContext, useEffect, useMemo, useState } fr
 export type Magic = MagicBase
 
 type MagicContextType = {
-  magic: Magic | undefined
-  ethersProvider: any | undefined
+    magic: Magic | undefined
+    ethersProvider: any | undefined
 };
 
 const MagicContext = createContext<MagicContextType>({
@@ -24,9 +24,15 @@ export const MagicProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (process.env.NEXT_PUBLIC_MAGIC_API_KEY) {
             const magic = new MagicBase(process.env.NEXT_PUBLIC_MAGIC_API_KEY, {
+                /*
                 network: {
                     rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
                     chainId: 10, // or preferred chain
+                },
+                */
+                network: {
+                    rpcUrl: `https://optimism-goerli.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
+                    chainId: 420, // or preferred chain
                 },
             })
             setMagic(magic)
@@ -36,11 +42,11 @@ export const MagicProvider = ({ children }: { children: ReactNode }) => {
   
     
     const value = useMemo(() => {
-      return {
-        magic,
-        ethersProvider,
-      };
+        return {
+            magic,
+            ethersProvider,
+        };
     }, [magic, ethersProvider])
     
     return <MagicContext.Provider value={value}>{children}</MagicContext.Provider>
-  };
+};

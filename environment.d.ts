@@ -4,8 +4,11 @@ declare global {
             NEXT_PUBLIC_INFURA_API_KEY: string
             NEXT_PUBLIC_BICONOMY_BUNDLER_URL: string
             NEXT_PUBLIC_BICONOMY_PAYMASTER_URL: string
+            NEXT_PUBLIC_BICONOMY_TEST_BUNDLER_URL: string
+            NEXT_PUBLIC_BICONOMY_TEST_PAYMASTER_URL: string
             NEXT_PUBLIC_MAGIC_API_KEY: string
             NEXT_PUBLIC_FLUTTERWAVE_KEY: string
+            NEXT_PUBLIC_FLUTTERWAVE_TEST_KEY: string
             NEXT_PUBLIC_PRIVATE_KEY: `0x${string}`
             MONGO: string
         }

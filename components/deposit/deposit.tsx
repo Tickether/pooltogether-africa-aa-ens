@@ -22,7 +22,8 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
     const [amountDollar, setAmountDollar] = useState<string | null>(null)
 
     const config = {
-        public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
+        //public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
+        public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_TEST_KEY,
         tx_ref: `${country.code}${Date.now()}`, //currency x timestaamp/datestamp
         amount: Number(amountLocal!), //amount local value inout
         currency: country.code, //select on page defaults to selected from db
@@ -45,11 +46,15 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
             handleFlutterPayment({
                 callback: (response) => {
                     console.log(response)
+                    if (response.status == 'successful') {
+                        //amount Dollars sent to smart address and offchain store
+                        handleNewPoolerDeposit(response.flw_ref)
+                    }
                     closePaymentModal() // this will close the modal programmatically
                 },
                 onClose: () => {
-                    //amount Dollars sent to smart address and offchain store
-                    handleNewPoolerDeposit()
+                    
+                   console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
                 },
             })
         }
@@ -77,7 +82,7 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
         }
     }
 
-    const postPoolerDeposit = async (address: string, txn: string, prizeAmount: string, localAmount: string, currency: string, rate: string) => {
+    const postPoolerDeposit = async (address: string, txn: string, ref: string, prizeAmount: string, localAmount: string, currency: string, rate: string) => {
         try {
             const res = await fetch('api/postPoolerDeposit  ', {
                 method: 'POST',
@@ -87,6 +92,7 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
                 body: JSON.stringify({
                     address,
                     txn,
+                    ref,
                     prizeAmount, 
                     localAmount, 
                     currency,  
@@ -100,11 +106,11 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
         }
     }
 
-    const handleNewPoolerDeposit = async() => {
+    const handleNewPoolerDeposit = async(ref: string) => {
         const amountParsed = parseUnits(amountDollar!, 6)
         const txnHash = await dripSusuPool(`0x${smartAccountAddress!.slice(2)}`, amountParsed!)
         //save offchain depo info
-        await postPoolerDeposit( smartAccountAddress!, txnHash!, amountDollar!, amountLocal!, country.code, country.$rate )
+        await postPoolerDeposit( smartAccountAddress!, txnHash!, ref, amountDollar!, amountLocal!, country.code, country.$rate )
         
     }
 
@@ -139,12 +145,7 @@ export default function Deposit({pooler, smartAccountAddress, setOpenDepositModa
                             </div>
                         </div>
                     </div>
-                    <button disabled={amountLocal == null || amountLocal == '' || amountLocal < country.$rate} onClick={doLocalPay}>Save to Susu</button>
-                    <button 
-                        onClick={handleNewPoolerDeposit}
-                    >
-                        chainon
-                    </button>
+                    <button disabled={ amountLocal == null || amountLocal == '' || amountLocal < country.$rate } onClick={doLocalPay}>Save to Susu</button>
                 </div>
                 
             </main>

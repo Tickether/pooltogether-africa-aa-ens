@@ -51,13 +51,16 @@ export const BiconomyProvider = ({ children }: { children: ReactNode }) => {
 
     
     const bundler: IBundler = useMemo(() => new Bundler({
-        bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL,
-        chainId: ChainId.OPTIMISM_MAINNET,
+        //bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL,
+        bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_TEST_BUNDLER_URL,
+        chainId: ChainId.OPTIMISM_GOERLI_TESTNET,
+        //chainId: ChainId.OPTIMISM_MAINNET,
         entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
     }), [])
 
     const paymaster: IPaymaster = useMemo(() => new BiconomyPaymaster({
-        paymasterUrl: process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_URL,
+        //paymasterUrl: process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_URL,
+        paymasterUrl: process.env.NEXT_PUBLIC_BICONOMY_TEST_PAYMASTER_URL,
     }), [])
 
     
@@ -69,12 +72,14 @@ export const BiconomyProvider = ({ children }: { children: ReactNode }) => {
 
         const biconomySmartAccount = await BiconomySmartAccountV2.create({
             provider: ethersProvider!,
-            chainId: ChainId.OPTIMISM_MAINNET,
+            //chainId: ChainId.OPTIMISM_MAINNET,
+            chainId: ChainId.OPTIMISM_GOERLI_TESTNET,
             bundler: bundler,
             paymaster: paymaster,
             entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
             defaultValidationModule: validationModule,
             activeValidationModule: validationModule,
+            //rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
             rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
         })
 

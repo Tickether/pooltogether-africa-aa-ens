@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Susu.module.css'
 import { useBiconomy } from '@/providers/BiconomyProvider'
-import { erc20ABI, useContractRead } from 'wagmi'
+import { useContractRead } from 'wagmi'
 import { useEffect, useState } from 'react'
 import { useMagic } from '@/providers/MagicProvider'
 import { useRouter } from 'next/router'
@@ -11,6 +11,8 @@ import Profile from '@/components/profile/profile'
 import Transactions from '@/components/transactions/transactions'
 import Withdraw from '@/components/withdraw/withdraw'
 import { useGet } from '@/hooks/useGetPooler'
+import { erc20ABI } from '@/utils/abis/ptaABI'
+import { formatUnits } from 'viem'
 
 
 
@@ -48,6 +50,7 @@ export default function Susu() {
     
 
     const smartWallet = smartAccountAddress ? smartAccountAddress! : '0xdEAD000000000000000042069420694206942069'
+    /*
     const ptAfricaBalance = useContractRead({
         address: '0xE3B3a464ee575E8E25D2508918383b89c832f275', //pUSDC.e
         abi: erc20ABI,
@@ -57,6 +60,17 @@ export default function Susu() {
         watch: true
     })
     
+    */
+    const ptAfricaBalance = useContractRead({
+        address: '0xc3d6a8d76B304E0716b3227C00a83187340DC846', ///pUSDC-HY-T
+        abi: erc20ABI,
+        functionName: 'balanceOf',
+        args:[(`0x${smartWallet?.slice(2)}`)],
+        chainId: 420,
+        watch: true
+    })
+   
+    console.log(ptAfricaBalance.data)
     // Function to be called when the profile modal is closed
     const onClose = async() => {
         console.log('Modal is closed! Do something...');
@@ -106,7 +120,7 @@ export default function Susu() {
                 <div className={styles.saving}>
                     {
                         smartAccountAddress
-                        ? <div>This is Smart Account Balance: {Number(ptAfricaBalance?.data!)} pUSDC.e</div>
+                        ? <div>Your Susu Balance: {formatUnits(ptAfricaBalance?.data!, 6)} pUSDC-HY-T</div>
                         : <div>{'loading'}</div>
                     }
                 </div>

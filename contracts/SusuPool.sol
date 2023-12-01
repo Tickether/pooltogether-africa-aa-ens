@@ -10,7 +10,7 @@ import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 contract SusuPool is Ownable {
     
     //confirm vault before deploy!!!!!!
-    address public ptaUSDC = 0xEF9aFd8b3701198cCac6bf55458C38F61C4b55c4; //ptaUSDC.e
+    address public ptaUSDC = 0xc3d6a8d76B304E0716b3227C00a83187340DC846; //pUSDC-HY-T
     IERC20 ptaVaultToken = IERC20(ptaUSDC);
 
 
