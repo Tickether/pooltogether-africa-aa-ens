@@ -20,4 +20,11 @@ export const erc20ABI = [
         stateMutability: 'nonpayable',
         type: 'function',
     },
+    {
+        inputs: [{ name: "to", type: "address" }, { name: "amount", type: "uint256" }],
+        name: 'transfer',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
 ] as const;

@@ -1,4 +1,3 @@
-
 import { susuPoolABI } from '../abis/susuPoolABI'
 import { BaseError, ContractFunctionRevertedError, encodeFunctionData } from 'viem';
 import { client, publicClient } from './client'
@@ -20,7 +19,9 @@ export const dripSusuPool = async(to: `0x${string}`, amount: bigint) => {
             { hash: hash }
         )
         console.log(transaction.status)
-        return hash!
+        if (transaction.status == 'success') {
+            return hash
+        }
     } catch (err) {
         if (err instanceof BaseError) {
             const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
