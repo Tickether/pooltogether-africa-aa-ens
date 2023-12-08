@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import Pooler from '@/model/pooler'
 import Deposit from '@/model/deposit'
 
-export default async function GetPoolerDeposits(
+export default async function POST(
     req: Request,
 ) {
     const { address } = await req.json()

@@ -40,7 +40,7 @@ export default function Susu() {
     }
     useEffect(()=>{
         doLoading()
-    },[address])
+    },[address, isConnected])
 
     const smartWallet = address ? address! : '0xdEAD000000000000000042069420694206942069'
     const ptAfricaBalance = useContractRead({
