@@ -23,7 +23,7 @@ export default function Susu() {
     const [openProfileModal, setOpenProfiletModal] = useState<boolean>(false) 
     const [openTransactionsModal, setOpenTransactionsModal] = useState<boolean>(false) 
     const [openWithdrawModal, setOpenWithdrawModal] = useState<boolean>(false) 
-
+/*
     const doLoading = async() => {
         try {
 
@@ -41,7 +41,7 @@ export default function Susu() {
     useEffect(()=>{
         doLoading()
     },[address, isConnected])
-
+*/
     const smartWallet = address ? address! : '0xdEAD000000000000000042069420694206942069'
     const ptAfricaBalance = useContractRead({
         address: '0xc3d6a8d76B304E0716b3227C00a83187340DC846', ///pUSDC-HY-T
