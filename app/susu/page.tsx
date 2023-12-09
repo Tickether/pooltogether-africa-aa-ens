@@ -23,25 +23,10 @@ export default function Susu() {
     const [openProfileModal, setOpenProfiletModal] = useState<boolean>(false) 
     const [openTransactionsModal, setOpenTransactionsModal] = useState<boolean>(false) 
     const [openWithdrawModal, setOpenWithdrawModal] = useState<boolean>(false) 
-/*
-    const doLoading = async() => {
-        try {
+    const [susuBalance, setSusuBalance] = useState<string | null>(null) 
 
-            console.log(address)
-            console.log(isConnected)
-            if( !address && !isConnected ) {
-                console.log('loading..')
-            } else {
-                console.log('loaded!')
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    useEffect(()=>{
-        doLoading()
-    },[address, isConnected])
-*/
+    
+
     const smartWallet = address ? address! : '0xdEAD000000000000000042069420694206942069'
     const ptAfricaBalance = useContractRead({
         address: '0xc3d6a8d76B304E0716b3227C00a83187340DC846', ///pUSDC-HY-T
@@ -51,6 +36,11 @@ export default function Susu() {
         watch: true
     })
     console.log(ptAfricaBalance.data)
+    useEffect(()=>{
+        if (ptAfricaBalance.data && typeof ptAfricaBalance.data == 'bigint') {
+            setSusuBalance(formatUnits(ptAfricaBalance.data, 6))
+        }
+    },[ptAfricaBalance.data])
     
     // Function to be called when the profile modal is closed
     const onProfileClose = async() => {
@@ -93,7 +83,7 @@ export default function Susu() {
         <div className={styles.saving}>
             {
                 address
-                ? <div>Your Susu Balance: {Number((ptAfricaBalance?.data!))} pUSDC-HY-T</div>
+                ? <div>Your Susu Balance: {susuBalance!} pUSDC-HY-T</div>
                 : <div>{'loading'}</div>
             }
         </div>
