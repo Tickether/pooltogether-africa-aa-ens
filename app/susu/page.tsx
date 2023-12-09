@@ -93,7 +93,7 @@ export default function Susu() {
         <div className={styles.saving}>
             {
                 address
-                ? <div>Your Susu Balance: {formatUnits((ptAfricaBalance?.data!), 6)} pUSDC-HY-T</div>
+                ? <div>Your Susu Balance: {Number((ptAfricaBalance?.data!))} pUSDC-HY-T</div>
                 : <div>{'loading'}</div>
             }
         </div>
