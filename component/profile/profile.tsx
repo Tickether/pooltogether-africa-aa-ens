@@ -4,6 +4,7 @@ import { Countries } from '@/utils/constants/countries'
 import { useState } from 'react'
 import { normalize } from 'viem/ens'
 import { ZeroDevWeb3Auth } from '@zerodev/web3auth';
+import Image from 'next/image'
 
 interface ProfileProps {
     pooler: Pooler | null
@@ -105,7 +106,12 @@ export default function Profile({pooler, address, setOpenProfiletModal, onProfil
                             onProfileClose()
                         }} 
                     >
-                        close
+                        <Image 
+                            src='close.svg' 
+                            alt='' 
+                            width={36}
+                            height={36}
+                        />
                     </div>
                     {
                         pooler 
@@ -115,7 +121,7 @@ export default function Profile({pooler, address, setOpenProfiletModal, onProfil
                             </div>
                         )
                         : (
-                            <div>
+                            <div className={styles.modal}>
                                 <form action="">
                                     <label htmlFor="firstname">First Name</label>
                                     <input
@@ -181,12 +187,12 @@ export default function Profile({pooler, address, setOpenProfiletModal, onProfil
                                         ))}
                                     </select>
                                 </form>
+                                <div>
+                                    <button onClick={handleNewPooler}>Save Susu Profile</button>
+                                </div>
                             </div>
                         )
                     }
-                    <div className={styles.buttons}>
-                        <button onClick={handleNewPooler}>Save Susu Profile</button>
-                    </div>
                 </div>
             </main>
         </>

@@ -2,7 +2,16 @@
   display: flex;
 }
 
-.wrapper {
-  display: flex;
-}
 
+
+.main button {
+  background-color: rgb(182, 45, 187);
+  cursor: pointer;
+  border-radius: 5px;
+  color: #4C249F;
+  width: 150px;
+  height: 40px;
+  font-weight: bold;
+  border: none;
+}
+/****#35F0D0;*/

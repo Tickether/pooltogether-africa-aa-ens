@@ -15,17 +15,18 @@
   backdrop-filter: blur(0.666px);
 }
 .wrapper {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  color: aliceblue;
-  align-items: flex-end;
-  justify-content: center;
-  background: #212427;
-  width: 550px;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: 50px;
+  background: #DECEFF;
+  border-radius: 25px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  width: 600px;
+  position: relative;
 }
 
+.close{
+  position: absolute;
+  cursor: pointer;
+  padding: 20px;
+  top: 0;
+  right: 0;
+}
