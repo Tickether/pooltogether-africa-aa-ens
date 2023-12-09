@@ -21,7 +21,7 @@ interface SusuProfile {
 }
 
 export default function Profile({pooler, address, setOpenProfiletModal, onProfileClose} : ProfileProps) {
-    const { getBackPooler } = useGetPooler('api/getPooler', address)
+
     const countries = Object.keys(Countries);
     const susuProfileDefaults = {
         firstname: '',
@@ -88,10 +88,11 @@ export default function Profile({pooler, address, setOpenProfiletModal, onProfil
         }
     }// new new profile get email, wallet and formdata
     const handleNewPooler = async(e: any) =>{
-        //e.preventDefault()
+        e.preventDefault()
         const email = await getEmail()
         await postPooler( address!, email, susuProfile.firstname, susuProfile.lastname, susuProfile.phone, susuProfile.susuTag, susuProfile.country )
-        getBackPooler()
+        setOpenProfiletModal(false)
+        onProfileClose()
     }
 
     //update
