@@ -11,28 +11,29 @@ export interface Pooler {
 }
 export const useGetPooler = (url: string, address: string) => {
     const [pooler, setPooler] = useState<Pooler | null>(null)
-    const [loading, setLoading] = useState<boolean | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<any | null>(null)
 
     useEffect (() =>{
         const getPooler = async ()=>{
-            setLoading(true)
-            try {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        address,
+            if (address) {
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            address,
+                        })
                     })
-                })
-                const data = await res.json()
-                setPooler(data)
-            } catch(err){
-                setError(err)
+                    const data = await res.json()
+                    setPooler(data)
+                } catch(err){
+                    setError(err)
+                }
+                setLoading(false)
             }
-            setLoading(false)
         }
         getPooler()
     },[ address ])

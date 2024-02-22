@@ -62,14 +62,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
         const connectionType = user?.linkedAccounts[1].type
         switch (connectionType) {
             case ('email'):
-                return user?.email?.address
-            case ('google_oauth'):
-                return user?.google?.email
-            case ('discord_oauth'):
-                return user?.discord?.email
-            case ('apple_oauth'):
-                return user?.apple?.email
-            
+            return user?.email?.address            
         }
     }
 

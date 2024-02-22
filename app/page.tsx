@@ -8,7 +8,7 @@ export default function Home() {
       <div className='flex flex-col w-full items-center md:gap-40 gap-10'>
         <div className='flex flex-col gap-5 text-center'>
           <h1 className='text-3xl font-bold'>Welcome to the Susu Pool</h1>
-          <p>Join millions of Africans saving at least a dollar a day & winning prizes daily!!!</p>
+          <p>Join millions of Africans saving at least a dollar a day & winning prizes daily 🌊🏆</p>
         </div>
         <div className='flex flex-col max-md:flex-col-reverse w-full items-center md:gap-40 gap-10'>
         <div className='flex gap-10 max-md:flex-col'>

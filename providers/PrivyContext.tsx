@@ -17,12 +17,12 @@ export function PrivyContext ({ children }: Props) {
                 appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID}
                 config={{
                     /* Replace this with your desired login methods */
-                    loginMethods: ['email', 'google', 'apple', 'discord'],
+                    loginMethods: ['email'],
                     /* Replace this with your desired appearance configuration */
                     appearance: {
                         theme: 'light',
-                        accentColor: '#676FFF',
-                        logo: '',
+                        accentColor: '#92278F',
+                        logo: 'https://i.ibb.co/M6M5BHY/Asset-4-33-666x.png',
                         showWalletLoginFirst: false,
 
                     },

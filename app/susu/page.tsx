@@ -38,7 +38,7 @@ export default function Susu () {
                         ?(
                             <>
                                 <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-                                    <Alert>
+                                    <Alert className='w-108'>
                                         <Terminal className="h-4 w-4" />
                                         <AlertTitle>Login First!</AlertTitle>
                                         <AlertDescription>
@@ -63,19 +63,18 @@ export default function Susu () {
                                             <p className='text-lg font-semibold'>Susu Club</p>
                                         </div>
                                         <div className='flex gap-3'>
-                                            {smartAccountAddress && pooler && !loading && (
-                                                <>
-                                                    <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
+                                            {
+                                                pooler && (
                                                     <Withdraw pooler={pooler!} smartAccount={smartAccount!}/>
-                                                    <Logout/>
-                                                </>
-                                            )}
-                                            
+                                                )
+                                            }
+                                            <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
+                                            <Logout/>
                                         </div>
                                     </div>
                                     <div className='flex w-full items-center justify-center'>
                                         {
-                                            !pooler || loading
+                                            !pooler && loading
                                             && (
                                                 <>
                                                     <p>loading...</p>
@@ -115,13 +114,10 @@ export default function Susu () {
                                     <div>
                                         {/** Balances */}
                                         {
-                                            !smartAccountAddress && !pooler && loading && <p>loading...</p>
-                                        }
-                                        {
                                             smartAccountAddress && pooler && !loading && <Balances smartAccountAddress={smartAccountAddress!}/>
                                         }
                                     </div>
-                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress!}/>}
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress!}/> }
                                     
                                 </main>    
                             </>
