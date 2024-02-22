@@ -1,10 +1,11 @@
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            NEXT_PUBLIC_ZERO_DEV_PROJECT_ID: string
+            NEXT_PUBLIC_PRIVY_APP_ID: string
             NEXT_PUBLIC_INFURA_API_KEY: string
-            NEXT_PUBLIC_FLUTTERWAVE_KEY: string
-            NEXT_PUBLIC_FLUTTERWAVE_TEST_KEY: string
+            NEXT_PUBLIC_BICONOMY_BUNDLER_URL: string
+            NEXT_PUBLIC_BICONOMY_PAYMASTER_URL: string
+            NEXT_PUBLIC_PAYSTACK_KEY: string
             NEXT_PUBLIC_PRIVATE_KEY: `0x${string}`
             MONGO: string
         }

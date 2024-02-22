@@ -1,64 +1,53 @@
+
+import { Login } from '@/components/login/Login';
 import Image from 'next/image'
-import styles from './page.module.css'
-import Login from '@/component/login/login'
 
 export default function Home() {
-
   return (
-    <>
-      <div className={styles.background}>
-        <Image
-          src='BG3.svg'
-          alt='Background'
-          layout='fill'
-          objectFit='cover'
-        />
-      </div>
-      <main className={styles.main}>
-        <div className={styles.welcome}>
-          <h1>Welcome to the Susu Pool</h1>
-        </div>
-        <div className={styles.action}>
+    <main className='flex min-h-screen flex-col items-center justify-between p-24'>
+      <div className='flex flex-col w-full items-center md:gap-40 gap-10'>
+        <div className='flex flex-col gap-5 text-center'>
+          <h1 className='text-3xl font-bold'>Welcome to the Susu Pool</h1>
           <p>Join millions of Africans saving at least a dollar a day & winning prizes daily!!!</p>
         </div>
-        <div className={styles.workings}>
-          <div className={styles.working}>
+        <div className='flex flex-col max-md:flex-col-reverse w-full items-center md:gap-40 gap-10'>
+        <div className='flex gap-10 max-md:flex-col'>
+          <div className='flex flex-col text-center'>
             <Image
               src='deposit.svg'
               alt='Deposit Local for Dollars'
               width={250}
               height={250}
             />
-            <h4>Save in Dollars</h4>
-            <p>Deposit Local for a chance to win</p>
+            <h4 className='font-semibold'>Save in Dollars</h4>
+            <p className='text-sm'>Deposit Local for a chance to win</p>
           </div>
-          <div className={styles.working}>
+          <div className='flex flex-col text-center'>
             <Image
               src='winPrizes.svg'
               alt='Win Prizes'
               width={250}
               height={250}
             />
-            <h4>Win Prizes</h4>
-            <p>Yield from deposits fund prizes</p>
+            <h4 className='font-semibold'>Win Prizes</h4>
+            <p className='text-sm'>Yield from deposits fund prizes</p>
           </div>
-          <div className={styles.working}>
+          <div className='flex flex-col text-center'>
             <Image
               src='noLoss.svg'
               alt='No Losses'
               width={250}
               height={250}
             />
-            <h4>No Loss</h4>
-            <p>Withdraw any time</p>
+            <h4 className='font-semibold'>No Loss</h4>
+            <p className='text-sm'>Withdraw any time</p>
           </div>
         </div>
-        
-        <div className={styles.login}>
-          
-          <Login />
+        <div>
+          <Login/>
         </div>
-      </main>
-    </>
-  )
+        </div>
+      </div>
+    </main>
+  );
 }

@@ -6,7 +6,7 @@ import Pooler from '@/model/pooler'
 export async function POST(
     req: Request,
 ) {
-    const { address, email, first, last, phone, ens, country } =  await req.json()
+    const { address, email, first, last, ens, country, phone } =  await req.json()
     try {
         await connectDB()
         const pooler = await Pooler.create({ 
@@ -14,9 +14,9 @@ export async function POST(
             email: email, 
             first: first, 
             last: last, 
-            phone: phone, 
             ens: ens, 
             country: country, 
+            phone: phone,
         })
         return new Response(JSON.stringify(pooler))
     } catch (error) {

@@ -1,123 +1,136 @@
 'use client'
 
 
-import styles from './page.module.css'
-import { Disconnect } from '@/component/disconnect/Disconnect'
-import { useAccount, useBalance } from 'wagmi'
-import { useState } from 'react'
-import { useGetPooler } from '@/hooks/useGetPooler'
-import Deposit from '@/component/deposit/deposit'
-import Profile from '@/component/profile/profile'
-import Transactions from '@/component/transactions/transactions'
-import Withdraw from '@/component/withdraw/withdraw'
-import Image from 'next/image'
+import { Balances } from '@/components/balances/Balances'
+import { Deposit } from '@/components/deposit/Deposit'
+import { Logout } from '@/components/logout/Logout'
+import { Profile } from '@/components/profile/Profile'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Withdraw } from '@/components/withdraw/Withdraw'
+import { useGetPooler } from '@/hooks/pooler/useGetPooler'
+import { useBiconomy } from '@/providers/BiconomyContext'
+import { usePrivy } from '@privy-io/react-auth'
+import { Terminal } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
-export default function Susu() {
-    const { address, isConnected } = useAccount()   
-    const { pooler, loading, getBackPooler } = useGetPooler('api/getPooler/', address!)
-    console.log(pooler?.address)
-
-    const [openDepositModal, setOpenDepositModal] = useState<boolean>(false) 
-    const [openProfileModal, setOpenProfiletModal] = useState<boolean>(false) 
-    const [openTransactionsModal, setOpenTransactionsModal] = useState<boolean>(false) 
-    const [openWithdrawModal, setOpenWithdrawModal] = useState<boolean>(false) 
-    const [poolWon, setPoolWon] = useState<string>('0') 
-
+export default function Susu () {
+    const { ready, authenticated } = usePrivy()
+    const { smartAccount, smartAccountAddress } = useBiconomy()
+    const router = useRouter() 
+    const { pooler, loading, getBackPooler } = useGetPooler('api/getPooler/', smartAccountAddress!)
     
-
-    const smartWallet = address ? address! : '0xdEAD000000000000000042069420694206942069'
-    const susuBalance = useBalance({
-        address: `0x${smartWallet?.slice(2)}`,
-        token: '0xc3d6a8d76B304E0716b3227C00a83187340DC846',
-        watch: true,
-    })
-    const poolBalance = useBalance({
-        address: `0x${smartWallet?.slice(2)}`,
-        token: '0x0Ec780bE0191f8A364FAccdE91D13BE6F96632bE',
-        watch: true,
-    })
-
-    
-    // Function to be called when the profile modal is closed
-    const onProfileClose = async() => {
-        console.log('Modal is closed! Do something...');
-        // reloaad data from db
-        await getBackPooler()
-    };
-    const onDepositClose = async() => {
-        console.log('Modal is closed! Do something...');
-        // reloaad data from db
-    }
-    const onWithdrawClose = async() => {
-        console.log('Modal is closed! Do something...');
-        // reloaad data from db
-    }
-
     return (
         <>
-            <main className={styles.main}>
-                <div className={styles.control}>
-                    <Disconnect />
-                    <div className={styles.panel}>                    
-                        <button onClick={()=> setOpenProfiletModal(true)}>Profile</button>
-                        <button disabled={!pooler} onClick={()=> setOpenTransactionsModal(true)}>Transactions</button>
-                        <button disabled={!pooler} onClick={()=> setOpenWithdrawModal(true)}>Withdraw</button>
-                    </div>
-                </div>
-                <div className={styles.welcome}>
+            {
+                !ready 
+                ?(
+                    <>
+                        <main className='flex min-h-screen flex-col items-center justify-between p-24'>
+                            <p>loading....</p>
+                        </main>
+                    </>
+                )
+                :(
+                    <>
                     {
-                    address!
-                    ? <><h2>Hi 👋🏾</h2>{ pooler ? <p><span>{pooler?.ens}</span>.pooltogether.africa</p> : <><p>⚠️Setup your profile & make deposits🚧</p></>}</>
-                    : <p>loading</p>
+                        !authenticated
+                        ?(
+                            <>
+                                <main className='flex min-h-screen flex-col items-center justify-between p-24'>
+                                    <Alert>
+                                        <Terminal className="h-4 w-4" />
+                                        <AlertTitle>Login First!</AlertTitle>
+                                        <AlertDescription>
+                                            You cannot view the Susu account without being Logged in.
+                                        </AlertDescription>
+                                    </Alert>
+                                    <Button
+                                        onClick={()=>{
+                                            router.push('/')
+                                        }}
+                                    >
+                                        Go to Home
+                                    </Button>
+                                </main>
+                            </>
+                        )
+                        :(
+                            <>
+                                <main className='flex min-h-screen flex-col items-center gap-20 p-24 max-md:p-6'>
+                                    <div className='flex w-full items-center justify-between'>
+                                        <div>
+                                            <p className='text-lg font-semibold'>Susu Club</p>
+                                        </div>
+                                        <div className='flex gap-3'>
+                                            {smartAccountAddress && pooler && !loading && (
+                                                <>
+                                                    <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
+                                                    <Withdraw pooler={pooler!} smartAccount={smartAccount!}/>
+                                                    <Logout/>
+                                                </>
+                                            )}
+                                            
+                                        </div>
+                                    </div>
+                                    <div className='flex w-full items-center justify-center'>
+                                        {
+                                            !pooler || loading
+                                            && (
+                                                <>
+                                                    <p>loading...</p>
+                                                </>
+                                            )
+                                        }
+                                        {
+                                            !pooler && !loading
+                                            && (
+                                                <>
+                                                    <Alert className='w-108'>
+                                                        <Terminal className="h-4 w-4" />
+                                                        <AlertTitle>Create a Profile!</AlertTitle>
+                                                        <AlertDescription>
+                                                            ⚠️Setup your profile & make deposits🚧
+                                                        </AlertDescription>
+                                                    </Alert>
+                                                </>
+                                            )
+                                        }
+                                        {
+                                            pooler && !loading
+                                            && (
+                                                <>
+                                                    <Alert className='w-108'>
+                                                        <Terminal className="h-4 w-4" />
+                                                        <AlertTitle>Hi 👋🏄 <span className='italic font-semibold'>{pooler?.ens}</span>.susu.pool</AlertTitle>
+                                                        <AlertDescription>
+                                                            🥳 You are ready to make deposits. Happy Pooling 🙌🏊
+                                                        </AlertDescription>
+                                                    </Alert>
+                                                    <h2></h2> 
+                                                </>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        {/** Balances */}
+                                        {
+                                            !smartAccountAddress && !pooler && loading && <p>loading...</p>
+                                        }
+                                        {
+                                            smartAccountAddress && pooler && !loading && <Balances smartAccountAddress={smartAccountAddress!}/>
+                                        }
+                                    </div>
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress!}/>}
+                                    
+                                </main>    
+                            </>
+                        )
                     }
-                </div>
-                <div className={styles.susuing}>
-                    {
-                        address
-                        ? <div className={styles.balance}> <p>Your Susu Balance:</p> <span>$USD {susuBalance.data?.formatted}</span> </div>
-                        : <div>{'loading'}</div>
-                    }
-                </div>
-                <div className={styles.boost}>
-                    {
-                        address
-                        ? <div className={styles.balance}><p>Winnings Boost Balance:</p> <span>$USD {0}</span> </div>
-                        : <div>{'loading'}</div>
-                    }
-                </div>
-                <div className={styles.winnings}>
-                    {
-                        address
-                        ? <div className={styles.balance}><p>Your Winnings Balance:</p> <span>$POOL {poolBalance.data?.formatted}</span> </div>
-                        : <div>{'loading'}</div>
-                    }
-                </div>
-                <div className={styles.won}>
-                    {
-                        address
-                        ? <div className={styles.balance}><p>Total Winnings Balance:</p> <span> $POOL {poolWon}</span></div>
-                        : <div>{'loading'}</div>
-                    }
-                </div>
-                <div className={styles.deposit}>
-                    <button disabled={!pooler} onClick={()=> setOpenDepositModal(true)}>Deposit to Susu</button>
-                </div>
-                {openDepositModal && <Deposit pooler={pooler!} address={address!} setOpenDepositModal={setOpenDepositModal} onDepositClose={onDepositClose}/>}
-                {openProfileModal && <Profile pooler={pooler} address={address!} setOpenProfiletModal={setOpenProfiletModal} onProfileClose={onProfileClose}/>}
-                {openTransactionsModal && <Transactions pooler={pooler!} setOpenTransactionsModal={setOpenTransactionsModal} />}
-                {openWithdrawModal && <Withdraw pooler={pooler!} setOpenWithdrawModal={setOpenWithdrawModal} onWithdrawClose={onWithdrawClose}/>}
-            </main>
+                    </>
+                )
+            }
         </>
     )
 }
 
-/*
-            <div className={styles.background}>
-                <Image
-                    src='BG3.svg'
-                    alt='Background'
-                    layout='fill'
-                    objectFit='cover'
-                />
-            </div>
-*/

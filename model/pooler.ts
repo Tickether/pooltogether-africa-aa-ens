@@ -13,17 +13,10 @@ const PoolerSchema = new mongoose.Schema({
     },
     first: {
         type: String,
-        unique: true,
         required: true,
     },
     last: {
         type: String,
-        unique: true,
-        required: true,
-    },
-    phone: {
-        type: String,
-        unique: true,
         required: true,
     },
     ens: {
@@ -36,13 +29,12 @@ const PoolerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    deposits: {
-        type: [String]
+    phone: {
+        type: String,
+        unique: true,
+        required: true,
     },
-    withdrawals: {
-        type: [String]
-    },
-
+    
 })
 
 const Pooler = mongoose.models.Pooler || mongoose.model('Pooler', PoolerSchema)
