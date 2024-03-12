@@ -10,7 +10,6 @@ const DepositSchema = new mongoose.Schema(
         txn: {
             type: String,
             unique: true,
-            required: true,
         },
         ref: {
             type: String,
@@ -32,6 +31,11 @@ const DepositSchema = new mongoose.Schema(
         rate: {
             type: Number,
             required: true,
+        },
+        status: {
+            type: String,
+            required: true,
+            enum: ['pending', 'success']
         },
     },
     {

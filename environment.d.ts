@@ -1,3 +1,5 @@
+import { string } from "zod"
+
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
@@ -7,6 +9,7 @@ declare global {
             NEXT_PUBLIC_BICONOMY_PAYMASTER_URL: string
             NEXT_PUBLIC_PAYSTACK_KEY: string
             NEXT_PUBLIC_PRIVATE_KEY: `0x${string}`
+            PAYSTACK_SECRET_KEY: string
             MONGO: string
         }
     }

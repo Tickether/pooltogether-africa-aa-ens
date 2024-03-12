@@ -1,16 +1,17 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import Withdraw from '@/model/withdraw'
 import connectDB from '@/utils/db/mongodb'
-import Deposit from '@/model/deposit'
+
 
 
 export  async function POST(
     req: Request,
 ) {
-    const { address, txn, ref, prizeAmount, localAmount, currency, rate , status} = await req.json()
+    const { address, txn, ref, prizeAmount, localAmount, currency, rate, status } = await req.json()
 
     try {
         await connectDB()
-        const deposit = await Deposit.create({ 
+        const withdraw = await Withdraw.create({ 
             address: address, 
             txn: txn,
             ref: ref,
@@ -20,7 +21,7 @@ export  async function POST(
             rate: rate,
             status: status
         })
-        return new Response(JSON.stringify(deposit))
+        return new Response(JSON.stringify(withdraw))
     } catch (error) {
         return new Response(JSON.stringify(error))
     }

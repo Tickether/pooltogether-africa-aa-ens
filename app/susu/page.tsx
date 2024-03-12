@@ -5,13 +5,17 @@ import { Balances } from '@/components/balances/Balances'
 import { Deposit } from '@/components/deposit/Deposit'
 import { Logout } from '@/components/logout/Logout'
 import { Profile } from '@/components/profile/Profile'
+import { Transactions } from '@/components/transactions/Transactions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 import { Withdraw } from '@/components/withdraw/Withdraw'
 import { useGetPooler } from '@/hooks/pooler/useGetPooler'
+import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
 import { useBiconomy } from '@/providers/BiconomyContext'
 import { usePrivy } from '@privy-io/react-auth'
 import { Terminal } from 'lucide-react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 export default function Susu () {
@@ -19,6 +23,7 @@ export default function Susu () {
     const { smartAccount, smartAccountAddress } = useBiconomy()
     const router = useRouter() 
     const { pooler, loading, getBackPooler } = useGetPooler('api/getPooler/', smartAccountAddress!)
+    const { transactions, getBackTransactions } = useGetTransactions('api/getTransactions/', smartAccountAddress!)
     
     return (
         <>
@@ -57,15 +62,21 @@ export default function Susu () {
                         )
                         :(
                             <>
-                                <main className='flex min-h-screen flex-col items-center gap-20 p-24 max-md:p-6'>
+                                <main className='flex min-h-screen flex-col items-center gap-8 p-24 max-md:p-6'>
                                     <div className='flex w-full items-center justify-between'>
-                                        <div>
+                                        <div className='flex gap-1'>
+                                            <Image
+                                                src='/logo.png'
+                                                alt=''
+                                                width={30}
+                                                height={30}
+                                            />
                                             <p className='text-lg font-semibold'>Susu Club</p>
                                         </div>
                                         <div className='flex gap-3'>
                                             {
                                                 pooler && (
-                                                    <Withdraw pooler={pooler!} smartAccount={smartAccount!}/>
+                                                    <Withdraw pooler={pooler!} smartAccount={smartAccount!} smartAccountAddress={smartAccountAddress!} getBackTransactions={getBackTransactions}/>
                                                 )
                                             }
                                             <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
@@ -117,8 +128,8 @@ export default function Susu () {
                                             smartAccountAddress && pooler && !loading && <Balances smartAccountAddress={smartAccountAddress!}/>
                                         }
                                     </div>
-                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress!}/> }
-                                    
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress!} getBackTransactions={getBackTransactions}/>  }
+                                    {smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
                                 </main>    
                             </>
                         )

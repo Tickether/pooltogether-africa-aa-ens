@@ -19,20 +19,23 @@ import { Countries, Country } from '@/utils/constants/countries'
 import { useState } from 'react'
 import { usePaystackPayment } from 'react-paystack'
 import { usePostDeposit } from '@/hooks/deposit/usePostDeposit'
+import { useUpdateDeposit } from '@/hooks/deposit/useUpdateDeposit'
 import { dripSusuPool } from '@/utils/deposit/useDripSusuPool'
 import { parseUnits } from 'viem'
 import { PaystackProps } from 'react-paystack/dist/types'
-import { channel } from 'diagnostics_channel'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
+import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
 
 interface DepositProps {
     pooler: Pooler
     smartAccountAddress : string
+    getBackTransactions : () => void
 }
 
-export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
+export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : DepositProps) {
     const { loading, postDeposit } = usePostDeposit()
+    const { updateDeposit } = useUpdateDeposit()
 
     const country : Country = ( Countries as any )[pooler.country]
     console.log(country)
@@ -62,7 +65,6 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
             setAmountLocal(inputValue === ''? '' : String(localRate.toFixed(2)))
         }
     }
-
     const config : PaystackProps = {
         reference: `${country.code}-${(new Date()).getTime().toString()}`,
         email: pooler.email,
@@ -78,8 +80,9 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
         const txnHash = await dripSusuPool(`0x${smartAccountAddress!.slice(2)}`, amountParsed!)
         //save offchain depo info
         if (txnHash) {
-            await postDeposit( smartAccountAddress!, txnHash!, ref, amountDollar!, amountLocal!, country.code, country.$rate )
+            await updateDeposit(ref, txnHash, 'success')
         }
+        await getBackTransactions()
     }
     interface referenceTypes {
         reference: string
@@ -87,8 +90,10 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const onSuccess = (reference: referenceTypes) => {
         // Implementation for whatever you want to do with reference and after success call.
         console.log('reference', reference);
-       
+        postDeposit( smartAccountAddress!, '', reference.reference, amountDollar!, amountLocal!, country.code, country.$rate, 'pending' )
+        getBackTransactions()
         handleNewDeposit(reference.reference)
+
        
         console.log('bomb');
     };
@@ -103,7 +108,6 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const doLcalPay = () => {
         initPaystackPayment({onSuccess, onClose})
     }
-    
 
     return (
         <Drawer>

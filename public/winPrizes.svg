@@ -1,16 +1,15 @@
-<svg width="340" height="265" viewBox="0 0 340 265" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="340" height="265" rx="24" fill="#21064E"/>
-<line x1="115.138" y1="84.7245" x2="228.275" y2="197.862" stroke="white" stroke-width="2"/>
-<line x1="113.724" y1="197.861" x2="226.861" y2="84.7242" stroke="white" stroke-width="2"/>
-<line x1="171" y1="52" x2="171" y2="212" stroke="white" stroke-width="2"/>
-<line x1="90" y1="131" x2="250" y2="131" stroke="white" stroke-width="2"/>
-<circle cx="171" cy="132" r="12" transform="rotate(90 171 132)" fill="#9B6AFF" stroke="#21064E" stroke-width="8"/>
-<circle cx="228" cy="75" r="12" transform="rotate(-180 228 75)" fill="#35F0D0" stroke="#21064E" stroke-width="8"/>
-<circle cx="171" cy="51" r="12" transform="rotate(-180 171 51)" fill="#F4B951" stroke="#21064E" stroke-width="8"/>
-<circle cx="171" cy="212" r="12" transform="rotate(-180 171 212)" fill="#FFB636" stroke="#21064E" stroke-width="8"/>
-<circle cx="114" cy="75" r="12" transform="rotate(-180 114 75)" fill="#35F0D0" stroke="#21064E" stroke-width="8"/>
-<circle cx="90" cy="131" r="12" transform="rotate(-180 90 131)" fill="#FFB636" stroke="#21064E" stroke-width="8"/>
-<circle cx="252" cy="131" r="12" transform="rotate(-180 252 131)" fill="#FFB636" stroke="#21064E" stroke-width="8"/>
-<circle cx="228" cy="189" r="12" transform="rotate(-180 228 189)" fill="#35F0D0" stroke="#21064E" stroke-width="8"/>
-<circle cx="114" cy="189" r="12" transform="rotate(-180 114 189)" fill="#35F0D0" stroke="#21064E" stroke-width="8"/>
+<svg width="137" height="161" viewBox="0 0 137 161" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_f_28_165)">
+<rect x="50" y="94.9437" width="32" height="16" rx="8" fill="#FAFF0C"/>
+</g>
+<path d="M57.1301 50.5706L59.7817 39.6357L62.4332 50.5706C66.6157 67.8188 80.0827 81.2858 97.3309 85.4682L108.266 88.1198L97.3309 90.7713C80.0827 94.9537 66.6157 108.421 62.4332 125.669L59.7817 136.604L57.1301 125.669C52.9477 108.421 39.4807 94.9537 22.2325 90.7713L11.2976 88.1198L22.2325 85.4682C39.4807 81.2858 52.9477 67.8188 57.1301 50.5706Z" fill="#F1F1F1" stroke="white" stroke-width="1.55422"/>
+<path d="M88.9676 47.2395C99.6654 43.7428 108.067 35.3414 111.563 24.6436C115.06 35.3414 123.461 43.7428 134.159 47.2395C123.461 50.7361 115.06 59.1375 111.563 69.8353C108.067 59.1375 99.6654 50.7361 88.9676 47.2395Z" fill="#F1F1F1" stroke="white" stroke-width="1.55422"/>
+<path d="M14.2581 14.5352C19.7468 12.4548 24.0886 8.11301 26.169 2.62427C28.2494 8.11301 32.5912 12.4548 38.08 14.5352C32.5912 16.6156 28.2494 20.9574 26.169 26.4461C24.0886 20.9574 19.7468 16.6156 14.2581 14.5352Z" fill="#F1F1F1" stroke="white" stroke-width="1.55422"/>
+<defs>
+<filter id="filter0_f_28_165" x="0" y="44.9437" width="132" height="116" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="25" result="effect1_foregroundBlur_28_165"/>
+</filter>
+</defs>
 </svg>

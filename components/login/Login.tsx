@@ -1,11 +1,11 @@
 'use client'
 
 
-import { useBiconomy } from '@/providers/BiconomyContext';
 import { usePrivy } from '@privy-io/react-auth';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 export function Login() {
     const router = useRouter()
@@ -30,5 +30,17 @@ export function Login() {
         }
     }, [authenticated, router])
 
-    return <Button disabled={!ready} onClick={Login}>Check Susu</Button>;
+    return (
+        <Button onClick={Login} className='w-48 rounded-full bg-blue-600 cursor-pointer z-20'>
+            <div className='flex w-full justify-between'>
+              <p>Join Susu</p>
+              <Image
+                src='./LeftArrow.svg'
+                alt=''
+                width={20}
+                height={20}
+              />
+            </div>
+        </Button>
+    );
 }

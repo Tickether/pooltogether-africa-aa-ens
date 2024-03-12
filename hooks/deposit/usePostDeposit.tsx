@@ -1,10 +1,38 @@
 'use client'
 
+import { toast } from '@/components/ui/use-toast';
 import { useState } from 'react'
 
 export const usePostDeposit = () => {
 
     const [loading, setLoading] = useState<boolean | null>(null)
+
+    async function giveMeSuccessToast(): Promise<void> {
+        return new Promise((resolve) => {
+            toast({
+                title: 'Your Payment is Successful..',
+                description: 'Your USD will arive shortly',
+            });
+            // Set a timeout of six seconds (6000 milliseconds)
+            setTimeout(() => {
+                resolve();
+            }, 3666);
+        });
+    }
+    async function giveMeFailedToast(): Promise<void> {
+        return new Promise((resolve) => {
+            toast({
+                title: 'Deposit Failed, Try again!',
+                description: 'Something went wrong, try again, check faqs, or contact support!!',
+                variant: 'destructive'
+            });
+    
+            // Set a timeout of six seconds (6000 milliseconds)
+            setTimeout(() => {
+                resolve();
+            }, 3666);
+        });
+    }
 
     const postDeposit = async (
         address: string, 
@@ -13,7 +41,8 @@ export const usePostDeposit = () => {
         prizeAmount: string, 
         localAmount: string, 
         currency: string, 
-        rate: string
+        rate: string, 
+        status: string, 
         
     ) => {
         setLoading(true)
@@ -31,12 +60,15 @@ export const usePostDeposit = () => {
                     localAmount, 
                     currency,  
                     rate,
+                    status
                 })
             }) 
             const data =  await res.json()
-        console.log(data)
+            console.log(data)
+            giveMeSuccessToast()
         } catch (error) {
             console.log(error)
+            giveMeFailedToast()
         }
         setLoading(false)
     }

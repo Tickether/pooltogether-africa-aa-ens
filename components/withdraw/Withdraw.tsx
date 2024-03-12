@@ -20,13 +20,20 @@ import { useState } from 'react'
 import { Countries, Country } from '@/utils/constants/countries'
 import { encodeFunctionData, erc20Abi, parseUnits } from 'viem'
 import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
+import { DripSusuPool, USDTOKEN } from '@/utils/constants/addresses'
+import { usePostWithdraw } from '@/hooks/withdraw/usePostWithdraw'
+import { useUpdateWithdraw } from '@/hooks/withdraw/useUpdateWithdraw'
 
 interface WithdrawProps {
     pooler: Pooler
     smartAccount: BiconomySmartAccountV2
+    smartAccountAddress : string
+    getBackTransactions : () => void
 }
 
-export function Withdraw ({ pooler, smartAccount } : WithdrawProps) {
+export function Withdraw ({ pooler, smartAccount, smartAccountAddress, getBackTransactions } : WithdrawProps) {
+    const { loading, postWithdraw } = usePostWithdraw()
+    const { updateWithdraw } = useUpdateWithdraw()
     
     const country : Country = ( Countries as any )[pooler.country]
 
@@ -58,15 +65,15 @@ export function Withdraw ({ pooler, smartAccount } : WithdrawProps) {
     const calldata = amountDollar ? encodeFunctionData({
         abi: erc20Abi,
         functionName: 'transfer',
-        args: [ ('0x9d7C4Ea7B93699EC0FE1b28776082E297A015734'), (parseUnits(amountDollar!, 6)) ]
+        args: [ (DripSusuPool), (parseUnits(amountDollar!, 6)) ]
     }) : '0xdEAD000000000000000042069420694206942069'
 
     const tx = {
-        to: '0x11DC650f09138b3F569A75FB9abAC934A1C25e4d',
+        to: USDTOKEN,
         data: calldata,
     };
 
-    const withdrawFromAAtoLocal = async () => {
+    const withdrawFromAAtoVault = async () => {
         // Send the transaction and get the transaction hash
         const userOpResponse = await smartAccount.sendTransaction(tx, {
             paymasterServiceData: {mode: PaymasterMode.SPONSORED},
@@ -75,14 +82,18 @@ export function Withdraw ({ pooler, smartAccount } : WithdrawProps) {
         console.log("Transaction Hash", transactionHash);
         const userOpReceipt  = await userOpResponse.wait();
         if(userOpReceipt.success == 'true') { 
+            postWithdraw( smartAccountAddress!, transactionHash!, '', amountDollar!, amountLocal!, country.code, country.$rate, 'pending' )
+            getBackTransactions()
             console.log("UserOp receipt", userOpReceipt)
             console.log("Transaction receipt", userOpReceipt.receipt)
-            toLocal()
+            toLocal(transactionHash!)
         }
     }
-    const toLocal = () => {
+    const toLocal = (txn: string) => {
         //paystack transfer from balances to user prefered walet
         // send info to  db
+        updateWithdraw(txn, '', 'success')
+
     }
     
 
@@ -153,7 +164,7 @@ export function Withdraw ({ pooler, smartAccount } : WithdrawProps) {
                 </div>
                 <DrawerFooter>
                     <DrawerClose asChild>
-                        <Button>Submit</Button>
+                        <Button onClick={withdrawFromAAtoVault}>Submit</Button>
                     </DrawerClose>
                 </DrawerFooter>
                 </div>

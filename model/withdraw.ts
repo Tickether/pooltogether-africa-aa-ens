@@ -15,7 +15,6 @@ const WithdrawSchema = new mongoose.Schema(
         ref: {
             type: String,
             unique: true,
-            required: true,
         },
         prizeAmount: {
             type: Number,
@@ -32,6 +31,11 @@ const WithdrawSchema = new mongoose.Schema(
         rate: {
             type: Number,
             required: true,
+        },
+        status: {
+            type: String,
+            required: true,
+            enum: ['pending', 'success']
         },
     },
     {

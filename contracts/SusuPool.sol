@@ -13,7 +13,7 @@ contract SusuPool is Ownable {
     {}
     
     //confirm vault before deploy!!!!!!
-    address public ptaUSDC = 0x2891d69786650260B9F99A7b333058FCC5418Df0; //pUSDC-HY-T
+    address public ptaUSDC = 0xA723Cf5D90c1A472c7de7285e5bD314AeA107EDe; //pUSDC-LY-T ARB SEPOLIA
     IERC20 ptaVaultToken = IERC20(ptaUSDC);
 
 
