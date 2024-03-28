@@ -1,5 +1,6 @@
 import { Login } from '@/components/login/Login';
 import Image from 'next/image'
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -73,7 +74,7 @@ export default function Home() {
             </div>
             <div>
               <p className='text-center'>Win Prizes</p>
-              <p className='text-center text-sm text-gray-400'>with your local cedis</p>
+              <p className='text-center text-sm text-gray-400'>for saving dollars</p>
             </div>
           </div>
         </div>
@@ -91,17 +92,28 @@ export default function Home() {
           </div>
 
           <div className='flex gap-1 items-center'>
-            <Image 
-              className='max-md:h-4 max-md:w-4' 
-              src='./twitter.svg'
-              alt=''
-              width={20}
-              height={20}
-            />            
-            <p className='underline max-md:text-sm'>susuclub</p>
+            <Link href='https://twitter.com/susudotclub' target='_blank'>
+              <Image 
+                className='max-md:h-4 max-md:w-4' 
+                src='./twitter.svg'
+                alt=''
+                width={20}
+                height={20}
+              /> 
+            </Link>
+            <Link href='https://warpcast.com/susuclub' target='_blank'>
+              <Image 
+                className='max-md:h-4 max-md:w-4' 
+                src='/farcaster.png'
+                alt=''
+                width={20}
+                height={20}
+              /> 
+            </Link>
+            {/** <p className='underline max-md:text-sm'>susuclub</p> */}
           </div>
 
-          <div className='flex gap-1  items-center'>
+          <div className='flex gap-1 items-center'>
             <Image 
               className='max-md:h-4 max-md:w-4' 
               src='./ghana.svg'

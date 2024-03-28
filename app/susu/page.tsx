@@ -64,14 +64,14 @@ export default function Susu () {
                             <>
                                 <main className='flex min-h-screen flex-col items-center gap-8 p-24 max-md:p-6'>
                                     <div className='flex w-full items-center justify-between'>
-                                        <div className='flex gap-1'>
+                                        <div className='flex'>
                                             <Image
-                                                src='/logo.png'
+                                                src=''
                                                 alt=''
-                                                width={30}
-                                                height={30}
+                                                width={0}
+                                                height={0}
                                             />
-                                            <p className='text-lg font-semibold'>Susu Club</p>
+                                            <p className='text-3xl font-bold'>susu club</p>
                                         </div>
                                         <div className='flex gap-3'>
                                             {

@@ -12,8 +12,8 @@ import { Toaster } from '@/components/ui/toaster'
 
 
 export const metadata: Metadata = {
-  title: 'Susu Club',
-  description: 'Join millions of Africans saving a least a dollar a day',
+  title: 'susu club',
+  description: 'Join millions saving a least a dollar a day',
 };
 
 const satoshi = localFont({

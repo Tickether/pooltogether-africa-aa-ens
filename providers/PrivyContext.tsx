@@ -21,8 +21,8 @@ export function PrivyContext ({ children }: Props) {
                     /* Replace this with your desired appearance configuration */
                     appearance: {
                         theme: 'light',
-                        accentColor: '#92278F',
-                        logo: 'https://i.ibb.co/M6M5BHY/Asset-4-33-666x.png',
+                        accentColor: '#0C3FFF',
+                        logo: 'https://i.ibb.co/mttPXst/susuclub.png',
                         showWalletLoginFirst: false,
 
                     },
