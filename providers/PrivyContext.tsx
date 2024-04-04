@@ -2,6 +2,7 @@
 
 
 import { PrivyProvider } from '@privy-io/react-auth'
+import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
 
 
@@ -11,10 +12,13 @@ type Props = {
 
 export function PrivyContext ({ children }: Props) {
 
+    const router = useRouter()
+
     return (
         <>
             <PrivyProvider
                 appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID}
+                onSuccess={() => router.push('/susu')}
                 config={{
                     /* Replace this with your desired login methods */
                     loginMethods: ['email'],

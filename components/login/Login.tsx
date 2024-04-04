@@ -23,13 +23,8 @@ export function Login() {
             console.log(error)
         }
     }
-/*
-    useEffect(() => {
-        if (authenticated) {
-            router.push('/susu')
-        }
-    }, [authenticated, router])
-*/
+
+    
     return (
         <Button onClick={Login} className='w-48 rounded-full bg-blue-600 cursor-pointer z-20 hover:bg-green-400'>
             <div className='flex w-full justify-between'>
