@@ -30,7 +30,7 @@ export default function Home() {
             height={600}
           />
           <p className='text-center z-20'>Introducing Susu Club</p>
-          <p className='font-bold text-center text-6xl z-20'>A new <span className='text-blue-700 bg-blue-100 rounded-lg px-2 pb-2'>way</span> to <span className='bg-green-300 rounded-lg px-2 pb-2'>save</span> in <span className='text-blue-700'>dollars</span></p>
+          <p className='font-bold text-center text-6xl z-20'>A new <span className='text-blue-700 bg-blue-100 rounded-lg px-2 pb-2'>way</span> to <span className='bg-green-400 rounded-lg px-2 pb-2'>save</span> in <span className='text-blue-700'>dollars</span></p>
           <Login/>
         </div>
 
@@ -121,7 +121,7 @@ export default function Home() {
               width={20}
               height={20}
             />
-            <p className='text-xs max-md:text-[7px]'>Trusted by Ghana, Built for Africa</p>
+            <p className='text-xs max-md:text-[7px]'>Built in Ghana, Trusted Globally</p>
           </div>
         </div>
       </div>
