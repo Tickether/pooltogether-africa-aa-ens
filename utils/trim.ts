@@ -18,3 +18,24 @@ export function trimDecimals(amount: string | number) {
     // If no dot or less than two digits after dot, return the original string
     return amount;
 }
+
+
+export function trimRef(
+    addr?: string,
+    frontSlice = 9,
+    backSlice = 6
+  ): string {
+    if (!addr) return '';
+    if (addr.length < frontSlice + backSlice) return addr;
+    return addr.slice(0, frontSlice) + '...' + addr.slice(-backSlice);
+  }
+  
+  export function shortenTitle(title : string) {
+    // Remove leading and trailing whitespaces
+    title = title.trim();
+  
+    // Replace spaces with hyphens
+    title = title.replace(/\s+/g, '-').toLowerCase()
+  
+    return title;
+  }

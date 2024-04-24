@@ -14,12 +14,11 @@
 */
    
 export interface Country {
+    name: string
     currency: string
-    code: string
-    $rate: string
 }
 
-
+/*
 const Uganda: Country = {
     currency: 'Ugandan Shillings',
     code: 'UGX',
@@ -30,11 +29,12 @@ const Morocco: Country = {
     code: 'MAD',
     $rate: '10.50'
 }
+*/
 const Ghana: Country = {
-    currency: 'Ghanaian Cedis',
-    code: 'GHS',
-    $rate: '12.32'
+    name: 'Ghana',
+    currency: 'GHS',
 }
+/*
 const Ethiopia: Country = {
     currency: 'Ethiopian Birrs',
     code: 'ETB',
@@ -45,35 +45,35 @@ const Tanzania: Country = {
     code: 'TZS',
     $rate: '2666.50'
 }
-const Egypt: Country = {
+*/
+/*
+const Zambia: Country = {
     currency: 'Egyptian Pounds',
     code: 'EGP',
     $rate: '52.50'
 }
+*/
 const Kenya: Country = {
-    currency: 'Kenyan Shillings',
-    code: 'KES',
-    $rate: '158.50'
+    name: 'Kenya',
+    currency: 'KES',
 }
 const SouthAfrica: Country = {
-    currency: 'South African Rand',
-    code: 'ZAR',
-    $rate: '20.50'
+    name: 'South Africa',
+    currency: 'ZAR',
 }
 const Nigeria: Country = {
-    currency: 'Nigerian Nairas',
-    code: 'NGN',
-    $rate: '1155.50'
+    name: 'Nigeria',
+    currency: 'NGN',
 }
 
 
 export const Countries = {
-    Uganda: Uganda,
-    Morocco: Morocco,
+    //Uganda: Uganda,
+    //Morocco: Morocco,
     Ghana: Ghana,
-    Ethiopia: Ethiopia,
-    Tanzania : Tanzania,
-    Egypt: Egypt, 
+    //Ethiopia: Ethiopia,
+    //Tanzania : Tanzania,
+    //Egypt: Egypt, 
     Kenya: Kenya,
     SouthAfrica: SouthAfrica,
     Nigeria: Nigeria,

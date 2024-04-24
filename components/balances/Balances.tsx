@@ -5,9 +5,9 @@ import { Separator } from '../ui/separator'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { formatUnits } from 'viem'
-import { arbitrumSepolia } from 'viem/chains'
-import { trimDecimals } from '@/utils/trimDecimals'
-import { USDTOKEN } from '@/utils/constants/addresses'
+import { optimism } from 'viem/chains'
+import { trimDecimals } from '@/utils/trim'
+import { przUSDC } from '@/utils/constants/addresses'
 
 interface BalancesProp{
     smartAccountAddress: string
@@ -19,8 +19,8 @@ export function Balances ({ smartAccountAddress }: BalancesProp) {
 
     const {data: balance, queryKey} = useBalance({
         address: `0x${smartAccountAddress.slice(2)}`,
-        token: USDTOKEN,
-        chainId: arbitrumSepolia.id
+        token: przUSDC,
+        chainId: optimism.id
     })
 
     useEffect(() => { 

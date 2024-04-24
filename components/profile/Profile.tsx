@@ -42,7 +42,10 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     
     console.log(smartAccountAddress)
 
-    const countries = Object.keys(Countries);
+    //const countries = Object.keys(Countries);
+
+    const countries: string[] = Object.values(Countries).map(country => country.name);
+
     
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),

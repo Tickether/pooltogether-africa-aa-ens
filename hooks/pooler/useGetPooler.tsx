@@ -17,6 +17,7 @@ export const useGetPooler = (url: string, address: string) => {
     useEffect (() =>{
         const getPooler = async ()=>{
             if (address) {
+                setLoading(true);
                 try {
                     const res = await fetch(url, {
                         method: 'POST',

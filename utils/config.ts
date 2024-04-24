@@ -1,15 +1,15 @@
 import { createConfig, http, cookieStorage, createStorage } from 'wagmi'
-import { arbitrumSepolia } from 'wagmi/chains'
+import { optimism } from 'wagmi/chains'
 
 //export const chains=
 export const config = createConfig({
-  chains: [ arbitrumSepolia ],
+  chains: [ optimism ],
   ssr: true,
   storage: createStorage({  
     storage: cookieStorage, 
   }),
   transports: {
-    [arbitrumSepolia.id]: http(),
+    [optimism.id]: http(),
   },
 })
 

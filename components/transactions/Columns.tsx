@@ -1,4 +1,5 @@
 import { Transaction } from '@/hooks/transactions/useGetTransactions';
+import { trimRef } from '@/utils/trim';
 import { ColumnDef } from '@tanstack/react-table';
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -8,11 +9,19 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     {
         accessorKey: 'ref',
-        header: 'Off-chain'
+        header: 'Off-chain',
+        cell: ({row}) => {
+            const refHash = (row.getValue('ref'))
+            return <div>{trimRef(refHash as string)}</div>
+        },
     },
     {
         accessorKey: 'txn',
-        header: 'On-chain'
+        header: 'On-chain',
+        cell: ({row}) => {
+            const txnHash = (row.getValue('txn'))
+            return <div>{trimRef(txnHash as string)}</div>
+        },
     },
     {
         accessorKey: 'currency',

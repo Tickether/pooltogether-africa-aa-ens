@@ -24,9 +24,10 @@ export default function Susu () {
     const router = useRouter() 
     const { pooler, loading, getBackPooler } = useGetPooler('api/getPooler/', smartAccountAddress!)
     const { transactions, getBackTransactions } = useGetTransactions('api/getTransactions/', smartAccountAddress!)
+
     
     return (
-        <>
+        <main className='z-0'>
             {
                 !ready 
                 ?(
@@ -76,7 +77,7 @@ export default function Susu () {
                                         <div className='flex gap-3'>
                                             {
                                                 pooler && (
-                                                    <Withdraw pooler={pooler!} smartAccount={smartAccount!} smartAccountAddress={smartAccountAddress!} getBackTransactions={getBackTransactions}/>
+                                                    <Withdraw pooler={pooler!} smartAccount={smartAccount!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions}/>
                                                 )
                                             }
                                             <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
@@ -128,8 +129,8 @@ export default function Susu () {
                                             smartAccountAddress && pooler && !loading && <Balances smartAccountAddress={smartAccountAddress!}/>
                                         }
                                     </div>
-                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress!} getBackTransactions={getBackTransactions}/>  }
-                                    {smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccount={smartAccount!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions}/>  }
+                                    { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
                                 </main>    
                             </>
                         )
@@ -137,7 +138,7 @@ export default function Susu () {
                     </>
                 )
             }
-        </>
+        </main>
     )
 }
 
