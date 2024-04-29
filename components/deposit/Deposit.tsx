@@ -61,6 +61,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
     console.log(rates)
 
     const [openRamp, setOpenRamp] = useState<boolean>(false)
+    const [reference, setReference] = useState<string | null>(null)
     const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
 
@@ -87,7 +88,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
         }
     }
     
-    const reference = `${country.currency}-${(new Date()).getTime().toString()}`
+    
     const handleNewDeposit = async(ref: string) => {
         const amountParsed = parseUnits(amountDollar!, 6)
         const allowance_ = await allowance(smartAccountAddress, przUSDC)
@@ -154,6 +155,8 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
 
     const doLcalPay = () => {
         setOpenRamp(true)
+        const ref = `${country.currency}-${(new Date()).getTime().toString()}`
+        setReference(ref)
         //initPaystackPayment({onSuccess, onClose})
     }
 
@@ -230,7 +233,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openRamp && <Ramp setOpenRamp={setOpenRamp} paymentType='deposit' address={smartAccountAddress} amount={amountDollar} reference={reference} currency={countryFromRamp?.code!}/>}
+            {openRamp && <Ramp setOpenRamp={setOpenRamp} paymentType='deposit' address={smartAccountAddress} amount={amountDollar} reference={reference!} currency={countryFromRamp?.code!}/>}
         </>
         
       )

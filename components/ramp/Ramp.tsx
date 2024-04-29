@@ -32,7 +32,7 @@ export function Ramp({ setOpenRamp, paymentType, address, amount, reference, cur
                     <iframe
                         src={
                             `
-                                https://useaccrue.com/hosted/ramp?key=CSHRMP-PUBK_mO86nNyK8gOwP5Ho&paymentType=${paymentType}&address=${address}&coin=USDC&network=OP&amount=${amount}&reference=${reference}&currency=${currency}&isWalletContext=false
+                                https://useaccrue.com/hosted/ramp?key=CSHRMP-PUBK_mO86nNyK8gOwP5Ho&paymentType=${paymentType}&address=${address}&coin=USDC&network=OP&amount=${amount}&reference=${reference}&isWalletContext=false
                             `
                         }
                         title="cashRamp"
@@ -44,3 +44,5 @@ export function Ramp({ setOpenRamp, paymentType, address, amount, reference, cur
         </main>
     );
 }
+
+//&currency=${currency}

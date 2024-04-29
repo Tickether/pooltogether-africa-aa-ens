@@ -113,7 +113,7 @@ export default function Susu () {
                                                 <>
                                                     <Alert className='w-108'>
                                                         <Terminal className="h-4 w-4" />
-                                                        <AlertTitle>Hi 👋🏄 <span className='italic font-semibold'>{pooler?.ens}</span>.susu.pool</AlertTitle>
+                                                        <AlertTitle>Hi 👋🏄 <span className='italic font-semibold'>{pooler?.ens}</span>.susu.box</AlertTitle>
                                                         <AlertDescription>
                                                             🥳 You are ready to make deposits. Happy Pooling 🙌🏊
                                                         </AlertDescription>

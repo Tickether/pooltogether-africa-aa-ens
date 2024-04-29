@@ -52,6 +52,7 @@ export function Withdraw ({ pooler, smartAccount, smartAccountAddress, getBackTr
     const { rates } = useGetRates('api/getRates', 'marketRate', countryFromRamp?.code!)
     console.log(rates)
     const [openRamp, setOpenRamp] = useState<boolean>(false)
+    const [reference, setReference] = useState<string | null>(null)
     const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
 
@@ -79,6 +80,10 @@ export function Withdraw ({ pooler, smartAccount, smartAccountAddress, getBackTr
 
     const withdrawFromPooltoCashRamp = async () => {
         const amountParsed = parseUnits(amountDollar!, 6)
+
+        const ref = `${country.currency}-${(new Date()).getTime().toString()}`
+        setReference(ref)
+        setOpenRamp(true)
         let tx = []
         const tx1 = withdraw(amountParsed, smartAccountAddress)
             tx.push(tx1)
@@ -183,7 +188,7 @@ export function Withdraw ({ pooler, smartAccount, smartAccountAddress, getBackTr
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openRamp && <Ramp setOpenRamp={setOpenRamp} paymentType='withdraw' address={smartAccountAddress} amount={amountDollar} reference='' currency={countryFromRamp?.code!} />}
+            {openRamp && <Ramp setOpenRamp={setOpenRamp} paymentType='withdrawal' address={smartAccountAddress} amount={amountDollar} reference={reference!} currency={countryFromRamp?.code!} />}
         </>
       )
 } 
