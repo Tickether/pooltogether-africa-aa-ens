@@ -17,34 +17,28 @@ import { Vault } from 'lucide-react'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
 import { Countries, Country } from '@/utils/constants/countries'
 import { useState } from 'react'
-import { usePaystackPayment } from 'react-paystack'
 import { usePostDeposit } from '@/hooks/deposit/usePostDeposit'
 import { useUpdateDeposit } from '@/hooks/deposit/useUpdateDeposit'
 import { parseUnits } from 'viem'
-import { PaystackProps } from 'react-paystack/dist/types'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
 import { Ramp } from '../ramp/Ramp'
 import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
 import { useGetRates } from '@/hooks/cashRamp/useGetRates'
-import { string } from 'zod'
-import { allowance } from '@/utils/deposit/allowance'
-import { przUSDC } from '@/utils/constants/addresses'
-import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
-import { deposit } from '@/utils/deposit/deposit'
-import { approveLifeTimeSwim } from '@/utils/deposit/approve'
+//import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
+
 
 interface DepositProps {
     pooler: Pooler
-    smartAccount: BiconomySmartAccountV2
+    //smartAccount: BiconomySmartAccountV2
     smartAccountAddress : `0x${string}`
-    getBackTransactions : () => void
+    //getBackTransactions : () => void
 }
 
 
 
-export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTransactions } : DepositProps) {
+export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const { countries } = useGetCountries('api/getCountries', 'availableCountries')
     console.log(countries)
         
@@ -88,7 +82,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
         }
     }
     
-    
+    /*
     const handleNewDeposit = async(ref: string) => {
         const amountParsed = parseUnits(amountDollar!, 6)
         const allowance_ = await allowance(smartAccountAddress, przUSDC)
@@ -133,7 +127,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
 
         getBackTransactions()
     }
-
+    */
 
     interface referenceTypes {
         reference: string
@@ -141,9 +135,9 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
     const onSuccess = (reference: referenceTypes) => {
         // Implementation for whatever you want to do with reference and after success call.
         console.log('reference', reference);
-        postDeposit( smartAccountAddress!, '', reference.reference, amountDollar!, amountLocal!, country.currency, rates?.depositRate!, 'pending' )
-        getBackTransactions()
-        handleNewDeposit(reference.reference)
+        //postDeposit( smartAccountAddress!, '', reference.reference, amountDollar!, amountLocal!, country.currency, rates?.depositRate!, 'pending' )
+        //getBackTransactions()
+        //handleNewDeposit(reference.reference)
 
     };
       

@@ -77,7 +77,7 @@ export default function Susu () {
                                         <div className='flex gap-3'>
                                             {
                                                 pooler && (
-                                                    <Withdraw pooler={pooler!} smartAccount={smartAccount!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions}/>
+                                                    <Withdraw pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions}/>
                                                 )
                                             }
                                             <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
@@ -129,7 +129,7 @@ export default function Susu () {
                                             smartAccountAddress && pooler && !loading && <Balances smartAccountAddress={smartAccountAddress!}/>
                                         }
                                     </div>
-                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccount={smartAccount!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions}/>  }
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} />  }
                                     { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
                                 </main>    
                             </>

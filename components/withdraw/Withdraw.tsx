@@ -18,24 +18,20 @@ import { Label } from '../ui/label'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
 import { useState } from 'react'
 import { Countries, Country } from '@/utils/constants/countries'
-import { encodeFunctionData, erc20Abi, parseUnits } from 'viem'
-import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
 import { usePostWithdraw } from '@/hooks/withdraw/usePostWithdraw'
 import { useUpdateWithdraw } from '@/hooks/withdraw/useUpdateWithdraw'
 import { Ramp } from '../ramp/Ramp'
 import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
 import { useGetRates } from '@/hooks/cashRamp/useGetRates'
-import { withdraw } from '@/utils/withdraw/withdraw'
-import { transfer } from '@/utils/withdraw/transfer'
 
 interface WithdrawProps {
     pooler: Pooler
-    smartAccount: BiconomySmartAccountV2
+    //smartAccount: BiconomySmartAccountV2
     smartAccountAddress : `0x${string}`
     getBackTransactions : () => void
 }
 
-export function Withdraw ({ pooler, smartAccount, smartAccountAddress, getBackTransactions } : WithdrawProps) {
+export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions } : WithdrawProps) {
 
     const { countries } = useGetCountries('api/getCountries', 'availableCountries')
     console.log(countries)
@@ -77,19 +73,21 @@ export function Withdraw ({ pooler, smartAccount, smartAccountAddress, getBackTr
             setAmountLocal(inputValue === ''? '' : String(localRate.toFixed(2)))
         }
     }
-
+    
     const withdrawFromPooltoCashRamp = async () => {
-        const amountParsed = parseUnits(amountDollar!, 6)
-
         const ref = `${country.currency}-${(new Date()).getTime().toString()}`
         setReference(ref)
         setOpenRamp(true)
+        /*
+        const amountParsed = parseUnits(amountDollar!, 6)
+
+        
         let tx = []
         const tx1 = withdraw(amountParsed, smartAccountAddress)
-            tx.push(tx1)
-            const tx2 = transfer(smartAccountAddress, amountParsed)
-            //replace address here with Cashramp EScrow
-            tx.push(tx2)
+        tx.push(tx1)
+        const tx2 = transfer(smartAccountAddress, amountParsed)
+        //replace address here with Cashramp EScrow
+        tx.push(tx2)
 
         // Send the transaction and get the transaction hash
         const userOpResponse = await smartAccount.sendTransaction(tx, {
@@ -99,12 +97,13 @@ export function Withdraw ({ pooler, smartAccount, smartAccountAddress, getBackTr
         console.log("Transaction Hash", transactionHash);
         const userOpReceipt  = await userOpResponse.wait();
         if(userOpReceipt.success == 'true') { 
-            postWithdraw( smartAccountAddress!, transactionHash!, '', amountDollar!, amountLocal!, country.currency, rates?.withdrawalRate!, 'pending' )
-            getBackTransactions()
+            //postWithdraw( smartAccountAddress!, transactionHash!, '', amountDollar!, amountLocal!, country.currency, rates?.withdrawalRate!, 'pending' )
+            //getBackTransactions()
             console.log("UserOp receipt", userOpReceipt)
             console.log("Transaction receipt", userOpReceipt.receipt)
             toLocal(transactionHash!)
         }
+        */
     }
     const toLocal = (txn: string) => {
         //await req from CashRamp
