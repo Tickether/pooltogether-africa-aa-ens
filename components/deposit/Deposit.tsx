@@ -26,6 +26,7 @@ import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
 import { Ramp } from '../ramp/Ramp'
 import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
 import { useGetRates } from '@/hooks/cashRamp/useGetRates'
+import { Separator } from '../ui/separator'
 //import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
 
 
@@ -39,7 +40,7 @@ interface DepositProps {
 
 
 export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
-    const { countries } = useGetCountries('api/getCountries', 'availableCountries')
+    const { countries } = useGetCountries()
     console.log(countries)
         
 
@@ -51,11 +52,13 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const country : Country = ( Countries as any )[pooler.country]
     console.log(country)
 
-    const { rates } = useGetRates('api/getRates', 'marketRate', countryFromRamp?.code!)
+    const { rates } = useGetRates()
     console.log(rates)
+    const [open, setOpen] = useState<boolean | null>()
 
-    const [openRamp, setOpenRamp] = useState<boolean>(false)
+    const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
     const [reference, setReference] = useState<string | null>(null)
+    const [paymentService, setPaymentService] = useState<string | null>(null)
     const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
 
@@ -141,24 +144,25 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
 
     };
       
-    const onClose = () => {
-        // implementation for whatever you want to do when the Paystack dialog closed.
-        console.log('closed');
-    };
 
-
-    const doLcalPay = () => {
-        setOpenRamp(true)
+    const doCashRampPay = () => {
+        setOpenCashRamp(true)
         const ref = `${country.currency}-${(new Date()).getTime().toString()}`
         setReference(ref)
-        //initPaystackPayment({onSuccess, onClose})
+        setOpen(false)
     }
 
     return (
         <>
-            <Drawer>
+            <Drawer open={open!}>
                 <DrawerTrigger asChild>
-                        <Button className='gap-2' variant='outline'>
+                        <Button 
+                            className='gap-2' 
+                            variant='outline'
+                            onClick={()=>{
+                                setOpen(true)
+                            }}
+                        >
                             <div className='flex items-center'>
                                 <DoubleArrowDownIcon/>
                                 <Vault size={17}/>
@@ -168,11 +172,67 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                 </DrawerTrigger>
                 <DrawerContent>
                     <div className='mx-auto w-full max-w-sm'>
-                    <DrawerHeader>
-                        <DrawerTitle>Deposit</DrawerTitle>
-                        <DrawerDescription>Hit your daily susu saving goal & deposit to boost rewards</DrawerDescription>
-                    </DrawerHeader>
-                    <div className='p-4 pb-0'>
+                        <DrawerHeader>
+                            {
+                                !paymentService && (
+                                    <>
+                                        <DrawerTitle>Deposit</DrawerTitle>
+                                        <DrawerDescription>Choose out of the options & deposit to boost rewards</DrawerDescription>
+                                    </>
+                                )
+                            }   
+                        </DrawerHeader>                    
+                        {
+                            !paymentService && (
+                                <>
+                                    <div className='flex flex-col'>
+                                        <Button>
+                                            <Vault size={17}/>
+                                            <p>Direct Deposit</p>
+                                        </Button>
+                                        <p className='text-center'>or</p>
+                                        <Separator orientation='horizontal' />
+                                        <p className='text-center'>third party exchanges</p>
+                                        <Button
+                                            onClick={doCashRampPay}
+                                        >
+                                            <Vault size={17}/>
+                                            <p>Cashramp</p>
+                                        </Button>
+                                    </div>
+                                </>
+                            )
+                        }
+                        {
+                            paymentService == 'cashramp' && (
+                                <>
+                                </>
+                            )
+                        }
+                        {
+                            true && (
+                                <>
+                                </>
+                            )
+                        }
+                    <DrawerFooter>
+                        
+                    </DrawerFooter>
+                    </div>
+                </DrawerContent>
+            </Drawer>
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='deposit' address={smartAccountAddress} amount={amountDollar} reference={reference!} currency={countryFromRamp?.code!}/>}
+        </>
+        
+      )
+} 
+
+
+
+
+/**
+
+<div className='p-4 pb-0'>
                         <div className='flex w-full'>
                             <div className='grid gap-4 py-4'>
                                 <div className="grid grid-cols-4 items-center gap-4">
@@ -218,21 +278,5 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                             </Button>
                         </div>
                     </div>
-                    <DrawerFooter>
-                        
-                        <DrawerClose asChild>
-                            <Button onClick={doLcalPay}>Submit</Button>
-                        </DrawerClose>
-                    </DrawerFooter>
-                    </div>
-                </DrawerContent>
-            </Drawer>
-            {openRamp && <Ramp setOpenRamp={setOpenRamp} paymentType='deposit' address={smartAccountAddress} amount={amountDollar} reference={reference!} currency={countryFromRamp?.code!}/>}
-        </>
-        
-      )
-} 
 
-
-
-
+ */

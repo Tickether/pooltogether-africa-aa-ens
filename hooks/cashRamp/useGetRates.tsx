@@ -7,36 +7,33 @@ export interface Rate {
     withdrawalRate: string 
 }
 
-export const useGetRates = (url: string, action: string, country: string) => {
+export const useGetRates = () => {
     const [rates, setRates] = useState<Rate | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<any | null>(null)
 
-    useEffect (() => {
-        const getRates = async () => {
-            setLoading(true);
-            try {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action,
-                        country,
-                    })
+    const getRates = async ( country: string ) => {
+        setLoading(true);
+        try {
+            const res = await fetch('api/getRates', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'marketRate',
+                    country,
                 })
-                const data = await res.json()
-                setRates(data)
-            } catch (err) {
-                setError(err)
-            }
-            setLoading(false);
+            })
+            const data = await res.json()
+            setRates(data)
+        } catch (err) {
+            setError(err)
         }
-        getRates()
-    })
+        setLoading(false);
+    }
 
-    return {rates, loading, error}
+    return {rates, loading, error, getRates}
 }
 
 

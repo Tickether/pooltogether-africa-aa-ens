@@ -33,7 +33,7 @@ interface WithdrawProps {
 
 export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions } : WithdrawProps) {
 
-    const { countries } = useGetCountries('api/getCountries', 'availableCountries')
+    const { countries } = useGetCountries()
     console.log(countries)
         
     
@@ -45,7 +45,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions } :
     const country : Country = ( Countries as any )[pooler.country]
 
 
-    const { rates } = useGetRates('api/getRates', 'marketRate', countryFromRamp?.code!)
+    const { rates } = useGetRates()
     console.log(rates)
     const [openRamp, setOpenRamp] = useState<boolean>(false)
     const [reference, setReference] = useState<string | null>(null)

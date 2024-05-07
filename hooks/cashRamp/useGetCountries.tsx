@@ -7,35 +7,32 @@ export interface Countries {
     name: string 
 }
 
-export const useGetCountries = (url: string, action: string) => {
+export const useGetCountries = () => {
     const [countries, setCountries] = useState<Countries[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<any | null>(null)
 
-    useEffect (() => {
-        const getCountries = async () => {
-            setLoading(true);
-            try {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action,
-                    })
+    const getCountries = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch('api/getCountries', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'availableCountries',
                 })
-                const data = await res.json()
-                setCountries(data)
-            } catch (err) {
-                setError(err)
-            }
-            setLoading(false);
+            })
+            const data = await res.json()
+            setCountries(data)
+        } catch (err) {
+            setError(err)
         }
-        getCountries()
-    })
+        setLoading(false);
+    }
 
-    return {countries, loading, error}
+    return {countries, loading, error, getCountries}
 }
 
 
