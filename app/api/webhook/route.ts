@@ -1,6 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
-import { headers } from 'next/headers'
 
 
 export async function POST(
@@ -10,9 +9,10 @@ export async function POST(
     const CASHRAMP_WEBHOOK_TOKEN = process.env.CASHRAMP_WEBHOOK_TOKEN
 
     try {
-        const text = await req.text()
+        const payload = await req.text()
         const CASHRAMP_HEADER_TOKEN = req.headers.get('X-CASHRAMP-TOKEN')
-        console.log(text)
+        console.log(payload)
+        console.log(CASHRAMP_HEADER_TOKEN)
 
         // Process the webhook payload *** if webhook token match
         if (CASHRAMP_WEBHOOK_TOKEN === CASHRAMP_HEADER_TOKEN) {

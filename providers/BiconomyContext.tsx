@@ -69,6 +69,7 @@ export function BiconomyContext ({ children }: Props) {
     const readyOrNot = async () => {
         if (!ready || !authenticated) return;
         const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
+        if (!embeddedWallet) return; 
         const walletClient = await getWalletClient()
         if (embeddedWallet && !smartAccount) createSmartAccount(walletClient);
     }

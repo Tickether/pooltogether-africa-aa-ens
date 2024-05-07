@@ -18,6 +18,7 @@ export async function POST(
             country: country, 
             phone: phone,
         })
+        console.log(pooler)
         return new Response(JSON.stringify(pooler))
     } catch (error) {
         return new Response(JSON.stringify(error))
