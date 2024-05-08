@@ -1,3 +1,5 @@
+'use client'
+
 import { przUSDC } from '@/utils/constants/addresses'
 import { allowance } from '@/utils/deposit/allowance'
 import { parseUnits } from 'viem'

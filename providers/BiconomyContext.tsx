@@ -59,6 +59,7 @@ export function BiconomyContext ({ children }: Props) {
             signer: walletClient,
             bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL, // <-- Read about this at https://docs.biconomy.io/dashboard#bundler-url
             biconomyPaymasterApiKey: process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_URL, // <-- Read about at https://docs.biconomy.io/dashboard/paymaster
+            rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
         });
       
         const address = await smartAccount.getAccountAddress();
