@@ -28,7 +28,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Switch } from '../ui/switch'
 import { useWatchContractEvent } from 'wagmi'
 import { USDC, przUSDC } from '@/utils/constants/addresses'
-//import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
+import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
 import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
 import { allowance } from '@/utils/deposit/allowance'
 import { approveLifeTimeSwim } from '@/utils/deposit/approve'
@@ -50,9 +50,9 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
         
 
 
-    const { loading, postDeposit } = usePostDeposit()
+    const { postDeposit } = usePostDeposit()
     const { updateDeposit } = useUpdateDeposit() 
-    //const { poolDeposit } = usePoolDeposit()
+    const { loading, poolDeposit } = usePoolDeposit()
 
     const countryFromRamp = countries ? countries!.find(country => country.name === pooler.country) : {name: '', code: ''}
     const country : Country = ( Countries as any )[pooler.country]
@@ -68,7 +68,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
     const [paymentService, setPaymentService] = useState<string | null>(null)
     const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
-    
+    /*
     const poolDeposit = async (amountDollar: string, smartAccountAddress: `0x${string}`) => {
         
         const amountParsed = parseUnits(amountDollar!, 6)
@@ -118,6 +118,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
             //await updateDeposit(ref, txnHash!, 'success')
         }
     }
+    */
 
     useWatchContractEvent({
         address: USDC,
@@ -132,6 +133,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
           console.log('New logs!', logs[0].args.value)
           const amount = formatUnits(logs[0].args.value!, 6)
           poolDeposit(amount, smartAccountAddress)
+          getBackTransactions()
           console.log("Done")
         },
     })
@@ -297,14 +299,19 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                     <SkipBack size={17}/>
                                     <p>Back</p>
                                 </Button>
+                                <div>
+                                    <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, <Button
+                                        disabled={loading!}
+                                        onClick={()=>{
+                                            poolDeposit('0.05', smartAccountAddress!)
+                                            getBackTransactions()
+                                        }}
+                                    >click here</Button></p>
+                                </div>
                                 </>
                             )
                         }
-                        <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, <span
-                            onClick={()=>{
-                                poolDeposit('0.05', smartAccountAddress!)
-                            }}
-                        >click here</span></p>
+                        
                     </DrawerFooter>
                     </div>
                 </DrawerContent>
@@ -314,57 +321,3 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
         
       )
 } 
-
-
-
-
-/**
-
-<div className='p-4 pb-0'>
-                        <div className='flex w-full'>
-                            <div className='grid gap-4 py-4'>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label className='text-right font-semibold'>
-                                        {country.currency}
-                                    </Label>
-                                    <Input 
-                                        placeholder={rates?.depositRate!}
-                                        value={amountLocal!}
-                                        onChange={handleLocalChange} 
-                                        className='text-xl font-semibold col-span-3' 
-                                    />
-                                </div>
-                                <div className='grid grid-cols-4 items-center gap-4'>
-                                    <Label className='text-right font-semibold'>
-                                        USD
-                                    </Label>
-                                    <Input  
-                                        placeholder='1.000000'
-                                        value={amountDollar!}
-                                        onChange={handleDollarChange}
-                                        className='text-xl font-semibold col-span-3'
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div className='flex items-center justify-between space-x-2'>
-                            <Button
-                                variant='outline'
-                                size='icon'
-                                className='h-8 w-8 shrink-0 rounded-full'
-                            >
-                                <MinusIcon className='h-4 w-4' />
-                                <span className='sr-only'>Decrease</span>
-                            </Button>
-                            <Button
-                                variant='outline'
-                                size='icon'
-                                className='h-8 w-8 shrink-0 rounded-full'
-                            >
-                                <PlusIcon className='h-4 w-4' />
-                                <span className='sr-only'>Increase</span>
-                            </Button>
-                        </div>
-                    </div>
-
- */

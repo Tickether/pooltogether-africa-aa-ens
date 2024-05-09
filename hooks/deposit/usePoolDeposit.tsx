@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { przUSDC } from '@/utils/constants/addresses'
 import { allowance } from '@/utils/deposit/allowance'
 import { parseUnits } from 'viem'
@@ -10,9 +11,11 @@ import { useBiconomy } from '@/providers/BiconomyContext'
 
 export const usePoolDeposit = () => {
     
+    const [loading, setLoading] = useState<boolean>()
     const { smartAccount } = useBiconomy()
 
     const poolDeposit = async (amountDollar: string, smartAccountAddress: `0x${string}`) => {
+        setLoading(true)
         const amountParsed = parseUnits(amountDollar!, 6)
         const allowance_ = await allowance(smartAccountAddress, przUSDC)
         let userOpResponse
@@ -46,13 +49,14 @@ export const usePoolDeposit = () => {
         }
 
         
-        const userOpReceipt  = await userOpResponse!.wait();
-        if(userOpReceipt.success == 'true') { 
+        const userOpReceipt  = await userOpResponse?.wait();
+        if(userOpReceipt?.success == 'true') { 
             console.log("UserOp receipt", userOpReceipt)
-            console.log("Transaction receipt", userOpReceipt.receipt)
+            console.log("Transaction receipt", userOpReceipt?.receipt)
             //save offchain depo info
             //await updateDeposit(ref, txnHash!, 'success')
         }
+        setLoading(false)
     }
-    return { poolDeposit }
+    return { loading, poolDeposit }
 }
