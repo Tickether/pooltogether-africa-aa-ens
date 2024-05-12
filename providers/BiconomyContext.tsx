@@ -68,7 +68,16 @@ export function BiconomyContext ({ children }: Props) {
     };
 
     const readyOrNot = async () => {
+        //logout smart account        
+        if (ready && !authenticated){
+            setSmartAccountAddress(undefined);
+            setSmartAccount(undefined);   
+        }
+        
+        //not ready or not logged in
         if (!ready || !authenticated) return;
+
+        //find privy signer & create/login smart account
         const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
         if (!embeddedWallet) return; 
         const walletClient = await getWalletClient()
@@ -76,7 +85,7 @@ export function BiconomyContext ({ children }: Props) {
     }
     useEffect(() => {
         readyOrNot()
-    }, [wallets]);
+    }, [wallets, ready, authenticated]);
 
     return (
         <>

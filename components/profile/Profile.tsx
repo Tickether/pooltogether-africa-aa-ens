@@ -83,11 +83,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
    
     
     const getEmail = () => {
-        const connectionType = user?.linkedAccounts[1].type
-        switch (connectionType) {
-            case ('email'):
-            return user?.email?.address            
-        }
+        return user?.email?.address
     }
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
