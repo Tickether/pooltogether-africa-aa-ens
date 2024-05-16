@@ -37,6 +37,10 @@ const DepositSchema = new mongoose.Schema(
             required: true,
             enum: ['pending', 'success']
         },
+        service: {
+            type: String,
+            required: true,
+        },
     },
     {
         timestamps: true, // Add timestamps

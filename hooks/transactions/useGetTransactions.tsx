@@ -12,6 +12,8 @@ export interface Transaction {
     currency: string
     rate: string, 
     status: string, 
+    service: string
+    fee: string
 }
 export const useGetTransactions = (url: string, address: string) => {
     const [transactions, setTransactions] = useState<Transaction[] | null>(null)

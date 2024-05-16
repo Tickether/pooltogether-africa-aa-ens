@@ -33,6 +33,7 @@ import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
 import { allowance } from '@/utils/deposit/allowance'
 import { approveLifeTimeSwim } from '@/utils/deposit/approve'
 import { deposit } from '@/utils/deposit/deposit'
+import { useGetPayment } from '@/hooks/cashRamp/useGetPayment'
 
 
 interface DepositProps {
@@ -68,57 +69,9 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
     const [paymentService, setPaymentService] = useState<string | null>(null)
     const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
-    /*
-    const poolDeposit = async (amountDollar: string, smartAccountAddress: `0x${string}`) => {
-        
-        const amountParsed = parseUnits(amountDollar!, 6)
-        console.log('step1', amountParsed)
-        const allowance_ = await allowance(smartAccountAddress, przUSDC)
-        console.log('step2', allowance_)
-        let userOpResponse
-        let txnHash
-        if (amountParsed < allowance_ || allowance_ == BigInt(0)) {
-            // send two
-            const tx = []
-            const tx1 = approveLifeTimeSwim(przUSDC)
-            console.log('step3', tx1)
-            tx.push(tx1)
-            const tx2 = deposit(amountParsed, smartAccountAddress)
-            console.log('step4', tx2)
-            tx.push(tx2)
-            // Send the transaction and get the transaction hash
-            const userOpResponse = await smartAccount!.sendTransaction(tx, {
-                paymasterServiceData: {mode: PaymasterMode.SPONSORED},
-            });
-            console.log('step5', userOpResponse)
-            const { transactionHash } = await userOpResponse.waitForTxHash();
-            console.log("Transaction Hash", transactionHash);
-            txnHash = transactionHash
-
-        }else {
-            // send one
-            const tx = deposit(amountParsed, smartAccountAddress)
-            console.log('step3', tx)
-            // Send the transaction and get the transaction hash
-            userOpResponse = await smartAccount!.sendTransaction(tx, {
-                paymasterServiceData: {mode: PaymasterMode.SPONSORED},
-            });
-            const { transactionHash } = await userOpResponse.waitForTxHash();
-            console.log("Transaction Hash", transactionHash);
-            txnHash = transactionHash
-
-        }
-
-        
-        const userOpReceipt  = await userOpResponse!.wait();
-        if(userOpReceipt.success == 'true') { 
-            console.log("UserOp receipt", userOpReceipt)
-            console.log("Transaction receipt", userOpReceipt.receipt)
-            //save offchain depo info
-            //await updateDeposit(ref, txnHash!, 'success')
-        }
-    }
-    */
+    
+    const { payment, getPayment } = useGetPayment()
+    console.log(payment)
 
     useWatchContractEvent({
         address: USDC,
@@ -133,6 +86,18 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
           console.log('New logs!', logs[0].args.value)
           const amount = formatUnits(logs[0].args.value!, 6)
           poolDeposit(amount, smartAccountAddress)
+          postDeposit(
+            smartAccountAddress,
+            '0xtnxhash',
+            'kes-timestamp',
+            'usdc gotten',
+            'localpaod',
+            'ghs',
+            'rate',
+            'success',
+            'get from modal',
+            'getfromCashramo',
+          )
           getBackTransactions()
           console.log("Done")
         },
@@ -164,6 +129,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
         }
     }
     */
+
  
 
     const doCashRampPay = () => {
@@ -177,19 +143,19 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
         <>
             <Drawer open={open!}>
                 <DrawerTrigger asChild>
-                        <Button 
-                            className='gap-2' 
-                            variant='outline'
-                            onClick={()=>{
-                                setOpen(true)
-                            }}
-                        >
-                            <div className='flex items-center'>
-                                <DoubleArrowDownIcon/>
-                                <Vault size={17}/>
-                            </div>
-                            <span>Deposit</span>
-                        </Button>
+                    <Button 
+                        className='gap-2' 
+                        variant='outline'
+                        onClick={()=>{
+                            setOpen(true)
+                        }}
+                    >
+                        <div className='flex items-center'>
+                            <DoubleArrowDownIcon/>
+                            <Vault size={17}/>
+                        </div>
+                        <span>Deposit</span>
+                    </Button>
                 </DrawerTrigger>
                 <DrawerContent>
                     <div className='mx-auto w-full max-w-sm'>
@@ -214,7 +180,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                         {
                             !paymentService && (
                                 <>
-                                    <div className='flex flex-col'>
+                                    <div className='flex flex-col p-4 pb-0'>
                                         <Button
                                             onClick={()=>{
                                                 setPaymentService('direct')
@@ -239,42 +205,42 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                         {
                             paymentService == 'direct' && (
                                 <>
-                                    <div className='flex flex-col'>
-                                    <span className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                                    <div className="space-y-0.5">
-                                        <span>Reveal Wallet Address</span>
-                                    </div>
-                                    <div>
-                                        <Switch
-                                            checked={showAddress!}
-                                            onCheckedChange={()=>{
-                                                setShowAddress(!showAddress)
-                                            }}
-                                        />
-                                    </div>
-                                    </span>
-                                    <Alert>
-                                    <Terminal className='h-4 w-4' />
-                                    <AlertTitle className='font-bold'>
-                                        <div className='flex items-center justify-between'>
-                                            
-                                            
-                                            {
-                                                !showAddress
-                                                ? <><p className='text-base'>{pooler.ens}.susu.box</p></>
-                                                : <><p className='text-xs'>{pooler.address}</p></>
-                                            }
-                                            {
-                                                showAddress && (
-                                                    <Copy className='h-5 w-5'/>
-                                                )
-                                            }
-                                        </div>
-                                    </AlertTitle>
-                                    <AlertDescription className='text-xs'>
-                                        Send USDC to this wallet. Do not close this window until magic deposit done.
-                                    </AlertDescription>
-                                    </Alert>
+                                    <div className='flex flex-col p-4 pb-0'>
+                                        <span className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <span>Reveal Wallet Address</span>
+                                            </div>
+                                            <div>
+                                                <Switch
+                                                    checked={showAddress!}
+                                                    onCheckedChange={()=>{
+                                                        setShowAddress(!showAddress)
+                                                    }}
+                                                />
+                                            </div>
+                                        </span>
+                                        <Alert>
+                                            <Terminal className='h-4 w-4' />
+                                            <AlertTitle className='font-bold'>
+                                                <div className='flex items-center justify-between'>
+                                                    
+                                                    
+                                                    {
+                                                        !showAddress
+                                                        ? <><p className='text-base'>{pooler.ens}.susu.box</p></>
+                                                        : <><p className='text-xs'>{pooler.address}</p></>
+                                                    }
+                                                    {
+                                                        showAddress && (
+                                                            <Copy className='h-5 w-5'/>
+                                                        )
+                                                    }
+                                                </div>
+                                            </AlertTitle>
+                                            <AlertDescription className='text-xs'>
+                                                Send USDC to this wallet. Do not close this window until magic deposit done.
+                                            </AlertDescription>
+                                        </Alert>
 
                                         <p className='text-center'></p>
                                     </div>
@@ -292,6 +258,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                             paymentService == 'direct' && (
                                 <>
                                 <Button
+                                    variant='outline'
                                     onClick={()=>{
                                         setPaymentService(null)
                                     }}
@@ -300,18 +267,35 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                     <p>Back</p>
                                 </Button>
                                 <div>
-                                    <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, <Button
-                                        disabled={loading!}
-                                        onClick={()=>{
-                                            poolDeposit('0.05', smartAccountAddress!)
-                                            getBackTransactions()
-                                        }}
-                                    >click here</Button></p>
+                                    <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, 
+                                        <Button
+                                            disabled={loading!}
+                                            onClick={()=>{
+                                                poolDeposit('0.05', smartAccountAddress!)
+                                                getBackTransactions()
+                                            }}
+                                        >
+                                            click here
+                                        </Button>
+                                    </p>
                                 </div>
                                 </>
                             )
                         }
-                        
+                        {
+                            !paymentService && (
+                                <>
+                                    <Button
+                                        onClick={()=>{
+                                            setOpen(false)
+                                        }}
+                                        variant='outline'
+                                    >
+                                        Cancel
+                                    </Button>
+                                </>
+                            )
+                        }
                     </DrawerFooter>
                     </div>
                 </DrawerContent>
@@ -321,3 +305,14 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
         
       )
 } 
+
+
+/**
+ *                                 <Button
+                                        onClick={()=>{
+                                            getPayment('KES-1715549139115')
+                                        }}
+                                    >
+                                        Payment
+                                </Button>
+ */

@@ -13,10 +13,16 @@ import { Withdraw } from '@/components/withdraw/Withdraw'
 import { useGetPooler } from '@/hooks/pooler/useGetPooler'
 import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
 import { useBiconomy } from '@/providers/BiconomyContext'
+import { przUSDC } from '@/utils/constants/addresses'
 import { usePrivy } from '@privy-io/react-auth'
+import { useQueryClient } from '@tanstack/react-query'
 import { Terminal } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { formatUnits } from 'viem'
+import { optimism } from 'viem/chains'
+import { useBalance, useBlockNumber } from 'wagmi'
 
 export default function Susu () {
     const { ready, authenticated } = usePrivy()
@@ -25,7 +31,22 @@ export default function Susu () {
     const { pooler, loading, getBackPooler } = useGetPooler('api/getPooler/', smartAccountAddress!)
     const { transactions, getBackTransactions } = useGetTransactions('api/getTransactions/', smartAccountAddress!)
 
-    
+    const queryClient = useQueryClient() 
+    const { data: blockNumber } = useBlockNumber({ watch: true }) 
+
+    const {data: balance, queryKey} = useBalance({
+        address: `0x${smartAccountAddress?.slice(2)}`,
+        token: przUSDC,
+        chainId: optimism.id
+    })
+
+    useEffect(() => { 
+        queryClient.invalidateQueries({ queryKey }) 
+      }, [blockNumber, queryClient, queryKey]) 
+
+    const formatedBalance = balance ? formatUnits(balance?.value!, balance?.decimals!) : '0'
+
+    console.log(balance?.decimals)
     return (
         <main className='z-0'>
             {
@@ -77,7 +98,7 @@ export default function Susu () {
                                         <div className='flex gap-3'>
                                             {
                                                 pooler && (
-                                                    <Withdraw pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions}/>
+                                                    <Withdraw pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} balance={formatedBalance!}/>
                                                 )
                                             }
                                             <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
@@ -126,7 +147,7 @@ export default function Susu () {
                                     <div>
                                         {/** Balances */}
                                         {
-                                            smartAccountAddress && pooler && !loading && <Balances smartAccountAddress={smartAccountAddress!}/>
+                                            smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!}/>
                                         }
                                     </div>
                                     { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccount={smartAccount!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} />  }

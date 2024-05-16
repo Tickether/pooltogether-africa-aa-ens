@@ -10,10 +10,11 @@ import { trimDecimals } from '@/utils/trim'
 import { przUSDC } from '@/utils/constants/addresses'
 
 interface BalancesProp{
-    smartAccountAddress: string
+    balance: string
 }
 
-export function Balances ({ smartAccountAddress }: BalancesProp) {
+export function Balances ({ balance }: BalancesProp) {
+/*
     const queryClient = useQueryClient() 
     const { data: blockNumber } = useBlockNumber({ watch: true }) 
 
@@ -30,7 +31,7 @@ export function Balances ({ smartAccountAddress }: BalancesProp) {
     const formatedBalance = balance ? formatUnits(balance?.value!, balance?.decimals!) : 0
 
     console.log(balance?.decimals)
-
+*/
     return (
         <>
             <main className='flex flex-col w-full items-center gap-24'>
@@ -58,7 +59,7 @@ export function Balances ({ smartAccountAddress }: BalancesProp) {
                 <div className='flex'>
                     <span className='text-xl max-md:text-base text-gray-700'>$</span>
                     <p className='text-6xl max-md:text-3xl max-md:text-center font-bold text-center'>
-                        {trimDecimals(formatedBalance!)}
+                        {trimDecimals(balance!)}
                     </p>
                 </div>
             </main>

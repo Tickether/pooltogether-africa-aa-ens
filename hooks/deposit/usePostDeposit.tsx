@@ -43,7 +43,8 @@ export const usePostDeposit = () => {
         currency: string, 
         rate: string, 
         status: string, 
-        
+        service: string,
+        fee: string
     ) => {
         setLoading(true)
         try {
@@ -60,7 +61,9 @@ export const usePostDeposit = () => {
                     localAmount, 
                     currency,  
                     rate,
-                    status
+                    status,
+                    service,
+                    fee
                 })
             }) 
             const data =  await res.json()

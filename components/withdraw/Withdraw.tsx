@@ -12,7 +12,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { Wallet2 } from 'lucide-react'
+import { SkipBack, Wallet2 } from 'lucide-react'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
@@ -23,21 +23,28 @@ import { useUpdateWithdraw } from '@/hooks/withdraw/useUpdateWithdraw'
 import { Ramp } from '../ramp/Ramp'
 import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
 import { useGetRates } from '@/hooks/cashRamp/useGetRates'
+import { Separator } from '../ui/separator'
+import { trimDecimals } from '@/utils/trim'
 
 interface WithdrawProps {
     pooler: Pooler
     //smartAccount: BiconomySmartAccountV2
     smartAccountAddress : `0x${string}`
     getBackTransactions : () => void
+    balance: string
 }
 
-export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions } : WithdrawProps) {
+export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, balance } : WithdrawProps) {
 
     const { countries } = useGetCountries()
     console.log(countries)
         
     
-
+    const [open, setOpen] = useState<boolean | null>()
+    
+    
+    //const [reference, setReference] = useState<string | null>(null)
+    const [paymentService, setPaymentService] = useState<string | null>(null)
     const { loading, postWithdraw } = usePostWithdraw()
     const { updateWithdraw } = useUpdateWithdraw()
     
@@ -47,11 +54,11 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions } :
 
     const { rates } = useGetRates()
     console.log(rates)
-    const [openRamp, setOpenRamp] = useState<boolean>(false)
+    const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
     const [reference, setReference] = useState<string | null>(null)
     const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
-
+    /*
     const handleLocalChange = (e: any) => {
         // Allow only numbers and a maximum of two decimal places
         const regex = /^\d*\.?\d{0,2}$/;
@@ -73,11 +80,11 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions } :
             setAmountLocal(inputValue === ''? '' : String(localRate.toFixed(2)))
         }
     }
-    
+    */
     const withdrawFromPooltoCashRamp = async () => {
         const ref = `${country.currency}-${(new Date()).getTime().toString()}`
         setReference(ref)
-        setOpenRamp(true)
+        //setOpenRamp(true)
         /*
         const amountParsed = parseUnits(amountDollar!, 6)
 
@@ -116,78 +123,132 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions } :
 
     return (
         <>
-            <Drawer>
+            <Drawer open={open!}>
                 <DrawerTrigger asChild>
-                        <Button className='gap-2' variant='outline'>
-                            <div className='flex items-center'>
-                                <DoubleArrowUpIcon/>
-                                <Wallet2 size={16} />
-                            </div>
-                            <span className='max-md:hidden'>Withdraw</span>
-                        </Button>
+                    <Button 
+                        className='gap-2' 
+                        variant='outline'
+                        onClick={()=>{
+                            setOpen(true)
+                        }}
+                    >
+                        <div className='flex items-center'>
+                            <DoubleArrowUpIcon/>
+                            <Wallet2 size={16} />
+                        </div>
+                        <span className='max-md:hidden'>Withdraw</span>
+                    </Button>
                 </DrawerTrigger>
                 <DrawerContent>
                     <div className='mx-auto w-full max-w-sm'>
                     <DrawerHeader>
-                        <DrawerTitle>Withdraw</DrawerTitle>
-                        <DrawerDescription>Withdraw your susu balance to cover your expenses.</DrawerDescription>
+                            {
+                                !paymentService && (
+                                    <>
+                                        <DrawerTitle>Withdraw</DrawerTitle>
+                                        <DrawerDescription>Choose withdraw option, cover your expenses.</DrawerDescription>
+                                    </>
+                                )
+                            }  
+                            {
+                                paymentService == 'direct' && (
+                                    <>
+                                        <DrawerTitle>Direct Withdraw</DrawerTitle>
+                                        <DrawerDescription>Withdraw USDC to any wallet on OP</DrawerDescription>
+                                    </>
+                                )
+                            }   
                     </DrawerHeader>
-                    <div className='p-4 pb-0'>
-                        <div className='flex w-full'>
-                            <div className='grid gap-4 py-4'>
-                                <div className='grid grid-cols-4 items-center gap-4'>
-                                    <Label className='text-right font-semibold'>
-                                        USD
-                                    </Label>
-                                    <Input  
-                                        placeholder='1.000000'
-                                        value={amountDollar!}
-                                        onChange={handleDollarChange}
-                                        className='text-xl font-semibold col-span-3'
-                                    />
-                                </div>
-                                <div className='grid grid-cols-4 items-center gap-4'>
-                                    <Label className='text-right font-semibold'>
-                                        {country.currency}
-                                    </Label>
-                                    <Input 
-                                        placeholder={rates?.withdrawalRate!}
-                                        value={amountLocal!}
-                                        onChange={handleLocalChange} 
-                                        className='text-xl font-semibold col-span-3' 
-                                    />
-                                </div>
-                                
-                            </div>
-                        </div>
-                        <div className='flex items-center justify-between space-x-2'>
-                            <Button
-                                variant='outline'
-                                size='icon'
-                                className='h-8 w-8 shrink-0 rounded-full'
-                            >
-                                <MinusIcon className='h-4 w-4' />
-                                <span className='sr-only'>Decrease</span>
-                            </Button>
-                            <Button
-                                variant='outline'
-                                size='icon'
-                                className='h-8 w-8 shrink-0 rounded-full'
-                            >
-                                <PlusIcon className='h-4 w-4' />
-                                <span className='sr-only'>Increase</span>
-                            </Button>
-                        </div>
-                    </div>
+                        {
+                            !paymentService && (
+                                <>
+                                    <div className='flex flex-col p-4 pb-0'>
+                                        <Button
+                                            onClick={()=>{
+                                                setPaymentService('direct')
+                                            }}
+                                        >
+                                            <DoubleArrowUpIcon/>
+                                            <Wallet2 size={16} />
+                                            <p>Direct Withdraw</p>
+                                        </Button>
+                                        <p className='text-center'>or</p>
+                                        <Separator orientation='horizontal' />
+                                        <p className='text-center'>third party exchanges</p>
+                                        <Button
+                                            //onClick={doCashRampPay}
+                                        >
+                                            <DoubleArrowUpIcon/>
+                                            <Wallet2 size={16} />
+                                            <p>Cashramp</p>
+                                        </Button>
+                                    </div>
+                                </>
+                            )
+                        }
+                        {
+                            paymentService == 'direct' && (
+                                <>
+                                    <div className='flex w-full flex-col gap-2 p-4 pb-0'>
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                            <Label htmlFor='address'>Enter your withdraw wallet</Label>
+                                            <div className='flex w-full max-w-sm items-center space-x-2'>
+                                                <Input id='address' />
+                                                <Button type="submit">Paste</Button> 
+                                            </div>
+                                        </div>
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                            <Label htmlFor='amount'>Enter your withdraw amount</Label>
+                                            <div className='flex w-full max-w-sm items-center space-x-2'>
+                                                <Input id='amount' />
+                                                <div>
+                                                    <p>{trimDecimals(balance)}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <Button>
+                                            Withdraw
+                                        </Button>
+                                    </div>
+                                </>
+                            )
+                        }
+
                     <DrawerFooter>
-                        <DrawerClose asChild>
-                            <Button onClick={withdrawFromPooltoCashRamp}>Submit</Button>
-                        </DrawerClose>
+                        {
+                            paymentService == 'direct' && (
+                                <>
+                                    <Button
+                                        variant='outline'
+                                        onClick={()=>{
+                                            setPaymentService(null)
+                                        }}
+                                    >
+                                        <SkipBack size={17}/>
+                                        <p>Back</p>
+                                    </Button> 
+                                </>
+                            )
+                        }
+                        {
+                            !paymentService && (
+                                <>
+                                    <Button
+                                        onClick={()=>{
+                                            setOpen(false)
+                                        }}
+                                        variant='outline'
+                                    >
+                                        Cancel
+                                    </Button>
+                                </>
+                            )
+                        }
                     </DrawerFooter>
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openRamp && <Ramp setOpenRamp={setOpenRamp} paymentType='withdrawal' address={smartAccountAddress} amount={amountDollar} reference={reference!} currency={countryFromRamp?.code!} />}
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='withdrawal' address={smartAccountAddress} amount={amountDollar} reference={reference!} currency={countryFromRamp?.code!} />}
         </>
       )
 } 
@@ -195,3 +256,15 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions } :
 
 
 
+/**4
+ * 
+ * <div>
+                                    <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, <Button
+                                        disabled={loading!}
+                                        onClick={()=>{
+                                            //poolWitjdraw('0.05', smartAccountAddress!)
+                                            //getBackTransactions()
+                                        }}
+                                    >click here</Button></p>
+                                </div>
+ */
