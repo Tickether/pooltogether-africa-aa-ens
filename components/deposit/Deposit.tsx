@@ -35,7 +35,7 @@ import { approveLifeTimeSwim } from '@/utils/deposit/approve'
 import { deposit } from '@/utils/deposit/deposit'
 import { useGetPayment } from '@/hooks/cashRamp/useGetPayment'
 import { useQueryClient } from '@tanstack/react-query'
-import { optimism } from 'viem/chains'
+import { base } from 'viem/chains'
 
 
 interface DepositProps {
@@ -81,7 +81,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
     const {data: balance, queryKey} = useBalance({
         address: `0x${smartAccountAddress?.slice(2)}`,
         token: USDC,
-        chainId: optimism.id
+        chainId: base.id
     })
 
     useEffect(() => { 
@@ -92,17 +92,17 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
 
     useWatchContractEvent({
         address: USDC,
-        chainId: 10,
+        chainId: 8453,
         abi: erc20Abi,
         eventName: 'Transfer',
         args: {
             to: smartAccountAddress
-            
         },
         onLogs(logs) {
           console.log('New logs!', logs[0].args.value)
           const amount = formatUnits(logs[0].args.value!, 6)
           poolDeposit(amount, smartAccountAddress)
+          /*
           postDeposit(
             smartAccountAddress,
             '0xtnxhash',
@@ -115,6 +115,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
             'get from modal',
             'getfromCashramo',
           )
+          */
           getBackTransactions()
           console.log("Done")
         },
@@ -286,7 +287,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                 <div>
                                     <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, 
                                         <Button
-                                            disabled={loading!}
+                                            disabled={loading! || parseFloat(formatedBalance) == 0}
                                             onClick={()=>{
                                                 poolDeposit(formatedBalance, smartAccountAddress!)
                                                 getBackTransactions()

@@ -5,7 +5,7 @@ import { Separator } from '../ui/separator'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { formatUnits } from 'viem'
-import { optimism } from 'viem/chains'
+import { base } from 'viem/chains'
 import { trimDecimals } from '@/utils/trim'
 import { przUSDC } from '@/utils/constants/addresses'
 
@@ -14,24 +14,7 @@ interface BalancesProp{
 }
 
 export function Balances ({ balance }: BalancesProp) {
-/*
-    const queryClient = useQueryClient() 
-    const { data: blockNumber } = useBlockNumber({ watch: true }) 
 
-    const {data: balance, queryKey} = useBalance({
-        address: `0x${smartAccountAddress.slice(2)}`,
-        token: przUSDC,
-        chainId: optimism.id
-    })
-
-    useEffect(() => { 
-        queryClient.invalidateQueries({ queryKey }) 
-      }, [blockNumber, queryClient, queryKey]) 
-
-    const formatedBalance = balance ? formatUnits(balance?.value!, balance?.decimals!) : 0
-
-    console.log(balance?.decimals)
-*/
     return (
         <>
             <main className='flex flex-col w-full items-center gap-24'>
