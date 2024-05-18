@@ -29,6 +29,8 @@ import { usePoolWithdraw } from '@/hooks/withdraw/usePoolWithdraw'
 import { isAddress } from 'viem'
 import { useEnsAddress } from 'wagmi'
 import { normalize } from 'viem/ens'
+import { mainnet } from 'viem/chains'
+import { publicClientMainnet } from '@/utils/client'
 
 
 interface WithdrawProps {
@@ -65,6 +67,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
     const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
     const [receiverAddress, setReceiverAddress] = useState<string>('');
+    const [receiverAddressResolved, setReceiverAddressResolved] = useState<string>('');
     const [valid, setValid] = useState<boolean | null>(null);
     
     const handlePaste = async () => {
@@ -75,24 +78,29 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
     const handleClearInput = () => {
         setReceiverAddress('')
     }; 
-    const result =  useEnsAddress({
-        name: normalize(receiverAddress),
-    }) 
-    const checkAddress = async (e: string) => {
-        if (isAddress(e)) {
-            setValid(true);
-        } else {
-            if (isAddress(result.data!)) {
+  
+
+    const checkAddress = async () => {
+        if (!isAddress(receiverAddress)) {
+            setValid(false)
+            setReceiverAddressResolved('')
+            const ensAddress = await publicClientMainnet.getEnsAddress({
+                name: (receiverAddress),
+            })
+            if (isAddress(ensAddress!)) {
                 setValid(true);
-            } else {
-                setValid(false);
-            }
+                setReceiverAddressResolved(ensAddress!)
+            } 
+        } else {
+            setValid(true);
+            setReceiverAddressResolved(receiverAddress)
         }
     }
 
     useEffect(()=>{
-        checkAddress(receiverAddress)
+        checkAddress()
     },[receiverAddress])
+    console.log(receiverAddressResolved)
 
     
     window.addEventListener("message", (message) => {
@@ -280,7 +288,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                                                     onChange={(e) => {
                                                         try {
                                                           (e.target.value.length >= 1)
-                                                          ? setReceiverAddress(normalize(e.target.value))
+                                                          ? setReceiverAddress((e.target.value))
                                                           : setReceiverAddress((e.target.value))
                                                         } catch (error : any) {
                                                           console.log(error.message)
@@ -315,7 +323,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                                         <Button
                                             disabled={!valid || parseFloat(amountDollar) == 0 || amountDollar == '' || loadingWithdraw}
                                             onClick={async ()=>{
-                                                await poolWithdraw(amountDollar, receiverAddress as `0x${string}`, smartAccountAddress)
+                                                await poolWithdraw(amountDollar, receiverAddressResolved as `0x${string}`, smartAccountAddress)
                                                 setReceiverAddress('')
                                                 setAmountDollar('')
                                             }}
