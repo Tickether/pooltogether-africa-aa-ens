@@ -112,7 +112,12 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                 const paymentRequest = payload.paymentRequest;
                 console.log(amountUsd, destinationAddress, paymentRequest)
                 // Here's where you add your custom experience for sending the *exact* USD amount to Cashramp's Escrow Address (destinationAddress)
-                
+                if (parseFloat(balance) >= amountUsd ) {
+                    poolWithdraw(String(amountUsd), destinationAddress, smartAccountAddress)
+                } else {
+                    setOpenCashRamp(false)
+                    return
+                }
                 // You can request transaction confirmation here by providing the payment request global ID provided above as `paymentRequest`
             }
         }
@@ -369,7 +374,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='withdrawal' address={smartAccountAddress} amount={amountDollar} reference={reference!} currency={countryFromRamp?.code!} />}
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='withdrawal' address={smartAccountAddress} reference={reference!} currency={countryFromRamp?.code!} />}
         </>
       )
 } 

@@ -317,7 +317,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='deposit' address={smartAccountAddress} amount={amountDollar} reference={reference!} currency={countryFromRamp?.code!}/>}
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='deposit' address={smartAccountAddress} reference={reference!} currency={countryFromRamp?.code!}/>}
         </>
         
       )
