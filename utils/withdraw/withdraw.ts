@@ -2,11 +2,11 @@ import { encodeFunctionData } from "viem";
 import { przUSDC } from "../constants/addresses";
 import { poolABI } from "../abis/poolABI";
 
-export const withdraw = (amount: bigint, address: `0x${string}`) => {
+export const withdraw = (amount: bigint, receiverAddress: `0x${string}`,  ownerAddress: `0x${string}`) => {
     const withdrawData = encodeFunctionData({
         abi: poolABI,
         functionName: 'withdraw',
-        args: [(amount), (address), (address)]
+        args: [(amount), (receiverAddress), (ownerAddress)]
     })
 
     // Build the transactions

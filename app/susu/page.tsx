@@ -42,7 +42,7 @@ export default function Susu () {
 
     useEffect(() => { 
         queryClient.invalidateQueries({ queryKey }) 
-      }, [blockNumber, queryClient, queryKey]) 
+    }, [blockNumber, queryClient, queryKey]) 
 
     const formatedBalance = balance ? formatUnits(balance?.value!, balance?.decimals!) : '0'
 

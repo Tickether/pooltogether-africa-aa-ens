@@ -12,11 +12,11 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { SkipBack, Wallet2 } from 'lucide-react'
+import { BadgeCheck, BadgeDollarSign, Ban, ClipboardPen, Eraser, SkipBack, Wallet2 } from 'lucide-react'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Countries, Country } from '@/utils/constants/countries'
 import { usePostWithdraw } from '@/hooks/withdraw/usePostWithdraw'
 import { useUpdateWithdraw } from '@/hooks/withdraw/useUpdateWithdraw'
@@ -25,6 +25,11 @@ import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
 import { useGetRates } from '@/hooks/cashRamp/useGetRates'
 import { Separator } from '../ui/separator'
 import { trimDecimals } from '@/utils/trim'
+import { usePoolWithdraw } from '@/hooks/withdraw/usePoolWithdraw'
+import { isAddress } from 'viem'
+import { useEnsAddress } from 'wagmi'
+import { normalize } from 'viem/ens'
+
 
 interface WithdrawProps {
     pooler: Pooler
@@ -36,6 +41,7 @@ interface WithdrawProps {
 
 export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, balance } : WithdrawProps) {
 
+    const { loading: loadingWithdraw, poolWithdraw } = usePoolWithdraw()
     const { countries } = useGetCountries()
     console.log(countries)
         
@@ -58,6 +64,53 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
     const [reference, setReference] = useState<string | null>(null)
     const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
+    const [receiverAddress, setReceiverAddress] = useState<string>('');
+    const [valid, setValid] = useState<boolean | null>(null);
+    
+    const handlePaste = async () => {
+        const clipboardText = await navigator.clipboard.readText();
+        setReceiverAddress(clipboardText);
+    };
+
+    const handleClearInput = () => {
+        setReceiverAddress('')
+    }; 
+    const result =  useEnsAddress({
+        name: normalize(receiverAddress),
+    }) 
+    const checkAddress = async (e: string) => {
+        if (isAddress(e)) {
+            setValid(true);
+        } else {
+            if (isAddress(result.data!)) {
+                setValid(true);
+            } else {
+                setValid(false);
+            }
+        }
+    }
+
+    useEffect(()=>{
+        checkAddress(receiverAddress)
+    },[receiverAddress])
+
+    
+    window.addEventListener("message", (message) => {
+        if (message.origin === "https://useaccrue.com") {
+            const { event, payload } = message.data;
+            if (event === "crypto.requested") {
+                const amountUsd = parseFloat(payload.amountCents) / 100;
+                const destinationAddress = payload.destinationAddress;
+                const paymentRequest = payload.paymentRequest;
+                console.log(amountUsd, destinationAddress, paymentRequest)
+                // Here's where you add your custom experience for sending the *exact* USD amount to Cashramp's Escrow Address (destinationAddress)
+                
+                // You can request transaction confirmation here by providing the payment request global ID provided above as `paymentRequest`
+            }
+        }
+    });
+    
+
     /*
     const handleLocalChange = (e: any) => {
         // Allow only numbers and a maximum of two decimal places
@@ -81,6 +134,17 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
         }
     }
     */
+    const handleUSDChange = (e: any) => {
+        // Allow only numbers and a maximum of two decimal places
+        const regex = /^(0|[1-9]\d*)(\.\d{0,6})?$/;
+        const inputValue = e.target.value;
+        const numericValue = parseFloat(inputValue)
+        const balanceValue = parseFloat(balance)
+
+        if ((regex.test(inputValue) || inputValue === '') && (numericValue <= balanceValue || isNaN(numericValue)) ) {
+            setAmountDollar(inputValue === '' ? '' : inputValue)
+        }
+    }
     const withdrawFromPooltoCashRamp = async () => {
         const ref = `${country.currency}-${(new Date()).getTime().toString()}`
         setReference(ref)
@@ -116,7 +180,6 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
         //await req from CashRamp
         // send info to  db
         updateWithdraw(txn, '', 'success')
-
     }
     
 
@@ -176,7 +239,12 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                                         <Separator orientation='horizontal' />
                                         <p className='text-center'>third party exchanges</p>
                                         <Button
-                                            //onClick={doCashRampPay}
+                                            onClick={()=>{
+                                                const ref = `${country.currency}-${(new Date()).getTime().toString()}`
+                                                setReference(ref)
+                                                setOpenCashRamp(true)
+                                                setOpen(false)
+                                            }}
                                         >
                                             <DoubleArrowUpIcon/>
                                             <Wallet2 size={16} />
@@ -190,23 +258,68 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                             paymentService == 'direct' && (
                                 <>
                                     <div className='flex w-full flex-col gap-2 p-4 pb-0'>
-                                        <div className="grid w-full max-w-sm items-center gap-1.5">
-                                            <Label htmlFor='address'>Enter your withdraw wallet</Label>
+                                        <div className='grid w-full max-w-sm items-center gap-1.5'>
+                                            <div className='flex justify-between'>
+                                                <div className='flex items-center gap-1'>
+                                                    {valid == false && <Ban className='text-red-500' />}
+                                                    {valid == true && <BadgeCheck className='text-green-500'/>}
+                                                    <Label htmlFor='address'>Enter your withdraw wallet</Label>
+                                                </div>
+                                                {
+                                                    receiverAddress != '' 
+                                                    ?<><Eraser onClick={handleClearInput} /> </>
+                                                    :<><ClipboardPen onClick={handlePaste} /></>
+                                                }
+                                            </div>
                                             <div className='flex w-full max-w-sm items-center space-x-2'>
-                                                <Input id='address' />
-                                                <Button type="submit">Paste</Button> 
+                                                <Input 
+                                                    id='address'
+                                                    value={receiverAddress}
+                                                    disabled={loadingWithdraw}
+                                                    className='text-[13px]'
+                                                    onChange={(e) => {
+                                                        try {
+                                                          (e.target.value.length >= 1)
+                                                          ? setReceiverAddress(normalize(e.target.value))
+                                                          : setReceiverAddress((e.target.value))
+                                                        } catch (error : any) {
+                                                          console.log(error.message)
+                                                        }
+                                                    }}
+                                                />
                                             </div>
                                         </div>
-                                        <div className="grid w-full max-w-sm items-center gap-1.5">
-                                            <Label htmlFor='amount'>Enter your withdraw amount</Label>
-                                            <div className='flex w-full max-w-sm items-center space-x-2'>
-                                                <Input id='amount' />
-                                                <div>
+                                        <div className='grid w-full max-w-sm items-center gap-1.5'>
+                                            <div className='flex justify-between'>
+                                                <div className='flex items-center gap-1'>
+                                                    {parseFloat(amountDollar) == 0 || amountDollar == '' ? <Ban className='text-red-500'/> : <BadgeCheck className='text-green-500'/>}
+                                                    <Label htmlFor='amount'>Enter amount</Label>
+                                                </div>
+                                                
+                                                <div className='flex gap-1'>
+                                                    <BadgeDollarSign />
                                                     <p>{trimDecimals(balance)}</p>
                                                 </div>
                                             </div>
+                                            <div className='flex w-full max-w-sm items-center space-x-2'>
+                                                <Input 
+                                                    className='text-xs'
+                                                    id='amount'
+                                                    value={amountDollar}
+                                                    disabled={loadingWithdraw}
+                                                    onChange={handleUSDChange} 
+                                                />
+                                                
+                                            </div>
                                         </div>
-                                        <Button>
+                                        <Button
+                                            disabled={!valid || parseFloat(amountDollar) == 0 || amountDollar == '' || loadingWithdraw}
+                                            onClick={async ()=>{
+                                                await poolWithdraw(amountDollar, receiverAddress as `0x${string}`, smartAccountAddress)
+                                                setReceiverAddress('')
+                                                setAmountDollar('')
+                                            }}
+                                        >
                                             Withdraw
                                         </Button>
                                     </div>

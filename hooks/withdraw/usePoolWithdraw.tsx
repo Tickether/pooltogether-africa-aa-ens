@@ -9,19 +9,20 @@ import { PaymasterMode } from '@biconomy/account'
 export const usePoolWithdraw = () => {
     
     const { smartAccount } = useBiconomy()
+    const [loading, setLoading] = useState<boolean>()
     
-    const poolWithdraw = async (amountDollar: string, smartAccountAddress: `0x${string}`, country: Country) => {
+    const poolWithdraw = async (amountDollar: string, receiverAddress: `0x${string}`, ownerAddress: `0x${string}`) => {
+        setLoading(true)
         const amountParsed = parseUnits(amountDollar!, 6)
-
-        let tx = []
-        const tx1 = withdraw(amountParsed, smartAccountAddress)
-        tx.push(tx1)
-        const tx2 = transfer(smartAccountAddress, amountParsed)
+        //let tx = []
+        const tx1 = withdraw(amountParsed, receiverAddress, ownerAddress)
+        //tx.push(tx1)
+        //const tx2 = transfer(smartAccountAddress, amountParsed)
         //replace address here with Cashramp EScrow
-        tx.push(tx2)
+        //tx.push(tx2)
 
         // Send the transaction and get the transaction hash
-        const userOpResponse = await smartAccount!.sendTransaction(tx, {
+        const userOpResponse = await smartAccount!.sendTransaction(tx1, {
             paymasterServiceData: {mode: PaymasterMode.SPONSORED},
         });
         const { transactionHash } = await userOpResponse.waitForTxHash();
@@ -34,6 +35,7 @@ export const usePoolWithdraw = () => {
             console.log("Transaction receipt", userOpReceipt.receipt)
             //toLocal(transactionHash!)
         }
+        setLoading(false)
     }
-    return { poolWithdraw }
+    return { loading, poolWithdraw }
 }

@@ -16,7 +16,7 @@ import { DoubleArrowDownIcon } from '@radix-ui/react-icons'
 import { Copy, SkipBack, Terminal, Vault } from 'lucide-react'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
 import { Countries, Country } from '@/utils/constants/countries'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { usePostDeposit } from '@/hooks/deposit/usePostDeposit'
 import { useUpdateDeposit } from '@/hooks/deposit/useUpdateDeposit'
 import { erc20Abi, formatUnits, parseUnits } from 'viem'
@@ -26,14 +26,16 @@ import { useGetRates } from '@/hooks/cashRamp/useGetRates'
 import { Separator } from '../ui/separator'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Switch } from '../ui/switch'
-import { useWatchContractEvent } from 'wagmi'
-import { USDC, przUSDC } from '@/utils/constants/addresses'
+import { useBalance, useBlockNumber, useWatchContractEvent } from 'wagmi'
+import { USDC } from '@/utils/constants/addresses'
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
 import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
 import { allowance } from '@/utils/deposit/allowance'
 import { approveLifeTimeSwim } from '@/utils/deposit/approve'
 import { deposit } from '@/utils/deposit/deposit'
 import { useGetPayment } from '@/hooks/cashRamp/useGetPayment'
+import { useQueryClient } from '@tanstack/react-query'
+import { optimism } from 'viem/chains'
 
 
 interface DepositProps {
@@ -72,6 +74,21 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
     
     const { payment, getPayment } = useGetPayment()
     console.log(payment)
+
+    const queryClient = useQueryClient() 
+    const { data: blockNumber } = useBlockNumber({ watch: true }) 
+
+    const {data: balance, queryKey} = useBalance({
+        address: `0x${smartAccountAddress?.slice(2)}`,
+        token: USDC,
+        chainId: optimism.id
+    })
+
+    useEffect(() => { 
+        queryClient.invalidateQueries({ queryKey }) 
+    }, [blockNumber, queryClient, queryKey]) 
+
+    const formatedBalance = balance ? formatUnits(balance?.value!, balance?.decimals!) : '0'
 
     useWatchContractEvent({
         address: USDC,
@@ -228,7 +245,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                                     {
                                                         !showAddress
                                                         ? <><p className='text-base'>{pooler.ens}.susu.box</p></>
-                                                        : <><p className='text-xs'>{pooler.address}</p></>
+                                                        : <><p className='text-[11px]'>{pooler.address}</p></>
                                                     }
                                                     {
                                                         showAddress && (
@@ -271,7 +288,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                         <Button
                                             disabled={loading!}
                                             onClick={()=>{
-                                                poolDeposit('0.05', smartAccountAddress!)
+                                                poolDeposit(formatedBalance, smartAccountAddress!)
                                                 getBackTransactions()
                                             }}
                                         >
