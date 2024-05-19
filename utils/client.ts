@@ -1,11 +1,11 @@
 import { privateKeyToAccount } from 'viem/accounts'
 import { createPublicClient, createWalletClient, http } from 'viem'
-import { base, mainnet} from 'viem/chains'
+import { optimism, mainnet} from 'viem/chains'
 
 
 
 export const publicClient = createPublicClient({
-  chain: base,
+  chain: optimism,
   transport: http(),
 })
 

@@ -5,7 +5,7 @@ import { Separator } from '../ui/separator'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { formatUnits } from 'viem'
-import { base } from 'viem/chains'
+import { optimism } from 'viem/chains'
 import { trimDecimals } from '@/utils/trim'
 import { przUSDC } from '@/utils/constants/addresses'
 
@@ -40,7 +40,7 @@ export function Balances ({ balance }: BalancesProp) {
                 </div>
                 {/**Susu Balance */}
                 <div className='flex'>
-                    <span className='text-xl max-md:text-base text-gray-700'>$</span>
+                    <span className='text-xl max-md:text-optimism text-gray-700'>$</span>
                     <p className='text-6xl max-md:text-3xl max-md:text-center font-bold text-center'>
                         {trimDecimals(balance!)}
                     </p>

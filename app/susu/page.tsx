@@ -21,7 +21,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { formatUnits } from 'viem'
-import { base } from 'viem/chains'
+import { optimism } from 'viem/chains'
 import { useBalance, useBlockNumber } from 'wagmi'
 
 export default function Susu () {
@@ -37,7 +37,7 @@ export default function Susu () {
     const {data: balance, queryKey} = useBalance({
         address: `0x${smartAccountAddress?.slice(2)}`,
         token: przUSDC,
-        chainId: base.id
+        chainId: optimism.id
     })
 
     useEffect(() => { 
