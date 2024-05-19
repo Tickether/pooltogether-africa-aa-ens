@@ -1,10 +1,8 @@
 'use client'
 
-import { MinusIcon, PlusIcon } from '@radix-ui/react-icons' 
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -30,9 +28,6 @@ import { useBalance, useBlockNumber, useWatchContractEvent } from 'wagmi'
 import { USDC } from '@/utils/constants/addresses'
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
 import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
-import { allowance } from '@/utils/deposit/allowance'
-import { approveLifeTimeSwim } from '@/utils/deposit/approve'
-import { deposit } from '@/utils/deposit/deposit'
 import { useGetPayment } from '@/hooks/cashRamp/useGetPayment'
 import { useQueryClient } from '@tanstack/react-query'
 import { base } from 'viem/chains'
@@ -63,7 +58,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
 
     const { rates } = useGetRates()
     console.log(rates)
-    const [open, setOpen] = useState<boolean | null>()
+    const [open, setOpen] = useState<boolean>(false)
     const [showAddress, setShowAddress] = useState<boolean | null>()
 
     const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
@@ -159,7 +154,13 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
 
     return (
         <>
-            <Drawer open={open!}>
+            <Drawer 
+                open={open}
+                onClose={()=>{
+                    setOpen(false)
+                    setPaymentService(null)
+                }}
+            >
                 <DrawerTrigger asChild>
                     <Button 
                         className='gap-2' 
@@ -300,20 +301,6 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                 </>
                             )
                         }
-                        {
-                            !paymentService && (
-                                <>
-                                    <Button
-                                        onClick={()=>{
-                                            setOpen(false)
-                                        }}
-                                        variant='outline'
-                                    >
-                                        Cancel
-                                    </Button>
-                                </>
-                            )
-                        }
                     </DrawerFooter>
                     </div>
                 </DrawerContent>
@@ -332,5 +319,5 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                         }}
                                     >
                                         Payment
-                                </Button>
+                                    </Button>
  */

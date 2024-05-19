@@ -4,7 +4,6 @@ import { DoubleArrowUpIcon, MinusIcon, PlusIcon } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -27,9 +26,6 @@ import { Separator } from '../ui/separator'
 import { trimDecimals } from '@/utils/trim'
 import { usePoolWithdraw } from '@/hooks/withdraw/usePoolWithdraw'
 import { isAddress } from 'viem'
-import { useEnsAddress } from 'wagmi'
-import { normalize } from 'viem/ens'
-import { mainnet } from 'viem/chains'
 import { publicClientMainnet } from '@/utils/client'
 
 
@@ -48,7 +44,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
     console.log(countries)
         
     
-    const [open, setOpen] = useState<boolean | null>()
+    const [open, setOpen] = useState<boolean>(false)
     
     
     //const [reference, setReference] = useState<string | null>(null)
@@ -199,7 +195,15 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
 
     return (
         <>
-            <Drawer open={open!}>
+            <Drawer 
+                open={open}
+                onClose={()=>{
+                    setOpen(false)
+                    setPaymentService(null)
+                    setReceiverAddress('')
+                    setAmountDollar('')
+                }}
+            >
                 <DrawerTrigger asChild>
                     <Button 
                         className='gap-2' 
@@ -356,20 +360,6 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                                 </>
                             )
                         }
-                        {
-                            !paymentService && (
-                                <>
-                                    <Button
-                                        onClick={()=>{
-                                            setOpen(false)
-                                        }}
-                                        variant='outline'
-                                    >
-                                        Cancel
-                                    </Button>
-                                </>
-                            )
-                        }
                     </DrawerFooter>
                     </div>
                 </DrawerContent>
@@ -378,19 +368,3 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
         </>
       )
 } 
-
-
-
-
-/**4
- * 
- * <div>
-                                    <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, <Button
-                                        disabled={loading!}
-                                        onClick={()=>{
-                                            //poolWitjdraw('0.05', smartAccountAddress!)
-                                            //getBackTransactions()
-                                        }}
-                                    >click here</Button></p>
-                                </div>
- */
