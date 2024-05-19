@@ -5,7 +5,7 @@ import { BiconomySmartAccountV2, createSmartAccountClient } from '@biconomy/acco
 import type { ReactNode } from 'react'
 import React, { useContext, useEffect, useState } from 'react'
 import { WalletClient } from 'viem'
-import { optimism } from 'viem/chains'
+import { base } from 'viem/chains'
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { createWalletClient, custom } from 'viem';
 
@@ -38,7 +38,7 @@ export function BiconomyContext ({ children }: Props) {
         
         const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
         // Switch your wallet to your target chain before getting the viem WalletClient
-        await embeddedWallet?.switchChain(optimism.id)
+        await embeddedWallet?.switchChain(base.id)
 
         // Get an EIP1193 provider from the user's wallet
         const ethereumProvider = await embeddedWallet?.getEthereumProvider()
@@ -46,7 +46,7 @@ export function BiconomyContext ({ children }: Props) {
         // Create a Viem wallet client from the EIP1193 provider
         const walletClient = createWalletClient({
             account: embeddedWallet?.address as `0x${string}`,
-            chain: optimism,
+            chain: base,
             transport: custom(ethereumProvider!)
         })
         return walletClient as WalletClient;
@@ -58,7 +58,7 @@ export function BiconomyContext ({ children }: Props) {
         const smartAccount = await createSmartAccountClient({
             signer: walletClient,
             bundlerUrl: process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_URL, // <-- Read about this at https://docs.biconomy.io/dashboard#bundler-url
-            biconomyPaymasterApiKey: process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_URL, // <-- Read about at https://docs.biconomy.io/dashboard/paymaster
+            biconomyPaymasterApiKey: process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY, // <-- Read about at https://docs.biconomy.io/dashboard/paymaster
         });
       
         const address = await smartAccount.getAccountAddress();

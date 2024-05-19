@@ -8,7 +8,6 @@ import { Profile } from '@/components/profile/Profile'
 import { Transactions } from '@/components/transactions/Transactions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { Withdraw } from '@/components/withdraw/Withdraw'
 import { useGetPooler } from '@/hooks/pooler/useGetPooler'
 import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
@@ -21,7 +20,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { formatUnits } from 'viem'
-import { optimism } from 'viem/chains'
+import { base } from 'viem/chains'
 import { useBalance, useBlockNumber } from 'wagmi'
 
 export default function Susu () {
@@ -37,7 +36,7 @@ export default function Susu () {
     const {data: balance, queryKey} = useBalance({
         address: `0x${smartAccountAddress?.slice(2)}`,
         token: przUSDC,
-        chainId: optimism.id
+        chainId: base.id
     })
 
     useEffect(() => { 

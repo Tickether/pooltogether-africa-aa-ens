@@ -30,7 +30,7 @@ import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
 import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
 import { useGetPayment } from '@/hooks/cashRamp/useGetPayment'
 import { useQueryClient } from '@tanstack/react-query'
-import { optimism } from 'viem/chains'
+import { base } from 'viem/chains'
 
 
 interface DepositProps {
@@ -76,7 +76,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
     const {data: balance, queryKey} = useBalance({
         address: `0x${smartAccountAddress?.slice(2)}`,
         token: USDC,
-        chainId: optimism.id
+        chainId: base.id
     })
 
     useEffect(() => { 
@@ -87,8 +87,8 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
 
     useWatchContractEvent({
         address: USDC,
-        chainId: 10,
         abi: erc20Abi,
+        batch: false,
         eventName: 'Transfer',
         args: {
             to: smartAccountAddress
@@ -114,6 +114,8 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
           getBackTransactions()
           console.log("Done")
         },
+        poll: true,
+        pollingInterval: 1_000,
     })
     
     
@@ -246,7 +248,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                                     
                                                     {
                                                         !showAddress
-                                                        ? <><p className='text-optimism'>{pooler.ens}.susu.box</p></>
+                                                        ? <><p className='text-base'>{pooler.ens}.susu.box</p></>
                                                         : <><p className='text-[11px]'>{pooler.address}</p></>
                                                     }
                                                     {

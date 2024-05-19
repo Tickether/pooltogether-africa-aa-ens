@@ -1,2 +1,2 @@
-export const przUSDC: `0x${string}` = '0x03D3CE84279cB6F54f5e6074ff0F8319d830dafe'
-export const USDC: `0x${string}` = '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85'
+export const przUSDC: `0x${string}` = '0x7f5C2b379b88499aC2B997Db583f8079503f25b9'
+export const USDC: `0x${string}` = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
