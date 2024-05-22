@@ -7,39 +7,22 @@ const DepositSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        target: {
+            type: String,
+            required: true,
+        },
         txn: {
             type: String,
             unique: true,
         },
-        ref: {
-            type: String,
-            unique: true,
-            required: true,
-        },
-        prizeAmount: {
-            type: Number,
-            required: true,
-        },
-        localAmount: {
-            type: Number,
-            required: true,
-        },
-        currency: {
+        amount: {
             type: String,
             required: true,
         },
-        rate: {
-            type: Number,
-            required: true,
-        },
-        status: {
+        txOf: {
             type: String,
             required: true,
-            enum: ['pending', 'success']
-        },
-        service: {
-            type: String,
-            required: true,
+            enum: ['deposit', 'withdraw']
         },
     },
     {

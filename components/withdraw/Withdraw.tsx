@@ -18,20 +18,21 @@ import { Pooler } from '@/hooks/pooler/useGetPooler'
 import { useEffect, useState } from 'react'
 import { Countries, Country } from '@/utils/constants/countries'
 import { usePostWithdraw } from '@/hooks/withdraw/usePostWithdraw'
-import { useUpdateWithdraw } from '@/hooks/withdraw/useUpdateWithdraw'
 import { Ramp } from '../ramp/Ramp'
 import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
 import { useGetRates } from '@/hooks/cashRamp/useGetRates'
 import { Separator } from '../ui/separator'
 import { trimDecimals } from '@/utils/trim'
 import { usePoolWithdraw } from '@/hooks/withdraw/usePoolWithdraw'
-import { isAddress } from 'viem'
+import { formatUnits, isAddress } from 'viem'
 import { publicClientMainnet } from '@/utils/client'
+import { poolABI } from '@/utils/abis/poolABI'
+import { przUSDC } from '@/utils/constants/addresses'
+import { useWatchContractEvent } from 'wagmi'
 
 
 interface WithdrawProps {
     pooler: Pooler
-    //smartAccount: BiconomySmartAccountV2
     smartAccountAddress : `0x${string}`
     getBackTransactions : () => void
     balance: string
@@ -40,9 +41,6 @@ interface WithdrawProps {
 export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, balance } : WithdrawProps) {
 
     const { loading: loadingWithdraw, poolWithdraw } = usePoolWithdraw()
-    const { countries } = useGetCountries()
-    console.log(countries)
-        
     
     const [open, setOpen] = useState<boolean>(false)
     
@@ -50,17 +48,13 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
     //const [reference, setReference] = useState<string | null>(null)
     const [paymentService, setPaymentService] = useState<string | null>(null)
     const { loading, postWithdraw } = usePostWithdraw()
-    const { updateWithdraw } = useUpdateWithdraw()
-    
-    const countryFromRamp = countries ? countries!.find(country => country.name === pooler.country) : {name: '', code: ''}
-    const country : Country = ( Countries as any )[pooler.country]
+
 
 
     const { rates } = useGetRates()
     console.log(rates)
     const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
     const [reference, setReference] = useState<string | null>(null)
-    const [amountLocal, setAmountLocal] = useState<string>('')
     const [amountDollar, setAmountDollar] = useState<string>('')
     const [receiverAddress, setReceiverAddress] = useState<string>('');
     const [receiverAddressResolved, setReceiverAddressResolved] = useState<string>('');
@@ -75,27 +69,39 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
         setReceiverAddress('')
     }; 
   
+    const handleUSDChange = (e: any) => {
+        // Allow only numbers and a maximum of two decimal places
+        const regex = /^(0|[1-9]\d*)(\.\d{0,6})?$/;
+        const inputValue = e.target.value;
+        const numericValue = parseFloat(inputValue)
+        const balanceValue = parseFloat(balance)
 
-    const checkAddress = async () => {
-        if (!isAddress(receiverAddress)) {
-            setValid(false)
-            setReceiverAddressResolved('')
-            const ensAddress = await publicClientMainnet.getEnsAddress({
-                name: (receiverAddress),
-            })
-            if (isAddress(ensAddress!)) {
-                setValid(true);
-                setReceiverAddressResolved(ensAddress!)
-            } 
-        } else {
-            setValid(true);
-            setReceiverAddressResolved(receiverAddress)
+        if ((regex.test(inputValue) || inputValue === '') && (numericValue <= balanceValue || isNaN(numericValue)) ) {
+            setAmountDollar(inputValue === '' ? '' : inputValue)
         }
     }
 
+    
+
     useEffect(()=>{
+        const checkAddress = async () => {
+            if (!isAddress(receiverAddress)) {
+                setValid(false)
+                setReceiverAddressResolved('')
+                const ensAddress = await publicClientMainnet.getEnsAddress({
+                    name: (receiverAddress),
+                })
+                if (isAddress(ensAddress!)) {
+                    setValid(true);
+                    setReceiverAddressResolved(ensAddress!)
+                } 
+            } else {
+                setValid(true);
+                setReceiverAddressResolved(receiverAddress)
+            }
+        }
         checkAddress()
-    },[receiverAddress])
+    },[ receiverAddress ])
     console.log(receiverAddressResolved)
 
     
@@ -109,7 +115,11 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                 console.log(amountUsd, destinationAddress, paymentRequest)
                 // Here's where you add your custom experience for sending the *exact* USD amount to Cashramp's Escrow Address (destinationAddress)
                 if (parseFloat(balance) >= amountUsd ) {
-                    poolWithdraw(String(amountUsd), destinationAddress, smartAccountAddress)
+                    const makeSunbath = async()=>{
+                        await poolWithdraw(String(amountUsd), destinationAddress, smartAccountAddress)
+                        getBackTransactions()
+                    }
+                    makeSunbath()
                 } else {
                     setOpenCashRamp(false)
                     return
@@ -119,77 +129,8 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
         }
     });
     
+    
 
-    /*
-    const handleLocalChange = (e: any) => {
-        // Allow only numbers and a maximum of two decimal places
-        const regex = /^\d*\.?\d{0,2}$/;
-        const inputValue = e.target.value;
-
-        if (regex.test(inputValue) || inputValue === '') {
-            setAmountLocal(inputValue === '' ? '' : inputValue);
-            const dollarRate = parseFloat(inputValue) / parseFloat(rates?.withdrawalRate!);
-            setAmountDollar(inputValue === ''? '' : String(dollarRate.toFixed(6)));
-        }
-    }
-    const handleDollarChange = (e: any) => {
-        // Allow only numbers and a maximum of two decimal places
-        const regex = /^\d*\.?\d{0,6}$/;
-        const inputValue = e.target.value;
-        if (regex.test(inputValue) || inputValue === '') {
-            setAmountDollar(inputValue === '' ? '' : inputValue)
-            const localRate = parseFloat(inputValue) * parseFloat(rates?.withdrawalRate!)
-            setAmountLocal(inputValue === ''? '' : String(localRate.toFixed(2)))
-        }
-    }
-    */
-    const handleUSDChange = (e: any) => {
-        // Allow only numbers and a maximum of two decimal places
-        const regex = /^(0|[1-9]\d*)(\.\d{0,6})?$/;
-        const inputValue = e.target.value;
-        const numericValue = parseFloat(inputValue)
-        const balanceValue = parseFloat(balance)
-
-        if ((regex.test(inputValue) || inputValue === '') && (numericValue <= balanceValue || isNaN(numericValue)) ) {
-            setAmountDollar(inputValue === '' ? '' : inputValue)
-        }
-    }
-    const withdrawFromPooltoCashRamp = async () => {
-        const ref = `${country.currency}-${(new Date()).getTime().toString()}`
-        setReference(ref)
-        //setOpenRamp(true)
-        /*
-        const amountParsed = parseUnits(amountDollar!, 6)
-
-        
-        let tx = []
-        const tx1 = withdraw(amountParsed, smartAccountAddress)
-        tx.push(tx1)
-        const tx2 = transfer(smartAccountAddress, amountParsed)
-        //replace address here with Cashramp EScrow
-        tx.push(tx2)
-
-        // Send the transaction and get the transaction hash
-        const userOpResponse = await smartAccount.sendTransaction(tx, {
-            paymasterServiceData: {mode: PaymasterMode.SPONSORED},
-        });
-        const { transactionHash } = await userOpResponse.waitForTxHash();
-        console.log("Transaction Hash", transactionHash);
-        const userOpReceipt  = await userOpResponse.wait();
-        if(userOpReceipt.success == 'true') { 
-            //postWithdraw( smartAccountAddress!, transactionHash!, '', amountDollar!, amountLocal!, country.currency, rates?.withdrawalRate!, 'pending' )
-            //getBackTransactions()
-            console.log("UserOp receipt", userOpReceipt)
-            console.log("Transaction receipt", userOpReceipt.receipt)
-            toLocal(transactionHash!)
-        }
-        */
-    }
-    const toLocal = (txn: string) => {
-        //await req from CashRamp
-        // send info to  db
-        updateWithdraw(txn, '', 'success')
-    }
     
 
 
@@ -257,7 +198,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                                         <p className='text-center'>third party exchanges</p>
                                         <Button
                                             onClick={()=>{
-                                                const ref = `${country.currency}-${(new Date()).getTime().toString()}`
+                                                const ref = `${smartAccountAddress}-${(new Date()).getTime().toString()}`
                                                 setReference(ref)
                                                 setOpenCashRamp(true)
                                                 setOpen(false)
@@ -333,6 +274,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                                             disabled={!valid || parseFloat(amountDollar) == 0 || amountDollar == '' || loadingWithdraw}
                                             onClick={async ()=>{
                                                 await poolWithdraw(amountDollar, receiverAddressResolved as `0x${string}`, smartAccountAddress)
+                                                getBackTransactions()
                                                 setReceiverAddress('')
                                                 setAmountDollar('')
                                             }}
@@ -364,7 +306,7 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='withdrawal' address={smartAccountAddress} reference={reference!} currency={countryFromRamp?.code!} />}
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='withdrawal' address={smartAccountAddress} reference={reference!} />}
         </>
       )
 } 

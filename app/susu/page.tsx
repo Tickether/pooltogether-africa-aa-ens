@@ -149,7 +149,7 @@ export default function Susu () {
                                             smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!}/>
                                         }
                                     </div>
-                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccount={smartAccount!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} />  }
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} />  }
                                     { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
                                 </main>    
                             </>

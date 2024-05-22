@@ -10,8 +10,8 @@ export const usePostWithdraw = () => {
     async function giveMeSuccessToast(): Promise<void> {
         return new Promise((resolve) => {
             toast({
-                title: 'Your Withdraw is Pending...',
-                description: 'Your GHS will be released shortly...!!',
+                title: 'Your Withdraw is Complete',
+                description: 'Come back again soon!!',
             });
             // Set a timeout of six seconds (6000 milliseconds)
             setTimeout(() => {
@@ -23,7 +23,7 @@ export const usePostWithdraw = () => {
         return new Promise((resolve) => {
             toast({
                 title: 'Withdraw Failed, Try again!',
-                description: 'Something went wrong, try again, check faqs, or contact support!!',
+                description: 'Something went wrong, try again, or contact support!!',
                 variant: 'destructive'
             });
     
@@ -36,13 +36,10 @@ export const usePostWithdraw = () => {
 
     const postWithdraw = async (
         address: string, 
+        target: string, 
         txn: string, 
-        ref: string, 
-        prizeAmount: string, 
-        localAmount: string, 
-        currency: string, 
-        rate: string, 
-        status: string, 
+        amount: string,  
+        txOf: string
     ) => {
         setLoading(true)
         try {
@@ -53,13 +50,10 @@ export const usePostWithdraw = () => {
                 },
                 body: JSON.stringify({
                     address,
+                    target,
                     txn,
-                    ref,
-                    prizeAmount, 
-                    localAmount, 
-                    currency,  
-                    rate,
-                    status
+                    amount,
+                    txOf
                 })
             }) 
             const data =  await res.json()

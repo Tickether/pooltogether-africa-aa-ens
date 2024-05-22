@@ -3,14 +3,11 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
-import { PersonIcon, FaceIcon } from '@radix-ui/react-icons'
+import { FaceIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-
-import { useEffect, useState } from 'react'
 import { usePostPooler } from '@/hooks/pooler/usePostPooler'
 import { usePrivy } from '@privy-io/react-auth'
 import { Countries } from '@/utils/constants/countries'
@@ -26,11 +23,7 @@ interface ProfileProps {
     getBackPooler: () => void
 }
 const FormSchema = z.object({
-    firstname: z.string(),
-    lastname: z.string(),
     susuTag: z.string(),
-    country: z.string(),
-    phone: z.string(),
 })
 
 
@@ -50,11 +43,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            firstname: pooler?.first,
-            lastname: pooler?.last,
             susuTag: pooler?.ens,
-            country: pooler?.country,
-            phone: pooler?.phone,
         },
     })
 
@@ -73,14 +62,6 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     const susu = form.watch('susuTag')
     console.log(susu)
 
-    const handlePhoneChange = (e: any) => {
-        // Check if the input matches the regex pattern
-        if (/^[0-9]+$/.test(e.target.value) || e.target.value === '') {
-            setValue('phone', e.target.value)
-        }
-    } 
-
-   
     
     const getEmail = () => {
         return user?.email?.address
@@ -93,11 +74,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
             await postPooler(
                 smartAccountAddress!,
                 email!,
-                data.firstname,
-                data.lastname,
                 data.susuTag,
-                data.country,
-                data.phone,
             )
             getBackPooler()
         } else {
@@ -122,34 +99,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
                     <div className='grid gap-4 py-4'>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-                                <FormField
-                                    control={form.control}
-                                    name='firstname'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <FormLabel className='text-right'>First Name</FormLabel>
-                                                <FormControl >
-                                                    <Input disabled={!!pooler} className='col-span-3' placeholder={!pooler ? 'Vitalik' : pooler.first} {...field} />
-                                                </FormControl>
-                                            </div>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name='lastname'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <FormLabel className='text-right'>Last Name</FormLabel>
-                                                <FormControl >
-                                                    <Input disabled={!!pooler} className='col-span-3' placeholder={!pooler ? 'Buterin' : pooler.last} {...field} />
-                                                </FormControl>
-                                            </div>
-                                        </FormItem>
-                                    )}
-                                />
+                                
                                 <FormField
                                     control={form.control}
                                     name='susuTag'
@@ -164,65 +114,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
                                         </FormItem>
                                     )}
                                 />
-                                <FormField
-                                    control={form.control}
-                                    name='country'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <FormLabel className='text-right'>Country</FormLabel>
-                                                {
-                                                    !pooler
-                                                    ?(
-                                                        <>
-                                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                                <FormControl>
-                                                                <SelectTrigger className='col-span-3'>
-                                                                    <SelectValue placeholder='Select a Country' />
-                                                                </SelectTrigger>
-                                                                </FormControl>
-                                                                <SelectContent className='col-span-3'>
-                                                                    <SelectGroup>
-                                                                        {countries!.map((country) => (
-                                                                            <SelectItem
-                                                                                key={country}
-                                                                                value={country}
-                                                                            >
-                                                                                {country}
-                                                                            </SelectItem> 
-                                                                        ))}
-                                                                    </SelectGroup>
-                                                                </SelectContent>
-                                                            </Select>
-                                                        </>
-                                                    )
-                                                    :(
-                                                        <>
-                                                        <FormControl>
-                                                            <Input disabled className='col-span-3' placeholder={pooler.country} {...field} />
-                                                        </FormControl>
-                                                        </>
-                                                    )
-                                                }
-                                            </div>
-                                        
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name='phone'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <FormLabel className='text-right'>Phone #</FormLabel>
-                                                <FormControl >
-                                                    <Input disabled={!!pooler} className='col-span-3' placeholder={!pooler ? '0506661777' : pooler.phone} {...field} onChange={handlePhoneChange} />
-                                                </FormControl>
-                                            </div>
-                                        </FormItem>
-                                    )}
-                                />
+                        
                                 <div className='flex justify-end'>
                                     <Button
                                         disabled={!!pooler || loading!}

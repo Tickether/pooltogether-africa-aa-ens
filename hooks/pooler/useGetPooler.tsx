@@ -3,11 +3,7 @@ import { useState, useEffect } from 'react'
 export interface Pooler {
     address: string
     email: string
-    first: string
-    last: string
-    phone: string 
-    ens: string
-    country: string
+    ens: string 
 }
 export const useGetPooler = (url: string, address: string) => {
     const [pooler, setPooler] = useState<Pooler | null>(null)

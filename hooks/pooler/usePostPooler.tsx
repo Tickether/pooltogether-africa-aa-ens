@@ -38,12 +38,8 @@ export const usePostPooler = () => {
 
     const postPooler = async (
         address: string, 
-        email: string, 
-        first: string, 
-        last: string, 
-        ens: string,
-        country: string,
-        phone: string, 
+        email: string,  
+        ens: string, 
         
     ) => {
         setLoading(true)
@@ -56,11 +52,7 @@ export const usePostPooler = () => {
                 body: JSON.stringify({
                     address,
                     email,
-                    first, 
-                    last, 
                     ens, 
-                    country, 
-                    phone, 
                 })
             }) 
             const data =  await res.json()

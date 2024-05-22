@@ -5,15 +5,11 @@ import { ColumnDef } from '@tanstack/react-table'
 
 export interface Transaction {
     address: string
+    target: string
     txn: string
-    ref: string
-    prizeAmount: string
-    localAmount: string 
-    currency: string
-    rate: string, 
-    status: string, 
-    service: string
-    fee: string
+    amount: string
+    txOf: string
+    
 }
 export const useGetTransactions = (url: string, address: string) => {
     const [transactions, setTransactions] = useState<Transaction[] | null>(null)

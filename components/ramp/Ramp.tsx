@@ -6,10 +6,9 @@ interface RampProps {
     paymentType: string
     address: string
     reference: string
-    currency: string
 }
 
-export function Ramp({ setOpenRamp, paymentType, address, reference, currency } : RampProps) {
+export function Ramp({ setOpenRamp, paymentType, address, reference } : RampProps) {
 
     
     return (

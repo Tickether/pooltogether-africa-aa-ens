@@ -16,7 +16,6 @@ import { Pooler } from '@/hooks/pooler/useGetPooler'
 import { Countries, Country } from '@/utils/constants/countries'
 import { useEffect, useState } from 'react'
 import { usePostDeposit } from '@/hooks/deposit/usePostDeposit'
-import { useUpdateDeposit } from '@/hooks/deposit/useUpdateDeposit'
 import { erc20Abi, formatUnits, parseUnits } from 'viem'
 import { Ramp } from '../ramp/Ramp'
 import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
@@ -35,26 +34,22 @@ import { base } from 'viem/chains'
 
 interface DepositProps {
     pooler: Pooler
-    smartAccount: BiconomySmartAccountV2
     smartAccountAddress : `0x${string}`
     getBackTransactions : () => void
 }
 
 
 
-export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTransactions } : DepositProps) {
+export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : DepositProps) {
     const { countries } = useGetCountries()
     console.log(countries)
         
 
 
     const { postDeposit } = usePostDeposit()
-    const { updateDeposit } = useUpdateDeposit() 
     const { loading, poolDeposit } = usePoolDeposit()
 
-    const countryFromRamp = countries ? countries!.find(country => country.name === pooler.country) : {name: '', code: ''}
-    const country : Country = ( Countries as any )[pooler.country]
-    console.log(country)
+    
 
     const { rates } = useGetRates()
     console.log(rates)
@@ -64,8 +59,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
     const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
     const [reference, setReference] = useState<string | null>(null)
     const [paymentService, setPaymentService] = useState<string | null>(null)
-    const [amountLocal, setAmountLocal] = useState<string>('')
-    const [amountDollar, setAmountDollar] = useState<string>('')
+
     
     const { payment, getPayment } = useGetPayment()
     console.log(payment)
@@ -95,23 +89,20 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
         },
         onLogs(logs) {
           console.log('New logs!', logs[0].args.value)
-          const amount = formatUnits(logs[0].args.value!, 6)
-          poolDeposit(amount, smartAccountAddress)
-          /*
-          postDeposit(
-            smartAccountAddress,
-            '0xtnxhash',
-            'kes-timestamp',
-            'usdc gotten',
-            'localpaod',
-            'ghs',
-            'rate',
-            'success',
-            'get from modal',
-            'getfromCashramo',
-          )
-          */
-          getBackTransactions()
+          const makePooling = async() => {
+            const amount = formatUnits(logs[0].args.value!, 6)
+            const poolTxn = await poolDeposit(amount, smartAccountAddress)
+            await postDeposit(
+                smartAccountAddress,
+                logs[0].args.from!,
+                poolTxn!,
+                amount,
+                'deposit'
+            )
+            getBackTransactions()
+          }
+          makePooling()
+          
           console.log("Done")
         },
         poll: true,
@@ -149,7 +140,7 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
 
     const doCashRampPay = () => {
         setOpenCashRamp(true)
-        const ref = `${country.currency}-${(new Date()).getTime().toString()}`
+        const ref = `${smartAccountAddress}-${(new Date()).getTime().toString()}`
         setReference(ref)
         setOpen(false)
     }
@@ -291,8 +282,15 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                                     <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, 
                                         <Button
                                             disabled={loading! || parseFloat(formatedBalance) == 0}
-                                            onClick={()=>{
-                                                poolDeposit(formatedBalance, smartAccountAddress!)
+                                            onClick={async()=>{
+                                                const poolTxn = await poolDeposit(formatedBalance, smartAccountAddress!)
+                                                await postDeposit(
+                                                    smartAccountAddress,
+                                                    smartAccountAddress,
+                                                    poolTxn!,
+                                                    formatedBalance,
+                                                    'deposit'
+                                                )
                                                 getBackTransactions()
                                             }}
                                         >
@@ -307,19 +305,8 @@ export function Deposit ({ pooler, smartAccount, smartAccountAddress, getBackTra
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='deposit' address={smartAccountAddress} reference={reference!} currency={countryFromRamp?.code!}/>}
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='deposit' address={smartAccountAddress} reference={reference!} />}
         </>
         
-      )
+    )
 } 
-
-
-/**
- *                                 <Button
-                                        onClick={()=>{
-                                            getPayment('KES-1715549139115')
-                                        }}
-                                    >
-                                        Payment
-                                    </Button>
- */

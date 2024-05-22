@@ -4,43 +4,30 @@ import { ColumnDef } from '@tanstack/react-table';
 
 export const columns: ColumnDef<Transaction>[] = [
     {
-        accessorKey: 'status',
-        header: 'Status'
+        accessorKey: 'txOf',
+        header: 'Type'
     },
     {
-        accessorKey: 'ref',
-        header: 'Off-chain',
+        accessorKey: 'target',
+        header: 'to/from',
         cell: ({row}) => {
-            const refHash = (row.getValue('ref'))
+            const refHash = (row.getValue('target'))
             return <div>{trimRef(refHash as string)}</div>
         },
     },
     {
         accessorKey: 'txn',
-        header: 'On-chain',
+        header: 'Txn Hsh',
         cell: ({row}) => {
             const txnHash = (row.getValue('txn'))
             return <div>{trimRef(txnHash as string)}</div>
         },
     },
     {
-        accessorKey: 'currency',
-        header: 'Currency'
-    },
-    {
-        accessorKey: 'rate',
-        header: 'Rate'
-    },
-    {
-        accessorKey: 'localAmount',
-        header: 'Local',
-
-    },
-    {
-        accessorKey: 'prizeAmount',
+        accessorKey: 'amount',
         header: 'USD',
         cell: ({row}) => {
-            const amount = parseFloat(row.getValue('prizeAmount'))
+            const amount = parseFloat(row.getValue('amount'))
             const formatted = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',

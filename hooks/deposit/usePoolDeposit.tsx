@@ -57,6 +57,7 @@ export const usePoolDeposit = () => {
             //await updateDeposit(ref, txnHash!, 'success')
         }
         setLoading(false)
+        return txnHash
     }
     return { loading, poolDeposit }
 }

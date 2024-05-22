@@ -13,4 +13,18 @@ export const poolABI = [
         stateMutability: 'nonpayable',
         type: 'function',
     },
-] as const;
+    {
+        inputs: [
+            { name: "sender", type: "address" }, 
+            { name: "receiver", type: "address" },
+            { name: "owner", type: "address" },
+            { name: "assets", type: "uint256" },
+            { name: "shares", type: "uint256" },
+        ],
+        name: 'Withdraw',
+        //outputs: [],
+        //stateMutability: 'nonpayable',
+        type: 'event',
+
+    }
+] as const; 
