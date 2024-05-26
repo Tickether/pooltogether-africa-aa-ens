@@ -12,7 +12,8 @@ import { Withdraw } from '@/components/withdraw/Withdraw'
 import { useGetPooler } from '@/hooks/pooler/useGetPooler'
 import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
 import { useBiconomy } from '@/providers/BiconomyContext'
-import { przUSDC } from '@/utils/constants/addresses'
+import { twabABI } from '@/utils/abis/twabABI'
+import { TWAB, WETH, przUSDC } from '@/utils/constants/addresses'
 import { usePrivy } from '@privy-io/react-auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { Terminal } from 'lucide-react'
@@ -21,7 +22,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { formatUnits } from 'viem'
 import { base } from 'viem/chains'
-import { useBalance, useBlockNumber } from 'wagmi'
+import { useBalance, useBlockNumber, useReadContract } from 'wagmi'
 
 export default function Susu () {
     const { ready, authenticated } = usePrivy()
@@ -38,14 +39,39 @@ export default function Susu () {
         token: przUSDC,
         chainId: base.id
     })
-
     useEffect(() => { 
         queryClient.invalidateQueries({ queryKey }) 
     }, [blockNumber, queryClient, queryKey]) 
-
     const formatedBalance = balance ? formatUnits(balance?.value!, balance?.decimals!) : '0'
 
-    console.log(balance?.decimals)
+
+
+    const {data: rewardBalance, queryKey: rewardBalanceQueryKey} = useBalance({
+        address: `0x${smartAccountAddress?.slice(2)}`,
+        token: WETH,
+        chainId: base.id
+    })
+    useEffect(() => { 
+        queryClient.invalidateQueries({ queryKey: rewardBalanceQueryKey }) 
+    }, [blockNumber, queryClient, rewardBalanceQueryKey]) 
+    const formatedRewardBalance = rewardBalance ? formatUnits(rewardBalance?.value!, rewardBalance?.decimals!) : '0'
+
+
+
+    const {data: boostBalance, queryKey: boostQueryKey} = useReadContract({
+        abi: twabABI,
+        address: TWAB,
+        functionName: 'delegateBalanceOf',
+        args: [(przUSDC), (smartAccountAddress!)]
+    })
+    useEffect(() => { 
+        queryClient.invalidateQueries({ queryKey: boostQueryKey }) 
+    }, [blockNumber, queryClient, boostQueryKey]) 
+    const boostedtBalance = boostBalance ? boostBalance - balance?.value! : 0
+    const formatedBoostBalance = boostedtBalance ? formatUnits(boostedtBalance!, balance?.decimals!) : '0'
+    
+    
+    //console.log(balance?.decimals)
     return (
         <main className='z-0'>
             {
@@ -146,7 +172,7 @@ export default function Susu () {
                                     <div>
                                         {/** Balances */}
                                         {
-                                            smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!}/>
+                                            smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!} rewardBalance={formatedRewardBalance!} boostBalance={formatedBoostBalance}/>
                                         }
                                     </div>
                                     { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} />  }

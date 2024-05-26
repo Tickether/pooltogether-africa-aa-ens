@@ -7,6 +7,7 @@ declare global {
             NEXT_PUBLIC_ALCHEMY_API_KEY: string;
             NEXT_PUBLIC_BICONOMY_BUNDLER_URL: string
             NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY: string
+            NEXT_PUBLIC_COINGECKO_API: string
             CASHRAMP_API_SECRET_KEY: string
             CASHRAMP_WEBHOOK_TOKEN: string
             MONGO: string

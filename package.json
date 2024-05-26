@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@biconomy/account": "^4.0.0",
+    "@generationsoftware/hyperstructure-client-js": "^1.12.10",
     "@hookform/resolvers": "^3.3.4",
     "@privy-io/react-auth": "^1.56.1",
     "@radix-ui/react-alert-dialog": "^1.0.5",
