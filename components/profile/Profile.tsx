@@ -10,7 +10,6 @@ import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { usePostPooler } from '@/hooks/pooler/usePostPooler'
 import { usePrivy } from '@privy-io/react-auth'
-import { Countries } from '@/utils/constants/countries'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer'
 import { normalize } from 'viem/ens'
 
@@ -34,10 +33,6 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
 
     
     console.log(smartAccountAddress)
-
-    //const countries = Object.keys(Countries);
-
-    const countries: string[] = Object.values(Countries).map(country => country.name);
 
     
     const form = useForm<z.infer<typeof FormSchema>>({

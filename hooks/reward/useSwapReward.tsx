@@ -1,33 +1,30 @@
-'use client'
-
+import { SWAP_ROUTER, WETH } from '@/utils/constants/addresses'
+import { allowanceWETH } from '@/utils/deposit/allowance'
+import { approveLifeTimeReward } from '@/utils/deposit/approve'
+import { SwapRouterParams, swap } from '@/utils/reward/swap'
 import { useState } from 'react'
-import { przUSDC } from '@/utils/constants/addresses'
-import { allowanceUSD } from '@/utils/deposit/allowance'
-import { parseUnits } from 'viem'
 import { PaymasterMode } from '@biconomy/account'
-import { approveLifeTimeSwim } from '@/utils/deposit/approve'
-import { deposit } from '@/utils/deposit/deposit'
 import { useBiconomy } from '@/providers/BiconomyContext'
 
-export const usePoolDeposit = () => {
+
+export const useSwapReward = () => {
     
     const [loading, setLoading] = useState<boolean>(false)
     const { smartAccount } = useBiconomy()
-
-    const poolDeposit = async (amountDollar: string, smartAccountAddress: `0x${string}`) => {
-        
+    
+    const swapReward = async (swapRouterParams: SwapRouterParams) => {
         try {
             setLoading(true)
-            const amountParsed = parseUnits(amountDollar!, 6)
-            const allowance_ = await allowanceUSD(smartAccountAddress, przUSDC)
+            const amountInParsed = swapRouterParams.amountIn
+            const allowance_ = await allowanceWETH(swapRouterParams.recipient, SWAP_ROUTER)
             let userOpResponse
             let txnHash
-            if (amountParsed < allowance_ || allowance_ == BigInt(0)) {
+            if (amountInParsed < allowance_ || allowance_ == BigInt(0)) {
                 // send two
                 const tx = []
-                const tx1 = approveLifeTimeSwim(przUSDC)
+                const tx1 = approveLifeTimeReward(SWAP_ROUTER)
                 tx.push(tx1)
-                const tx2 = deposit(amountParsed, smartAccountAddress)
+                const tx2 = swap(swapRouterParams)
                 tx.push(tx2)
                 // Send the transaction and get the transaction hash
                 userOpResponse = await smartAccount!.sendTransaction(tx, {
@@ -36,10 +33,9 @@ export const usePoolDeposit = () => {
                 const { transactionHash } = await userOpResponse.waitForTxHash();
                 console.log("Transaction Hash", transactionHash);
                 txnHash = transactionHash
-    
-            }else {
+            } else {
                 // send one
-                const tx = deposit(amountParsed, smartAccountAddress)
+                const tx = swap(swapRouterParams)
                 // Send the transaction and get the transaction hash
                 userOpResponse = await smartAccount!.sendTransaction(tx, {
                     paymasterServiceData: {mode: PaymasterMode.SPONSORED},
@@ -47,23 +43,20 @@ export const usePoolDeposit = () => {
                 const { transactionHash } = await userOpResponse.waitForTxHash();
                 console.log("Transaction Hash", transactionHash);
                 txnHash = transactionHash
-    
             }
-    
-            
+
+
             const userOpReceipt  = await userOpResponse?.wait();
             if(userOpReceipt?.success == 'true') { 
                 console.log("UserOp receipt", userOpReceipt)
                 console.log("Transaction receipt", userOpReceipt?.receipt)
             }
             setLoading(false)
-            return txnHash 
+            return txnHash
         } catch (error) {
             console.log(error)
             setLoading(false)
         }
-        
-        
     }
-    return { loading, poolDeposit }
+    return { loading, swapReward }
 }

@@ -13,10 +13,9 @@ import {
 import { DoubleArrowDownIcon } from '@radix-ui/react-icons'
 import { Copy, SkipBack, Terminal, Vault } from 'lucide-react'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
-import { Countries, Country } from '@/utils/constants/countries'
 import { useEffect, useState } from 'react'
 import { usePostDeposit } from '@/hooks/deposit/usePostDeposit'
-import { erc20Abi, formatUnits, parseUnits } from 'viem'
+import { erc20Abi, formatUnits, parseEther, parseUnits } from 'viem'
 import { Ramp } from '../ramp/Ramp'
 import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
 import { useGetRates } from '@/hooks/cashRamp/useGetRates'
@@ -24,23 +23,24 @@ import { Separator } from '../ui/separator'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Switch } from '../ui/switch'
 import { useBalance, useBlockNumber, useWatchContractEvent } from 'wagmi'
-import { USDC } from '@/utils/constants/addresses'
+import { USDC, WETH } from '@/utils/constants/addresses'
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
-import { BiconomySmartAccountV2, PaymasterMode } from '@biconomy/account'
 import { useGetPayment } from '@/hooks/cashRamp/useGetPayment'
 import { useQueryClient } from '@tanstack/react-query'
 import { base } from 'viem/chains'
+import { useSwapReward } from '@/hooks/reward/useSwapReward'
 
 
 interface DepositProps {
     pooler: Pooler
-    smartAccountAddress : `0x${string}`
-    getBackTransactions : () => void
+    smartAccountAddress: `0x${string}`
+    getBackTransactions: () => void
+    rewardBalance: string
 }
 
 
 
-export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : DepositProps) {
+export function Deposit ({ pooler, smartAccountAddress, getBackTransactions, rewardBalance } : DepositProps) {
     const { countries } = useGetCountries()
     console.log(countries)
         
@@ -48,6 +48,7 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : 
 
     const { postDeposit } = usePostDeposit()
     const { loading, poolDeposit } = usePoolDeposit()
+    const { loading: loadingSwapReward, swapReward } = useSwapReward()
 
     
 
@@ -193,18 +194,39 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : 
                             !paymentService && (
                                 <>
                                     <div className='flex flex-col p-4 pb-0'>
-                                        <Button
-                                            onClick={()=>{
-                                                setPaymentService('direct')
-                                            }}
-                                        >
-                                            <Vault size={17}/>
-                                            <p>Direct Deposit</p>
-                                        </Button>
+                                        <div className='flex flex-col gap-3'>
+                                            <Button
+                                                disabled={loadingSwapReward}
+                                                onClick={()=>{
+                                                    setPaymentService('direct')
+                                                }}
+                                            >
+                                                <Vault size={17}/>
+                                                <p>Direct Deposit</p>
+                                            </Button>
+                                            <Button
+                                                disabled={loadingSwapReward}
+                                                onClick={()=>{
+                                                    swapReward({
+                                                        tokenIn: WETH,
+                                                        tokenOut: USDC,
+                                                        recipient: smartAccountAddress,
+                                                        fee: 500,
+                                                        amountIn: parseEther(rewardBalance),
+                                                        amountOutMinimum: BigInt(0),
+                                                        sqrtPriceLimitX96: BigInt(0),
+                                                    })
+                                                }}
+                                            >
+                                                <Vault size={17}/>
+                                                <p>Reward Deposit</p>
+                                            </Button>
+                                        </div>
                                         <p className='text-center'>or</p>
                                         <Separator orientation='horizontal' />
                                         <p className='text-center'>third party exchanges</p>
                                         <Button
+                                            disabled={loadingSwapReward}
                                             onClick={doCashRampPay}
                                         >
                                             <Vault size={17}/>

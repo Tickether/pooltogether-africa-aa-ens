@@ -2,6 +2,8 @@
 import connectDB from '@/utils/db/mongodb'
 import Deposit from '@/model/deposit'
 import Withdraw from '@/model/withdraw'
+import Incentive from '@/model/incentive'
+import Reward from '@/model/reward'
 
 
 export async function POST(
@@ -12,9 +14,11 @@ export async function POST(
         await connectDB()
         const deposits = await Deposit.find({ address: address })
         const withdrawals = await Withdraw.find({ address })
+        const rewards = await Reward.find({ address })
+        const incentives = await Incentive.find({ address })
 
         // Combine deposits and withdrawals into a single array
-        const transactions = [...deposits, ...withdrawals]
+        const transactions = [...deposits, ...withdrawals, ...rewards, ...incentives]
 
         // Sort the combined array by date in descending order
         const sortedTransactions = transactions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())

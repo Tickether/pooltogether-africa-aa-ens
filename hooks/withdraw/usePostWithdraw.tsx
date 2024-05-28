@@ -41,8 +41,9 @@ export const usePostWithdraw = () => {
         amount: string,  
         txOf: string
     ) => {
-        setLoading(true)
+        
         try {
+            setLoading(true)
             const res = await fetch('api/postWithdraw', {
                 method: 'POST',
                 headers: {
@@ -59,11 +60,13 @@ export const usePostWithdraw = () => {
             const data =  await res.json()
             console.log(data)
             giveMeSuccessToast()
+            setLoading(false)
         } catch (error) {
             console.log(error)
             giveMeFailedToast()
+            setLoading(false)
         }
-        setLoading(false)
+        
     }
 
     return {loading, postWithdraw}

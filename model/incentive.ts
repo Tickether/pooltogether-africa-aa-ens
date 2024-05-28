@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 const { Schema } = mongoose
 
-const WithdrawSchema = new mongoose.Schema(
+const IncentiveSchema = new mongoose.Schema(
     {
         address: {
             type: String,
@@ -31,6 +31,6 @@ const WithdrawSchema = new mongoose.Schema(
     }
 )
 
-const Withdraw = mongoose.models.Withdraw || mongoose.model('Withdraw', WithdrawSchema)
+const Incentive = mongoose.models.Incentive || mongoose.model('Incentive', IncentiveSchema)
 
-export default Withdraw
+export default Incentive

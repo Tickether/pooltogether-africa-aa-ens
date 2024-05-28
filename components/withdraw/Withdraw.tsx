@@ -1,6 +1,6 @@
 'use client'
 
-import { DoubleArrowUpIcon, MinusIcon, PlusIcon } from '@radix-ui/react-icons' 
+import { DoubleArrowUpIcon } from '@radix-ui/react-icons' 
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -16,19 +16,15 @@ import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
 import { useEffect, useState } from 'react'
-import { Countries, Country } from '@/utils/constants/countries'
 import { usePostWithdraw } from '@/hooks/withdraw/usePostWithdraw'
 import { Ramp } from '../ramp/Ramp'
-import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
 import { useGetRates } from '@/hooks/cashRamp/useGetRates'
 import { Separator } from '../ui/separator'
 import { trimDecimals } from '@/utils/trim'
 import { usePoolWithdraw } from '@/hooks/withdraw/usePoolWithdraw'
-import { formatUnits, isAddress } from 'viem'
+import { isAddress } from 'viem'
 import { publicClientMainnet } from '@/utils/client'
-import { poolABI } from '@/utils/abis/poolABI'
-import { przUSDC } from '@/utils/constants/addresses'
-import { useWatchContractEvent } from 'wagmi'
+
 
 
 interface WithdrawProps {

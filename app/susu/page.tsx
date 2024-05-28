@@ -67,7 +67,7 @@ export default function Susu () {
     useEffect(() => { 
         queryClient.invalidateQueries({ queryKey: boostQueryKey }) 
     }, [blockNumber, queryClient, boostQueryKey]) 
-    const boostedtBalance = boostBalance ? boostBalance - balance?.value! : 0
+    const boostedtBalance = boostBalance ? BigInt(boostBalance) - balance?.value! : BigInt(0)
     const formatedBoostBalance = boostedtBalance ? formatUnits(boostedtBalance!, balance?.decimals!) : '0'
     
     
@@ -175,7 +175,7 @@ export default function Susu () {
                                             smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!} rewardBalance={formatedRewardBalance!} boostBalance={formatedBoostBalance}/>
                                         }
                                     </div>
-                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} />  }
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} rewardBalance={formatedRewardBalance}/>  }
                                     { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
                                 </main>    
                             </>
