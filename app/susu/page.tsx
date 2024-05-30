@@ -13,7 +13,7 @@ import { useGetPooler } from '@/hooks/pooler/useGetPooler'
 import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
 import { useBiconomy } from '@/providers/BiconomyContext'
 import { twabABI } from '@/utils/abis/twabABI'
-import { TWAB, WETH, przUSDC } from '@/utils/constants/addresses'
+import { TWAB, przUSDC } from '@/utils/constants/addresses'
 import { usePrivy } from '@privy-io/react-auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { Terminal } from 'lucide-react'
@@ -43,18 +43,6 @@ export default function Susu () {
         queryClient.invalidateQueries({ queryKey }) 
     }, [blockNumber, queryClient, queryKey]) 
     const formatedBalance = balance ? formatUnits(balance?.value!, balance?.decimals!) : '0'
-
-
-
-    const {data: rewardBalance, queryKey: rewardBalanceQueryKey} = useBalance({
-        address: `0x${smartAccountAddress?.slice(2)}`,
-        token: WETH,
-        chainId: base.id
-    })
-    useEffect(() => { 
-        queryClient.invalidateQueries({ queryKey: rewardBalanceQueryKey }) 
-    }, [blockNumber, queryClient, rewardBalanceQueryKey]) 
-    const formatedRewardBalance = rewardBalance ? formatUnits(rewardBalance?.value!, rewardBalance?.decimals!) : '0'
 
 
 
@@ -172,10 +160,10 @@ export default function Susu () {
                                     <div>
                                         {/** Balances */}
                                         {
-                                            smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!} rewardBalance={formatedRewardBalance!} boostBalance={formatedBoostBalance}/>
+                                            smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!} boostBalance={formatedBoostBalance}/>
                                         }
                                     </div>
-                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} rewardBalance={formatedRewardBalance}/>  }
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions}/>  }
                                     { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
                                 </main>    
                             </>

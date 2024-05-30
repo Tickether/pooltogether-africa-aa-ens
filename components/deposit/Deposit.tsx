@@ -23,24 +23,22 @@ import { Separator } from '../ui/separator'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Switch } from '../ui/switch'
 import { useBalance, useBlockNumber, useWatchContractEvent } from 'wagmi'
-import { USDC, WETH } from '@/utils/constants/addresses'
+import { USDC } from '@/utils/constants/addresses'
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
 import { useGetPayment } from '@/hooks/cashRamp/useGetPayment'
 import { useQueryClient } from '@tanstack/react-query'
 import { base } from 'viem/chains'
-import { useSwapReward } from '@/hooks/reward/useSwapReward'
 
 
 interface DepositProps {
     pooler: Pooler
     smartAccountAddress: `0x${string}`
     getBackTransactions: () => void
-    rewardBalance: string
 }
 
 
 
-export function Deposit ({ pooler, smartAccountAddress, getBackTransactions, rewardBalance } : DepositProps) {
+export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : DepositProps) {
     const { countries } = useGetCountries()
     console.log(countries)
         
@@ -48,7 +46,6 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions, rew
 
     const { postDeposit } = usePostDeposit()
     const { loading, poolDeposit } = usePoolDeposit()
-    const { loading: loadingSwapReward, swapReward } = useSwapReward()
 
     
 
@@ -110,33 +107,6 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions, rew
         pollingInterval: 1_000,
     })
     
-    
-
-    /*
-    const handleLocalChange = (e: any) => {
-        // Allow only numbers and a maximum of two decimal places
-        const regex = /^\d*\.?\d{0,2}$/;
-        const inputValue = e.target.value;
-
-        if (regex.test(inputValue) || inputValue === '') {
-            setAmountLocal(inputValue === '' ? '' : inputValue);
-            const dollarRate = parseFloat(inputValue) / parseFloat(rates?.depositRate!);
-            setAmountDollar(inputValue === ''? '' : String(dollarRate.toFixed(6)));
-        }
-    }
-    const handleDollarChange = (e: any) => {
-        // Allow only numbers and a maximum of two decimal places
-        const regex = /^\d*\.?\d{0,6}$/;
-        const inputValue = e.target.value;
-
-        if (regex.test(inputValue) || inputValue === '') {
-            setAmountDollar(inputValue === '' ? '' : inputValue)
-            const localRate = parseFloat(inputValue) * parseFloat(rates?.depositRate!)
-            setAmountLocal(inputValue === ''? '' : String(localRate.toFixed(2)))
-        }
-    }
-    */
-
  
 
     const doCashRampPay = () => {
@@ -196,7 +166,6 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions, rew
                                     <div className='flex flex-col p-4 pb-0'>
                                         <div className='flex flex-col gap-3'>
                                             <Button
-                                                disabled={loadingSwapReward}
                                                 onClick={()=>{
                                                     setPaymentService('direct')
                                                 }}
@@ -204,29 +173,11 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions, rew
                                                 <Vault size={17}/>
                                                 <p>Direct Deposit</p>
                                             </Button>
-                                            <Button
-                                                disabled={loadingSwapReward}
-                                                onClick={()=>{
-                                                    swapReward({
-                                                        tokenIn: WETH,
-                                                        tokenOut: USDC,
-                                                        recipient: smartAccountAddress,
-                                                        fee: 500,
-                                                        amountIn: parseEther(rewardBalance),
-                                                        amountOutMinimum: BigInt(0),
-                                                        sqrtPriceLimitX96: BigInt(0),
-                                                    })
-                                                }}
-                                            >
-                                                <Vault size={17}/>
-                                                <p>Reward Deposit</p>
-                                            </Button>
                                         </div>
                                         <p className='text-center'>or</p>
                                         <Separator orientation='horizontal' />
                                         <p className='text-center'>third party exchanges</p>
                                         <Button
-                                            disabled={loadingSwapReward}
                                             onClick={doCashRampPay}
                                         >
                                             <Vault size={17}/>
