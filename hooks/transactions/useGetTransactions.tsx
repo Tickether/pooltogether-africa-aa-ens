@@ -40,9 +40,17 @@ export const useGetTransactions = (url: string, address: string) => {
         getTransactions()
     },[ address ])
 
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            await getBackTransactions()
+        }, 3000)
+
+        return () => clearInterval(interval)
+    }, [address])
+
     const getBackTransactions = async ()=>{
         setLoading(true);
-        console.log('aaa')
+        
         try {
             const res = await fetch(url ,{
                 method: 'POST',
@@ -61,5 +69,5 @@ export const useGetTransactions = (url: string, address: string) => {
         setLoading(false)
     }
 
-    return {transactions, loading, error, getBackTransactions}
+    return {transactions, loading, error}
 }

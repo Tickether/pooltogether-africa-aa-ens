@@ -29,7 +29,7 @@ export default function Susu () {
     const { smartAccount, smartAccountAddress } = useBiconomy()
     const router = useRouter() 
     const { pooler, loading, getBackPooler } = useGetPooler('api/getPooler/', smartAccountAddress!)
-    const { transactions, getBackTransactions } = useGetTransactions('api/getTransactions/', smartAccountAddress!)
+    const { transactions } = useGetTransactions('api/getTransactions/', smartAccountAddress!)
 
     const queryClient = useQueryClient() 
     const { data: blockNumber } = useBlockNumber({ watch: true }) 
@@ -55,7 +55,7 @@ export default function Susu () {
     useEffect(() => { 
         queryClient.invalidateQueries({ queryKey: boostQueryKey }) 
     }, [blockNumber, queryClient, boostQueryKey]) 
-    const boostedtBalance = boostBalance ? BigInt(boostBalance) - balance?.value! : BigInt(0)
+    const boostedtBalance = typeof boostBalance == 'bigint' ? BigInt(boostBalance) - balance?.value! : BigInt(0)
     const formatedBoostBalance = boostedtBalance ? formatUnits(boostedtBalance!, balance?.decimals!) : '0'
     
     
@@ -111,7 +111,7 @@ export default function Susu () {
                                         <div className='flex gap-3'>
                                             {
                                                 pooler && (
-                                                    <Withdraw pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions} balance={formatedBalance!}/>
+                                                    <Withdraw pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} balance={formatedBalance!}/>
                                                 )
                                             }
                                             <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
@@ -163,7 +163,7 @@ export default function Susu () {
                                             smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!} boostBalance={formatedBoostBalance}/>
                                         }
                                     </div>
-                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} getBackTransactions={getBackTransactions}/>  }
+                                    { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`}/>  }
                                     { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
                                 </main>    
                             </>

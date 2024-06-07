@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { przUSDC } from '@/utils/constants/addresses'
+import { przDepositBot, przUSDC } from '@/utils/constants/addresses'
 import { allowanceUSD } from '@/utils/deposit/allowance'
 import { parseUnits } from 'viem'
 import { PaymasterMode } from '@biconomy/account'
 import { approveLifeTimeSwim } from '@/utils/deposit/approve'
 import { deposit } from '@/utils/deposit/deposit'
 import { useBiconomy } from '@/providers/BiconomyContext'
+import { hook } from '@/utils/deposit/hook'
 
 export const usePoolDeposit = () => {
     
@@ -65,5 +66,39 @@ export const usePoolDeposit = () => {
         
         
     }
-    return { loading, poolDeposit }
+    const poolApproveHook = async () => {
+        
+        try {
+            //setLoading(true)
+            let tx = []
+            const approveTx = approveLifeTimeSwim(przDepositBot)
+            tx.push(approveTx)
+            const hookTx = hook()
+            tx.push(hookTx)
+
+
+            // Send the transaction and get the transaction hash
+            const userOpResponse = await smartAccount!.sendTransaction(tx, {
+                paymasterServiceData: {mode: PaymasterMode.SPONSORED},
+            });
+            const { transactionHash } = await userOpResponse.waitForTxHash();
+            console.log("Transaction Hash", transactionHash);
+    
+            
+            const userOpReceipt  = await userOpResponse?.wait();
+            if(userOpReceipt?.success == 'true') { 
+                console.log("UserOp receipt", userOpReceipt)
+                console.log("Transaction receipt", userOpReceipt?.receipt)
+            }
+            //setLoading(false)
+            return transactionHash 
+        } catch (error) {
+            console.log(error)
+            //setLoading(false)
+        }
+        
+        
+    }
+    
+    return { loading, poolDeposit, poolApproveHook }
 }

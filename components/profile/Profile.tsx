@@ -12,6 +12,7 @@ import { usePostPooler } from '@/hooks/pooler/usePostPooler'
 import { usePrivy } from '@privy-io/react-auth'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer'
 import { normalize } from 'viem/ens'
+import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
 
 
 
@@ -29,6 +30,7 @@ const FormSchema = z.object({
 
 export function Profile ({ pooler, smartAccountAddress, getBackPooler } : ProfileProps) {
     const { loading, postPooler } = usePostPooler()
+    const { poolApproveHook } = usePoolDeposit()
     const { user } = usePrivy()
 
     
@@ -66,6 +68,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
         console.log({ data });
         const email = getEmail()
         if (!pooler) {
+            await poolApproveHook()
             await postPooler(
                 smartAccountAddress!,
                 email!,

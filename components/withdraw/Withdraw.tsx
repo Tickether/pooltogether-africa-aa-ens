@@ -30,11 +30,10 @@ import { publicClientMainnet } from '@/utils/client'
 interface WithdrawProps {
     pooler: Pooler
     smartAccountAddress : `0x${string}`
-    getBackTransactions : () => void
     balance: string
 }
 
-export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, balance } : WithdrawProps) {
+export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawProps) {
 
     const { loading: loadingWithdraw, poolWithdraw } = usePoolWithdraw()
     
@@ -113,7 +112,6 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                 if (parseFloat(balance) >= amountUsd ) {
                     const makeSunbath = async()=>{
                         await poolWithdraw(String(amountUsd), destinationAddress, smartAccountAddress)
-                        getBackTransactions()
                     }
                     makeSunbath()
                 } else {
@@ -270,7 +268,6 @@ export function Withdraw ({ pooler, smartAccountAddress, getBackTransactions, ba
                                             disabled={!valid || parseFloat(amountDollar) == 0 || amountDollar == '' || loadingWithdraw}
                                             onClick={async ()=>{
                                                 await poolWithdraw(amountDollar, receiverAddressResolved as `0x${string}`, smartAccountAddress)
-                                                getBackTransactions()
                                                 setReceiverAddress('')
                                                 setAmountDollar('')
                                             }}

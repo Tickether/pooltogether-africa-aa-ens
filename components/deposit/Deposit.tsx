@@ -33,12 +33,11 @@ import { base } from 'viem/chains'
 interface DepositProps {
     pooler: Pooler
     smartAccountAddress: `0x${string}`
-    getBackTransactions: () => void
 }
 
 
 
-export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : DepositProps) {
+export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const { countries } = useGetCountries()
     console.log(countries)
         
@@ -76,7 +75,7 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : 
     }, [blockNumber, queryClient, queryKey]) 
 
     const formatedBalance = balance ? formatUnits(balance?.value!, balance?.decimals!) : '0'
-
+/*
     useWatchContractEvent({
         address: USDC,
         abi: erc20Abi,
@@ -106,7 +105,7 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : 
         poll: true,
         pollingInterval: 1_000,
     })
-    
+*/  
  
 
     const doCashRampPay = () => {
@@ -264,7 +263,6 @@ export function Deposit ({ pooler, smartAccountAddress, getBackTransactions } : 
                                                     formatedBalance,
                                                     'deposit'
                                                 )
-                                                getBackTransactions()
                                             }}
                                         >
                                             click here
