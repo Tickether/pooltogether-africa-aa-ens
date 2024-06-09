@@ -46,23 +46,10 @@ export default function Home() {
             </div>
             <div>
               <p className='text-center'>Save in Dollars</p>
-              <p className='text-center text-sm text-gray-400'>with your local cedis</p>  
+              <p className='text-center text-xs text-gray-400'>via cash ramps</p>  
             </div>
           </div>
-          <div className='flex w-full flex-col max-md:flex-col-reverse items-center'>
-            <div className='flex w-48 h-48 justify-center'>
-              <Image 
-                src='./noLoss.svg'
-                alt=''
-                width={150}
-                height={150}
-              />
-            </div>
-            <div>
-              <p className='text-center'>Withdraw Anytime</p>
-              <p className='text-center text-sm text-gray-400'>without any loss</p>
-            </div>
-          </div>
+          
           <div className='flex w-full flex-col max-md:flex-col-reverse items-center'>
             <div className='flex w-48 h-48 justify-center'>
               <Image 
@@ -74,7 +61,22 @@ export default function Home() {
             </div>
             <div>
               <p className='text-center'>Win Prizes</p>
-              <p className='text-center text-sm text-gray-400'>for saving dollars</p>
+              <p className='text-center text-xs text-gray-400'>for saving</p>
+            </div>
+          </div>
+
+          <div className='flex w-full flex-col max-md:flex-col-reverse items-center'>
+            <div className='flex w-48 h-48 justify-center'>
+              <Image 
+                src='./noLoss.svg'
+                alt=''
+                width={150}
+                height={150}
+              />
+            </div>
+            <div>
+              <p className='text-center'>Withdraw Anytime</p>
+              <p className='text-center text-xs text-gray-400'>no loss</p>
             </div>
           </div>
         </div>
