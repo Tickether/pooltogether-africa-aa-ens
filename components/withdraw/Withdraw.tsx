@@ -169,7 +169,7 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                 paymentService == 'direct' && (
                                     <>
                                         <DrawerTitle>Direct Withdraw</DrawerTitle>
-                                        <DrawerDescription>Withdraw USDC to any wallet on OP</DrawerDescription>
+                                        <DrawerDescription>Withdraw USDC to any wallet on Base</DrawerDescription>
                                     </>
                                 )
                             }   
@@ -179,18 +179,22 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                 <>
                                     <div className='flex flex-col p-4 pb-0'>
                                         <Button
+                                            className='gap-2'
                                             onClick={()=>{
                                                 setPaymentService('direct')
                                             }}
                                         >
-                                            <DoubleArrowUpIcon/>
-                                            <Wallet2 size={16} />
+                                            <div className='flex items-center'>
+                                                <DoubleArrowUpIcon/>
+                                                <Wallet2 size={16} />
+                                            </div>
                                             <p>Direct Withdraw</p>
                                         </Button>
                                         <p className='text-center'>or</p>
                                         <Separator orientation='horizontal' />
                                         <p className='text-center'>third party exchanges</p>
                                         <Button
+                                            className='gap-2'
                                             onClick={()=>{
                                                 const ref = `${smartAccountAddress}-${(new Date()).getTime().toString()}`
                                                 setReference(ref)
@@ -198,8 +202,11 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                                 setOpen(false)
                                             }}
                                         >
-                                            <DoubleArrowUpIcon/>
-                                            <Wallet2 size={16} />
+                                            <div className='flex items-center'>
+                                                <DoubleArrowUpIcon/>
+                                                <Wallet2 size={16} />
+                                            </div>
+                                            
                                             <p>Cashramp</p>
                                         </Button>
                                     </div>

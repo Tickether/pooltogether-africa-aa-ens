@@ -55,9 +55,12 @@ export default function Susu () {
     useEffect(() => { 
         queryClient.invalidateQueries({ queryKey: boostQueryKey }) 
     }, [blockNumber, queryClient, boostQueryKey]) 
-    const boostedtBalance = typeof boostBalance == 'bigint' ? BigInt(boostBalance) - balance?.value! : BigInt(0)
-    const formatedBoostBalance = boostedtBalance ? formatUnits(boostedtBalance!, balance?.decimals!) : '0'
     
+    const boostedtBalance = boostBalance && typeof boostBalance === 'bigint' 
+    ? boostBalance - (balance?.value !== undefined ? BigInt(balance.value) : BigInt(0)) 
+    : BigInt(0);
+
+    const formatedBoostBalance = boostedtBalance ? formatUnits(boostedtBalance, balance?.decimals!) : '0';
     
     //console.log(balance?.decimals)
     return (
@@ -164,7 +167,9 @@ export default function Susu () {
                                         }
                                     </div>
                                     { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`}/>  }
-                                    { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
+                                    <div className='flex w-full items-center justify-center'>
+                                        { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
+                                    </div>
                                 </main>    
                             </>
                         )

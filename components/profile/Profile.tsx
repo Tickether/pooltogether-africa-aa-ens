@@ -13,6 +13,7 @@ import { usePrivy } from '@privy-io/react-auth'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer'
 import { normalize } from 'viem/ens'
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
+import { useState } from 'react'
 
 
 
@@ -33,6 +34,8 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     const { poolApproveHook } = usePoolDeposit()
     const { user } = usePrivy()
 
+    
+    const [open, setOpen] = useState<boolean>(false)
     
     console.log(smartAccountAddress)
 
@@ -81,50 +84,63 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     }
 
     return (
-        <Drawer>
-            <DrawerTrigger asChild>
-                <Button className='gap-2' variant='outline'>
-                    <FaceIcon/>
-                    <span className='max-md:hidden'>Edit Profile</span>
-                </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-                <div className='mx-auto w-full max-w-sm'>
-                    <DrawerHeader>
-                        <DrawerTitle>Edit profile</DrawerTitle>
-                        <DrawerDescription>Make changes to your profile here. Click save when done.</DrawerDescription>
-                    </DrawerHeader>
-                    <div className='grid gap-4 py-4'>
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-                                
-                                <FormField
-                                    control={form.control}
-                                    name='susuTag'
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <div className='grid grid-cols-4 items-center gap-4'>
-                                                <FormLabel className='text-right'>Username</FormLabel>
-                                                <FormControl >
-                                                    <Input disabled={!!pooler} className='col-span-3' placeholder={!pooler ? 'vitalik' : pooler.ens} {...field} onChange={handleSusuTagChange}/>
-                                                </FormControl>
-                                            </div>
-                                        </FormItem>
-                                    )}
-                                />
-                        
-                                <div className='flex justify-end'>
-                                    <Button
-                                        disabled={!!pooler || loading!}
-                                        type='submit'>Save changes
-                                    </Button>
-                                </div>
-                            </form>
-                        </Form>
+        <>
+            <Drawer
+                open={open}
+                onClose={()=>{
+                    setOpen(false)
+                }}
+            >
+                <DrawerTrigger asChild>
+                    <Button 
+                        className='gap-2' 
+                        variant='outline'
+                        onClick={()=>{
+                            setOpen(true)
+                        }}
+                    >
+                        <FaceIcon/>
+                        <span className='max-md:hidden'>Edit Profile</span>
+                    </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                    <div className='mx-auto w-full max-w-sm'>
+                        <DrawerHeader>
+                            <DrawerTitle>Edit profile</DrawerTitle>
+                            <DrawerDescription>Make changes to your profile here. Click save when done.</DrawerDescription>
+                        </DrawerHeader>
+                        <div className='flex flex-col p-4'>
+                            <Form {...form}>
+                                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+                                    
+                                    <FormField
+                                        control={form.control}
+                                        name='susuTag'
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <div className='flex w-full max-w-sm items-center space-x-2'>
+                                                    <FormLabel className='text-right'>Username</FormLabel>
+                                                    <FormControl >
+                                                        <Input disabled={!!pooler} className='col-span-3' placeholder={!pooler ? 'vitalik' : pooler.ens} {...field} onChange={handleSusuTagChange}/>
+                                                    </FormControl>
+                                                </div>
+                                            </FormItem>
+                                        )}
+                                    />
+                            
+                                    <div className='flex justify-end'>
+                                        <Button
+                                            disabled={!!pooler || loading!}
+                                            type='submit'>Save changes
+                                        </Button>
+                                    </div>
+                                </form>
+                            </Form>
+                        </div>
                     </div>
-                </div>
-            </DrawerContent>
-        </Drawer>
+                </DrawerContent>
+            </Drawer>
+        </>
     )
 
 }

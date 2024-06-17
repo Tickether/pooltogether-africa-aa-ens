@@ -8,14 +8,6 @@ export const columns: ColumnDef<Transaction>[] = [
         header: 'Type'
     },
     {
-        accessorKey: 'target',
-        header: 'to/from',
-        cell: ({row}) => {
-            const refHash = (row.getValue('target'))
-            return <div>{trimRef(refHash as string)}</div>
-        },
-    },
-    {
         accessorKey: 'txn',
         header: 'Txn Hsh',
         cell: ({row}) => {

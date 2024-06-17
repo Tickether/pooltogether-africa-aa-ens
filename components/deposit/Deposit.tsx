@@ -11,7 +11,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { DoubleArrowDownIcon } from '@radix-ui/react-icons'
-import { Copy, SkipBack, Terminal, Vault } from 'lucide-react'
+import { CheckCircle, Copy, SkipBack, Terminal, Vault } from 'lucide-react'
 import { Pooler } from '@/hooks/pooler/useGetPooler'
 import { useEffect, useState } from 'react'
 import { usePostDeposit } from '@/hooks/deposit/usePostDeposit'
@@ -51,6 +51,7 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const { rates } = useGetRates()
     console.log(rates)
     const [open, setOpen] = useState<boolean>(false)
+    const [copied, setCopied] = useState<boolean>(false)
     const [showAddress, setShowAddress] = useState<boolean | null>()
 
     const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
@@ -107,7 +108,14 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     })
 */  
  
+    const handleCopy = async () => {
+        const clipboardText = await navigator.clipboard.writeText(pooler.address);
+        setCopied(true);
+        setTimeout(() => {
+            setCopied(false);
+        }, 2000);
 
+    };
     const doCashRampPay = () => {
         setOpenCashRamp(true)
         const ref = `${smartAccountAddress}-${(new Date()).getTime().toString()}`
@@ -154,7 +162,7 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                                 paymentService == 'direct' && (
                                     <>
                                         <DrawerTitle>Direct Deposit</DrawerTitle>
-                                        <DrawerDescription>Transfer USDC on OP to deposit</DrawerDescription>
+                                        <DrawerDescription>Transfer USDC on Base to deposit</DrawerDescription>
                                     </>
                                 )
                             }   
@@ -165,11 +173,15 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                                     <div className='flex flex-col p-4 pb-0'>
                                         <div className='flex flex-col gap-3'>
                                             <Button
+                                                className='gap-2'
                                                 onClick={()=>{
                                                     setPaymentService('direct')
                                                 }}
                                             >
-                                                <Vault size={17}/>
+                                                <div className='flex items-center'>
+                                                    <DoubleArrowDownIcon/>
+                                                    <Vault size={17}/>
+                                                </div>
                                                 <p>Direct Deposit</p>
                                             </Button>
                                         </div>
@@ -177,9 +189,13 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                                         <Separator orientation='horizontal' />
                                         <p className='text-center'>third party exchanges</p>
                                         <Button
+                                            className='gap-2'
                                             onClick={doCashRampPay}
                                         >
-                                            <Vault size={17}/>
+                                            <div className='flex items-center'>
+                                                <DoubleArrowDownIcon/>
+                                                <Vault size={17}/>
+                                            </div>
                                             <p>Cashramp</p>
                                         </Button>
                                     </div>
@@ -212,17 +228,35 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                                                     {
                                                         !showAddress
                                                         ? <><p className='text-base'>{pooler.ens}.susu.box</p></>
-                                                        : <><p className='text-[11px]'>{pooler.address}</p></>
+                                                        : <><p className='text-[12px] max-[360px]:text-[11px]'>{pooler.address}</p></>
                                                     }
-                                                    {
-                                                        showAddress && (
-                                                            <Copy className='h-5 w-5'/>
-                                                        )
-                                                    }
+                                                    
                                                 </div>
                                             </AlertTitle>
                                             <AlertDescription className='text-xs'>
-                                                Send USDC to this wallet. Do not close this window until magic deposit done.
+                                                
+                                                <div className='flex items-center justify-between'>
+                                                    <p>Send USDC to this wallet. Do not close this window until magic deposit done.</p>
+                                                    {
+                                                        showAddress && (
+                                                            copied 
+                                                            ?
+                                                                <>
+                                                                    <CheckCircle 
+                                                                        className='h-9 w-9 cursor-none'
+                                                                        //onClick={handleCopy}
+                                                                    />
+                                                                </>
+                                                            :
+                                                                <>
+                                                                    <Copy 
+                                                                        className='h-9 w-9 cursor-pointer'
+                                                                        onClick={handleCopy}
+                                                                    />
+                                                                </>
+                                                        )
+                                                    }
+                                                </div>
                                             </AlertDescription>
                                         </Alert>
 
@@ -250,24 +284,23 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                                     <SkipBack size={17}/>
                                     <p>Back</p>
                                 </Button>
-                                <div>
-                                    <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries, 
-                                        <Button
-                                            disabled={loading! || parseFloat(formatedBalance) == 0}
-                                            onClick={async()=>{
-                                                const poolTxn = await poolDeposit(formatedBalance, smartAccountAddress!)
-                                                await postDeposit(
-                                                    smartAccountAddress,
-                                                    smartAccountAddress,
-                                                    poolTxn!,
-                                                    formatedBalance,
-                                                    'deposit'
-                                                )
-                                            }}
-                                        >
-                                            click here
-                                        </Button>
-                                    </p>
+                                <div className='flex items-center justify-center gap-2'>
+                                    <p className='text-center text-xs text-gray-500'>Missing some magic deposits, no worries...</p>
+                                    <Button
+                                        disabled={loading! || parseFloat(formatedBalance) == 0}
+                                        onClick={async()=>{
+                                            const poolTxn = await poolDeposit(formatedBalance, smartAccountAddress!)
+                                            await postDeposit(
+                                                smartAccountAddress,
+                                                smartAccountAddress,
+                                                poolTxn!,
+                                                formatedBalance,
+                                                'deposit'
+                                            )
+                                        }}
+                                    >
+                                        click here
+                                    </Button>
                                 </div>
                                 </>
                             )

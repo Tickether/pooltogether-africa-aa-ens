@@ -15,7 +15,7 @@ export function Transactions ({ transactions } : TransactionsProps) {
     console.log( transactions )
     return (
         <>
-            <div className='container mx-auto py-10 z-10'>
+            <div className='py-3 z-10 w-[26rem]'>
                 {
                     transactions?.length! >= 1 && (
                         <DataTable columns={columns} data={transactions!} />

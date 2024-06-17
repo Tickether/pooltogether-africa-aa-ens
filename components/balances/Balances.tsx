@@ -15,7 +15,7 @@ export function Balances ({ balance, boostBalance }: BalancesProp) {
 
     return (
         <>
-            <main className='flex flex-col w-full items-center gap-24'>
+            <main className='flex flex-col w-full items-center gap-16'>
                 {/**Misc Balances */}
                 <div className='flex flex-col w-full items-center'>
                     <Separator className='my-4 max-md:mb-8'  />
