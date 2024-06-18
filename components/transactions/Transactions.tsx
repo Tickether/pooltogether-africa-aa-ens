@@ -1,8 +1,8 @@
 'use client'
 
-import { Transaction, useGetTransactions } from "@/hooks/transactions/useGetTransactions"
-import { DataTable } from "./DataTable"
-import { columns } from "./Columns"
+import { Transaction } from '@/hooks/transactions/useGetTransactions'
+import { DataTable } from './DataTable'
+import { columns } from './Columns'
 
 
 
@@ -18,7 +18,9 @@ export function Transactions ({ transactions } : TransactionsProps) {
             <div className='py-3 z-10 w-[26rem]'>
                 {
                     transactions?.length! >= 1 && (
+                        
                         <DataTable columns={columns} data={transactions!} />
+                        
                     )
                 }
             </div>

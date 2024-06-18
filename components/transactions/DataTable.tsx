@@ -2,6 +2,7 @@ import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
+    getPaginationRowModel,
     useReactTable,
 } from '@tanstack/react-table'
 
@@ -27,7 +28,14 @@ export function DataTable<TData, TValue> ({
     const table = useReactTable({
         data,
         columns,
-        getCoreRowModel: getCoreRowModel()
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        initialState: { 
+            pagination:{
+                pageSize: 5
+            }
+        }
+        
     })
 
     return (

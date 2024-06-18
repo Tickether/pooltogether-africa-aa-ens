@@ -30,7 +30,17 @@ export const useGetTransactions = (url: string, address: string) => {
                         })
                     })
                     const data = await res.json()
-                    setTransactions(data)
+                    setTransactions((prevTransactions) => {
+                        if (!prevTransactions) {
+                            return data;
+                        } else {
+                            if (prevTransactions.length !== data.length) {
+                                return data;
+                            } else {
+                                return prevTransactions;
+                            }
+                        }
+                    });
                 } catch(err){
                     setError(err)
                 }
@@ -38,36 +48,11 @@ export const useGetTransactions = (url: string, address: string) => {
             }
         }
         getTransactions()
+
+        const intervalId = setInterval(getTransactions, 3000)
+
+        return () => clearInterval(intervalId)
     },[ address ])
-
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            await getBackTransactions()
-        }, 3000)
-
-        return () => clearInterval(interval)
-    }, [address])
-
-    const getBackTransactions = async ()=>{
-        setLoading(true);
-        
-        try {
-            const res = await fetch(url ,{
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    address: address,
-                })
-            })
-            const data = await res.json()
-            setTransactions(data)
-        } catch(err){
-            setError(err)
-        }
-        setLoading(false)
-    }
 
     return {transactions, loading, error}
 }
