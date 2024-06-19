@@ -13,7 +13,7 @@ import { useGetPooler } from '@/hooks/pooler/useGetPooler'
 import { useGetTransactions } from '@/hooks/transactions/useGetTransactions'
 import { useBiconomy } from '@/providers/BiconomyContext'
 import { twabABI } from '@/utils/abis/twabABI'
-import { TWAB, przUSDC } from '@/utils/constants/addresses'
+import { TWAB, suPrzUSDC } from '@/utils/constants/addresses'
 import { usePrivy } from '@privy-io/react-auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { Terminal } from 'lucide-react'
@@ -36,7 +36,7 @@ export default function Susu () {
 
     const {data: balance, queryKey} = useBalance({
         address: `0x${smartAccountAddress?.slice(2)}`,
-        token: przUSDC,
+        token: suPrzUSDC,
         chainId: base.id
     })
     useEffect(() => { 
@@ -50,7 +50,7 @@ export default function Susu () {
         abi: twabABI,
         address: TWAB,
         functionName: 'delegateBalanceOf',
-        args: [(przUSDC), (smartAccountAddress!)]
+        args: [(suPrzUSDC), (smartAccountAddress!)]
     })
     useEffect(() => { 
         queryClient.invalidateQueries({ queryKey: boostQueryKey }) 

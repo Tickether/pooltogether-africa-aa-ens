@@ -30,12 +30,13 @@ const FormSchema = z.object({
 
 
 export function Profile ({ pooler, smartAccountAddress, getBackPooler } : ProfileProps) {
-    const { loading, postPooler } = usePostPooler()
+    const { postPooler } = usePostPooler()
     const { poolApproveHook } = usePoolDeposit()
     const { user } = usePrivy()
 
     
     const [open, setOpen] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean | null>(null)
     
     console.log(smartAccountAddress)
 
@@ -68,19 +69,28 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     }
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        console.log({ data });
-        const email = getEmail()
-        if (!pooler) {
-            await poolApproveHook()
-            await postPooler(
-                smartAccountAddress!,
-                email!,
-                data.susuTag,
-            )
-            getBackPooler()
-        } else {
-            //update
+        setLoading(true)
+        try {
+            console.log({ data });
+            const email = getEmail()
+            if (!pooler) {
+                
+                await poolApproveHook()
+                await postPooler(
+                    smartAccountAddress!,
+                    email!,
+                    data.susuTag,
+                )
+                getBackPooler()
+                
+            } else {
+                //update
+            }
+        } catch (error) {
+            console.log(error)
+            
         }
+        setLoading(false)
     }
 
     return (

@@ -1,5 +1,5 @@
 import { encodeFunctionData } from "viem";
-import { przUSDC } from "../constants/addresses";
+import { suPrzUSDC } from "../constants/addresses";
 import { poolABI } from "../abis/poolABI";
 
 export const withdraw = (amount: bigint, receiverAddress: `0x${string}`,  ownerAddress: `0x${string}`) => {
@@ -11,7 +11,7 @@ export const withdraw = (amount: bigint, receiverAddress: `0x${string}`,  ownerA
 
     // Build the transactions
     const withdrawTx = {
-        to: przUSDC,
+        to: suPrzUSDC,
         data: withdrawData,
     };
     return withdrawTx

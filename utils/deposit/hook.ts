@@ -1,5 +1,5 @@
 import { encodeFunctionData } from "viem";
-import { przRedirectHook, przUSDC } from "../constants/addresses";
+import { przRedirectHook, suPrzUSDC } from "../constants/addresses";
 import { vaultABI } from '@generationsoftware/hyperstructure-client-js'
 
 export const hook = () => {
@@ -16,7 +16,7 @@ export const hook = () => {
 
     // Build the transactions
     const hookTx = {
-        to: przUSDC,
+        to: suPrzUSDC,
         data: hookData,
     };
     return hookTx

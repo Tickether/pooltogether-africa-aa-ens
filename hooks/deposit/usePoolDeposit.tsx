@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { przDepositBot, przUSDC } from '@/utils/constants/addresses'
+import { przDepositBot, suPrzUSDC } from '@/utils/constants/addresses'
 import { allowanceUSD } from '@/utils/deposit/allowance'
 import { parseUnits } from 'viem'
 import { PaymasterMode } from '@biconomy/account'
@@ -20,13 +20,13 @@ export const usePoolDeposit = () => {
         try {
             setLoading(true)
             const amountParsed = parseUnits(amountDollar!, 6)
-            const allowance_ = await allowanceUSD(smartAccountAddress, przUSDC)
+            const allowance_ = await allowanceUSD(smartAccountAddress, suPrzUSDC)
             let userOpResponse
             let txnHash
             if (amountParsed < allowance_ || allowance_ == BigInt(0)) {
                 // send two
                 const tx = []
-                const tx1 = approveLifeTimeSwim(przUSDC)
+                const tx1 = approveLifeTimeSwim(suPrzUSDC)
                 tx.push(tx1)
                 const tx2 = deposit(amountParsed, smartAccountAddress)
                 tx.push(tx2)
