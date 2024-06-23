@@ -14,6 +14,7 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, Dr
 import { normalize } from 'viem/ens'
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
 import { useState } from 'react'
+import { Label } from '../ui/label'
 
 
 
@@ -24,8 +25,11 @@ interface ProfileProps {
     getBackPooler: () => void
 }
 const FormSchema = z.object({
-    susuTag: z.string(),
+    susuTag: z.string().min(1),
+    
 })
+
+const emailSchema = z.string().email();
 
 
 
@@ -33,10 +37,14 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     const { postPooler } = usePostPooler()
     const { poolApproveHook } = usePoolDeposit()
     const { user } = usePrivy()
-
-    
+    console.log(user?.linkedAccounts)
+    const linkedIndexAccount = user?.linkedAccounts[0]!
+     
     const [open, setOpen] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean | null>(null)
+
+    const [email, setEmail] = useState<string | null>(null)
+    const [isValidEmail, setIsValidEmail] = useState(true);
     
     console.log(smartAccountAddress)
 
@@ -44,7 +52,8 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            susuTag: pooler?.ens,
+            //email: undefined,
+            susuTag: undefined,
         },
     })
 
@@ -62,18 +71,36 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     }
     const susu = form.watch('susuTag')
     console.log(susu)
-
     
-    const getEmail = () => {
-        return user?.email?.address
+    const handleEmailChange = (e: any) => {
+
+        const inputEmail = e.target.value;
+        setEmail(inputEmail)
+
     }
 
+    
+    
+
     async function onSubmit(data: z.infer<typeof FormSchema>) {
+        
         setLoading(true)
+        const getEmail = () => {
+            if (linkedIndexAccount.type === 'wallet') {
+                return email
+            } else if (linkedIndexAccount.type === 'email') {
+                return user?.email?.address
+            }
+            
+        }
         try {
             console.log({ data });
             const email = getEmail()
-            if (!pooler) {
+            console.log(email)
+            // Zod email validation
+            const result = emailSchema.safeParse(email);
+            setIsValidEmail(result.success);
+            if (!pooler && email && data.susuTag && result.success == true) {
                 
                 await poolApproveHook()
                 await postPooler(
@@ -123,6 +150,20 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
                                     
+                                    {
+                                        linkedIndexAccount.type === 'wallet' && (
+                                            <>
+                                                <div className='flex w-full max-w-sm items-center space-x-2'>
+                                                    <Label className={`text-right ${!isValidEmail && 'text-red-500'}`}>Email</Label>
+                                                    <Input 
+                                                        disabled={!!pooler} 
+                                                        className='col-span-3' 
+                                                        placeholder={!pooler ? 'pooler@susu.club' : pooler.email} 
+                                                        onChange={handleEmailChange}  />    
+                                                </div>
+                                            </>
+                                        )
+                                    }
                                     <FormField
                                         control={form.control}
                                         name='susuTag'
@@ -137,6 +178,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
                                             </FormItem>
                                         )}
                                     />
+                                    
                             
                                     <div className='flex justify-end'>
                                         <Button

@@ -35,7 +35,7 @@ export function PrivyContext ({ children }: Props) {
                     defaultChain: base,
                     supportedChains: [base],
                     embeddedWallets: {
-                        createOnLogin: 'users-without-wallets',
+                        createOnLogin: 'all-users',
                         noPromptOnSignature: true
                     },
                     externalWallets: { 
