@@ -36,7 +36,7 @@ export function BiconomyContext ({ children }: Props) {
 
     const getWalletClient = async () => {
         
-        const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
+        const embeddedWallet = wallets[0]
         // Switch your wallet to your target chain before getting the viem WalletClient
         await embeddedWallet?.switchChain(base.id)
 
@@ -77,7 +77,7 @@ export function BiconomyContext ({ children }: Props) {
         if (!ready || !authenticated) return;
 
         //find privy signer & create/login smart account
-        const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
+        const embeddedWallet = wallets[0]
         if (!embeddedWallet) return; 
         const walletClient = await getWalletClient()
         if (embeddedWallet && !smartAccount) createSmartAccount(walletClient);

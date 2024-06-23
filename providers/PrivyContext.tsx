@@ -4,6 +4,7 @@
 import { PrivyProvider } from '@privy-io/react-auth'
 import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
+import { base } from 'viem/chains'
 
 
 type Props = {
@@ -21,19 +22,28 @@ export function PrivyContext ({ children }: Props) {
                 onSuccess={() => router.push('/susu')}
                 config={{
                     /* Replace this with your desired login methods */
-                    loginMethods: ['email'],
+                    loginMethods: ['email','wallet'],
                     /* Replace this with your desired appearance configuration */
                     appearance: {
                         theme: 'light',
                         accentColor: '#0C3FFF',
                         logo: 'https://i.ibb.co/mttPXst/susuclub.png',
-                        showWalletLoginFirst: false,
+                        showWalletLoginFirst: true,
+                        walletList: ['coinbase_wallet'], 
 
                     },
+                    defaultChain: base,
+                    supportedChains: [base],
                     embeddedWallets: {
                         createOnLogin: 'users-without-wallets',
                         noPromptOnSignature: true
-                    },    
+                    },
+                    externalWallets: { 
+                        coinbaseWallet: { 
+                          // Valid connection options include 'eoaOnly' (default), 'smartWalletOnly', or 'all'
+                          connectionOptions: 'smartWalletOnly', 
+                        },
+                    },     
                 }}
             >
                 {children}

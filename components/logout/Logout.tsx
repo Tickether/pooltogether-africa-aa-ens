@@ -46,10 +46,8 @@ export function Logout () {
                 <AlertDialogAction asChild>
                     <Button
                         onClick={async ()=>{
-                            if (smartAccount) {
-                                await logout()
-                                router.push('/')
-                            }
+                            await logout()
+                            router.push('/')
                         }}
                         className='gap-2'
                     >
