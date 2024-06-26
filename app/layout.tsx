@@ -8,12 +8,13 @@ import { WagmiContext } from '@/providers/WagmiContext'
 import { PrivyContext } from '@/providers/PrivyContext'
 import { BiconomyContext } from '@/providers/BiconomyContext'
 import { Toaster } from '@/components/ui/toaster'
+import PlausibleProvider from 'next-plausible'
 
 
 
 export const metadata: Metadata = {
   title: 'susu club',
-  description: 'Join millions saving a least a dollar a day',
+  description: 'simple savings accounts for simple people',
 };
 
 const satoshi = localFont({
@@ -43,6 +44,11 @@ export default function RootLayout({
   
   return (
     <html lang="en" className={satoshi.className}>
+      <head>
+        <PlausibleProvider 
+          domain='susu.club'
+        />
+      </head>
       <body>
         <WagmiContext initialState={initialState!}>
           <PrivyContext>
