@@ -4,11 +4,16 @@ import Deposit from '@/model/deposit'
 import Withdraw from '@/model/withdraw'
 import Incentive from '@/model/incentive'
 import Reward from '@/model/reward'
+import { middleware } from '@/utils/middleware'
 
 
 export async function POST(
     req: Request,
 ) {
+    const authResponse = middleware(req);
+    if (authResponse.status !== 200) {
+        return authResponse;
+    }
     const { address } = await req.json()
     try {
         await connectDB()

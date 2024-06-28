@@ -46,7 +46,8 @@ export const usePostDeposit = () => {
             const res = await fetch('api/postDeposit', {
                 method: 'POST',
                 headers: {
-                'Content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'x-api-key': process.env.SUSU_API_KEY
                 },
                 body: JSON.stringify({
                     address,

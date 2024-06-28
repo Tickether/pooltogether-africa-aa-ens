@@ -47,7 +47,8 @@ export const usePostWithdraw = () => {
             const res = await fetch('api/postWithdraw', {
                 method: 'POST',
                 headers: {
-                'Content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'x-api-key': process.env.SUSU_API_KEY
                 },
                 body: JSON.stringify({
                     address,

@@ -28,8 +28,8 @@ export default function Susu () {
     const { ready, authenticated } = usePrivy()
     const { smartAccount, smartAccountAddress } = useBiconomy()
     const router = useRouter() 
-    const { pooler, loading, getBackPooler } = useGetPooler('api/getPooler/', smartAccountAddress!)
-    const { transactions } = useGetTransactions('api/getTransactions/', smartAccountAddress!)
+    const { pooler, loading, getBackPooler } = useGetPooler( smartAccountAddress! )
+    const { transactions } = useGetTransactions( smartAccountAddress! )
 
     const queryClient = useQueryClient() 
     const { data: blockNumber } = useBlockNumber({ watch: true }) 

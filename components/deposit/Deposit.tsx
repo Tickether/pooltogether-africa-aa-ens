@@ -17,15 +17,12 @@ import { useEffect, useState } from 'react'
 import { usePostDeposit } from '@/hooks/deposit/usePostDeposit'
 import { erc20Abi, formatUnits, parseEther, parseUnits } from 'viem'
 import { Ramp } from '../ramp/Ramp'
-import { useGetCountries } from '@/hooks/cashRamp/useGetCountries'
-import { useGetRates } from '@/hooks/cashRamp/useGetRates'
 import { Separator } from '../ui/separator'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Switch } from '../ui/switch'
 import { useBalance, useBlockNumber, useWatchContractEvent } from 'wagmi'
 import { USDC } from '@/utils/constants/addresses'
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
-import { useGetPayment } from '@/hooks/cashRamp/useGetPayment'
 import { useQueryClient } from '@tanstack/react-query'
 import { base } from 'viem/chains'
 
@@ -38,18 +35,11 @@ interface DepositProps {
 
 
 export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
-    const { countries } = useGetCountries()
-    console.log(countries)
-        
-
 
     const { postDeposit } = usePostDeposit()
     const { loading, poolDeposit } = usePoolDeposit()
 
     
-
-    const { rates } = useGetRates()
-    console.log(rates)
     const [open, setOpen] = useState<boolean>(false)
     const [copied, setCopied] = useState<boolean>(false)
     const [showAddress, setShowAddress] = useState<boolean | null>()
@@ -58,9 +48,6 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const [reference, setReference] = useState<string | null>(null)
     const [paymentService, setPaymentService] = useState<string | null>(null)
 
-    
-    const { payment, getPayment } = useGetPayment()
-    console.log(payment)
 
     const queryClient = useQueryClient() 
     const { data: blockNumber } = useBlockNumber({ watch: true }) 

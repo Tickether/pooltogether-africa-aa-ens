@@ -11,7 +11,7 @@ export interface Transaction {
     txOf: string
     
 }
-export const useGetTransactions = (url: string, address: string) => {
+export const useGetTransactions = (address: string) => {
     const [transactions, setTransactions] = useState<Transaction[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<any | null>(null)
@@ -20,10 +20,11 @@ export const useGetTransactions = (url: string, address: string) => {
         const getTransactions = async ()=>{
             if (address) {
                 try {
-                    const res = await fetch(url, {
+                    const res = await fetch('api/getTransactions', {
                         method: 'POST',
                         headers: {
-                            'Content-type': 'application/json'
+                            'Content-type': 'application/json',
+                            'x-api-key': process.env.SUSU_API_KEY
                         },
                         body: JSON.stringify({
                             address,

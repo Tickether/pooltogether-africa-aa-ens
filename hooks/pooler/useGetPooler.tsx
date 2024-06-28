@@ -5,7 +5,7 @@ export interface Pooler {
     email: string
     ens: string 
 }
-export const useGetPooler = (url: string, address: string) => {
+export const useGetPooler = (address: string) => {
     const [pooler, setPooler] = useState<Pooler | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<any | null>(null)
@@ -15,10 +15,11 @@ export const useGetPooler = (url: string, address: string) => {
             if (address) {
                 setLoading(true);
                 try {
-                    const res = await fetch(url, {
+                    const res = await fetch('api/getPooler/', {
                         method: 'POST',
                         headers: {
-                            'Content-type': 'application/json'
+                            'Content-type': 'application/json',
+                            'x-api-key': process.env.SUSU_API_KEY
                         },
                         body: JSON.stringify({
                             address,
@@ -38,10 +39,11 @@ export const useGetPooler = (url: string, address: string) => {
     const getBackPooler = async ()=>{
         setLoading(true);
         try {
-            const res = await fetch(url ,{
+            const res = await fetch('api/getPooler/',{
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'x-api-key': process.env.SUSU_API_KEY
                 },
                 body: JSON.stringify({
                     address: address,

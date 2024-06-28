@@ -18,7 +18,6 @@ import { Pooler } from '@/hooks/pooler/useGetPooler'
 import { useEffect, useState } from 'react'
 import { usePostWithdraw } from '@/hooks/withdraw/usePostWithdraw'
 import { Ramp } from '../ramp/Ramp'
-import { useGetRates } from '@/hooks/cashRamp/useGetRates'
 import { Separator } from '../ui/separator'
 import { trimDecimals } from '@/utils/trim'
 import { usePoolWithdraw } from '@/hooks/withdraw/usePoolWithdraw'
@@ -42,12 +41,9 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
     
     //const [reference, setReference] = useState<string | null>(null)
     const [paymentService, setPaymentService] = useState<string | null>(null)
-    const { loading, postWithdraw } = usePostWithdraw()
+    //const { loading, postWithdraw } = usePostWithdraw()
 
 
-
-    const { rates } = useGetRates()
-    console.log(rates)
     const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
     const [reference, setReference] = useState<string | null>(null)
     const [amountDollar, setAmountDollar] = useState<string>('')
