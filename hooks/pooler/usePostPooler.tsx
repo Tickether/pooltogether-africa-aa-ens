@@ -1,5 +1,6 @@
 'use client'
 
+import { postPoolerAction } from '@/app/actions/pooler/postPoolerAction';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react'
@@ -44,19 +45,12 @@ export const usePostPooler = () => {
     ) => {
         setLoading(true)
         try {
-            const res = await fetch('api/postPooler', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'x-api-key': process.env.SUSU_API_KEY
-                },
-                body: JSON.stringify({
-                    address,
-                    email,
-                    ens, 
-                })
-            }) 
-            const data =  await res.json()
+            
+            const data =  await postPoolerAction(
+                address,
+                email,
+                ens
+            )
             console.log(data)
             await giveMeSuccessToast()
         } catch (error) {

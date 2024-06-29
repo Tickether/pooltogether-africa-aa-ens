@@ -1,5 +1,6 @@
 'use client'
 
+import { postDepositAction } from '@/app/actions/deposit/postDepositAction';
 import { toast } from '@/components/ui/use-toast';
 import { useState } from 'react'
 
@@ -42,22 +43,14 @@ export const usePostDeposit = () => {
         txOf: string
     ) => {
         try {
-            setLoading(true)
-            const res = await fetch('api/postDeposit', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'x-api-key': process.env.SUSU_API_KEY
-                },
-                body: JSON.stringify({
-                    address,
-                    target, 
-                    txn, 
-                    amount, 
-                    txOf 
-                })
-            }) 
-            const data =  await res.json()
+           
+            const data =  await postDepositAction(
+                address,
+                target, 
+                txn, 
+                amount, 
+                txOf 
+            )
             console.log(data)
             giveMeSuccessToast()
             setLoading(false)

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 
 import { ColumnDef } from '@tanstack/react-table'
+import { getTransactionsAction } from '@/app/actions/transactions/getTransactionsAction'
 
 export interface Transaction {
     address: string
@@ -20,17 +21,8 @@ export const useGetTransactions = (address: string) => {
         const getTransactions = async ()=>{
             if (address) {
                 try {
-                    const res = await fetch('api/getTransactions', {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json',
-                            'x-api-key': process.env.SUSU_API_KEY
-                        },
-                        body: JSON.stringify({
-                            address,
-                        })
-                    })
-                    const data = await res.json()
+                    
+                    const data = await getTransactionsAction(address)
                     setTransactions((prevTransactions) => {
                         if (!prevTransactions) {
                             return data;

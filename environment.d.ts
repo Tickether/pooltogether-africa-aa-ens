@@ -11,6 +11,7 @@ declare global {
             CASHRAMP_API_SECRET_KEY: string
             CASHRAMP_WEBHOOK_TOKEN: string
             MONGO: string
+            VERCEL_URL: string
         }
     }
 }

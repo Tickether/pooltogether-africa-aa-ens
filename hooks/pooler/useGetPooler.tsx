@@ -1,3 +1,4 @@
+import { getPoolerAction } from '@/app/actions/pooler/getPoolerAction'
 import { useState, useEffect } from 'react'
 
 export interface Pooler {
@@ -15,17 +16,8 @@ export const useGetPooler = (address: string) => {
             if (address) {
                 setLoading(true);
                 try {
-                    const res = await fetch('api/getPooler/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json',
-                            'x-api-key': process.env.SUSU_API_KEY
-                        },
-                        body: JSON.stringify({
-                            address,
-                        })
-                    })
-                    const data = await res.json()
+                    
+                    const data = await getPoolerAction(address)
                     setPooler(data)
                 } catch(err){
                     setError(err)
@@ -39,17 +31,7 @@ export const useGetPooler = (address: string) => {
     const getBackPooler = async ()=>{
         setLoading(true);
         try {
-            const res = await fetch('api/getPooler/',{
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'x-api-key': process.env.SUSU_API_KEY
-                },
-                body: JSON.stringify({
-                    address: address,
-                })
-            })
-            const data = await res.json()
+            const data = await getPoolerAction(address)
             setPooler(data)
         } catch(err){
             setError(err)

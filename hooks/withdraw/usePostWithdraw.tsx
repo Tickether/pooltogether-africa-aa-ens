@@ -1,5 +1,6 @@
 'use client'
 
+import { postWithdrawAction } from '@/app/actions/withdraw/postWithdrawAction';
 import { toast } from '@/components/ui/use-toast';
 import { useState } from 'react'
 
@@ -44,21 +45,14 @@ export const usePostWithdraw = () => {
         
         try {
             setLoading(true)
-            const res = await fetch('api/postWithdraw', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    'x-api-key': process.env.SUSU_API_KEY
-                },
-                body: JSON.stringify({
-                    address,
-                    target,
-                    txn,
-                    amount,
-                    txOf
-                })
-            }) 
-            const data =  await res.json()
+    
+            const data =  await postWithdrawAction(
+                address,
+                target,
+                txn,
+                amount,
+                txOf
+            )
             console.log(data)
             giveMeSuccessToast()
             setLoading(false)
