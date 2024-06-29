@@ -12,17 +12,16 @@ import {
 import { Button } from '../ui/button'
 import { ExitIcon } from '@radix-ui/react-icons'
 import { usePrivy } from '@privy-io/react-auth'
-import { useBiconomy } from '@/providers/BiconomyContext'
+import { usePlausible } from 'next-plausible'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 
   
 
 export function Logout () {
     
     const { logout } = usePrivy()
-    const { smartAccount } = useBiconomy()
     const router = useRouter()
+    const plausible = usePlausible()
 
     
     return(
@@ -46,6 +45,7 @@ export function Logout () {
                 <AlertDialogAction asChild>
                     <Button
                         onClick={async ()=>{
+                            plausible('logoutEvent')
                             await logout()
                             router.push('/')
                         }}

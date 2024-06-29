@@ -6,13 +6,16 @@ import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useEffect } from 'react';
 import Image from 'next/image';
+import { usePlausible } from 'next-plausible'
 
 export function Login() {
     const router = useRouter()
     const { login, ready, authenticated } = usePrivy()
+    const plausible = usePlausible()
 
     const Login = async () => {
         try {
+            plausible('loginEvent')
             if (authenticated) {
                 router.push('/susu')
             }
