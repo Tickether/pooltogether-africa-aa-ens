@@ -25,6 +25,8 @@ import { USDC } from '@/utils/constants/addresses'
 import { usePoolDeposit } from '@/hooks/deposit/usePoolDeposit'
 import { useQueryClient } from '@tanstack/react-query'
 import { base } from 'viem/chains'
+import { createOnrampSession } from '@/app/actions/createStripeSession/createOnrampSession'
+import { StripeOnrampModal } from '../stripeRamp/StripeOnrampModal'
 
 
 interface DepositProps {
@@ -45,8 +47,10 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const [showAddress, setShowAddress] = useState<boolean | null>()
 
     const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
+    const [openStripeRamp, setOpenStripeRamp] = useState<boolean>(false)
     const [reference, setReference] = useState<string | null>(null)
     const [paymentService, setPaymentService] = useState<string | null>(null)
+    const [client_secret, setClientSecret] = useState<string | null>(null)
 
 
     const queryClient = useQueryClient() 
@@ -107,6 +111,15 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
         setOpenCashRamp(true)
         const ref = `${smartAccountAddress}-${(new Date()).getTime().toString()}`
         setReference(ref)
+        setOpen(false)
+    }
+
+    const doStripePay = async () => {
+        const res = await createOnrampSession(smartAccountAddress!)
+        console.log(res)
+        console.log(res?.client_secret!)
+        setClientSecret(res?.client_secret!)
+        setOpenStripeRamp(true)
         setOpen(false)
     }
 
@@ -175,16 +188,28 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                                         <p className='text-center'>or</p>
                                         <Separator orientation='horizontal' />
                                         <p className='text-center'>third party exchanges</p>
-                                        <Button
-                                            className='gap-2'
-                                            onClick={doCashRampPay}
-                                        >
-                                            <div className='flex items-center'>
-                                                <DoubleArrowDownIcon/>
-                                                <Vault size={17}/>
-                                            </div>
-                                            <p>Cashramp</p>
-                                        </Button>
+                                        <div className='flex flex-col gap-3'>
+                                            <Button
+                                                className='gap-2'
+                                                onClick={doCashRampPay}
+                                            >
+                                                <div className='flex items-center'>
+                                                    <DoubleArrowDownIcon/>
+                                                    <Vault size={17}/>
+                                                </div>
+                                                <p>Cashramp</p>
+                                            </Button>
+                                            <Button
+                                                className='gap-2'
+                                                onClick={doStripePay}
+                                            >
+                                                <div className='flex items-center'>
+                                                    <DoubleArrowDownIcon/>
+                                                    <Vault size={17}/>
+                                                </div>
+                                                <p>Link by Stripe</p>
+                                            </Button>
+                                        </div>
                                     </div>
                                 </>
                             )
@@ -253,7 +278,7 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                             )
                         }
                         {
-                            true && (
+                            paymentService == 'stripe' && (
                                 <>
                                 </>
                             )
@@ -297,6 +322,8 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                 </DrawerContent>
             </Drawer>
             {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType='deposit' address={smartAccountAddress} reference={reference!} />}
+            
+            {openStripeRamp && <StripeOnrampModal setOpenRamp={setOpenStripeRamp} client_secret={client_secret!} />}
         </>
         
     )
