@@ -4,6 +4,7 @@ import { withdraw } from '@/utils/withdraw/withdraw'
 import { parseUnits } from 'viem'
 import { PaymasterMode } from '@biconomy/account'
 import { usePostWithdraw } from './usePostWithdraw'
+import { transfer } from '@/utils/withdraw/transfer'
 
 export const usePoolWithdraw = () => {
     
@@ -15,9 +16,12 @@ export const usePoolWithdraw = () => {
         try {
             setLoading(true)
             const amountParsed = parseUnits(amountDollar!, 6)
-        
+            let tx = []
 
-            const tx = withdraw(amountParsed, receiverAddress, ownerAddress)
+            const withdrawTx = withdraw(amountParsed, ownerAddress, ownerAddress)
+            tx.push(withdrawTx)
+            const transferTx = transfer(receiverAddress, amountParsed)
+            tx.push(transferTx)
 
             // Send the transaction and get the transaction hash
             const userOpResponse = await smartAccount!.sendTransaction(tx, {
