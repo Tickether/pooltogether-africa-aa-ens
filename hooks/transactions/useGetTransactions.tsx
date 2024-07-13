@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
-
-
-import { ColumnDef } from '@tanstack/react-table'
 import { getTransactionsAction } from '@/app/actions/transactions/getTransactionsAction'
+import { useBlockNumber } from 'wagmi'
+import isEqual from 'lodash/isEqual'
 
 export interface Transaction {
     address: string
@@ -13,6 +12,7 @@ export interface Transaction {
     
 }
 export const useGetTransactions = (address: string) => {
+    const { data: blockNumber } = useBlockNumber({ watch: true }) 
     const [transactions, setTransactions] = useState<Transaction[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<any | null>(null)
@@ -23,17 +23,10 @@ export const useGetTransactions = (address: string) => {
                 try {
                     
                     const data = await getTransactionsAction(address)
-                    setTransactions((prevTransactions) => {
-                        if (!prevTransactions) {
-                            return data;
-                        } else {
-                            if (prevTransactions.length !== data.length) {
-                                return data;
-                            } else {
-                                return prevTransactions;
-                            }
-                        }
-                    });
+                    // Check if the new data is different from the current transactions
+                    if (!isEqual(data, transactions)) {
+                        setTransactions(data)
+                    }
                 } catch(err){
                     setError(err)
                 }
@@ -41,11 +34,7 @@ export const useGetTransactions = (address: string) => {
             }
         }
         getTransactions()
-
-        const intervalId = setInterval(getTransactions, 3000)
-
-        return () => clearInterval(intervalId)
-    },[ address ])
+    },[ address, blockNumber ])
 
     return {transactions, loading, error}
 }
