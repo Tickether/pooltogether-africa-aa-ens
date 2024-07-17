@@ -91,35 +91,8 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
         checkAddress()
     },[ receiverAddress ])
     console.log(receiverAddressResolved)
-
-    
-    window.addEventListener("message", (message) => {
-        if (message.origin === "https://useaccrue.com") {
-            const { event, payload } = message.data;
-            if (event === "crypto.requested") {
-                const amountUsd = parseFloat(payload.amountCents) / 100;
-                const destinationAddress = payload.destinationAddress;
-                const paymentRequest = payload.paymentRequest;
-                console.log(amountUsd, destinationAddress, paymentRequest)
-                // Here"s where you add your custom experience for sending the *exact* USD amount to Cashramp"s Escrow Address (destinationAddress)
-                if (parseFloat(balance) >= amountUsd ) {
-                    const makeSunbath = async()=>{
-                        await poolWithdraw(String(amountUsd), destinationAddress, smartAccountAddress)
-                    }
-                    makeSunbath()
-                } else {
-                    setOpenCashRamp(false)
-                    return
-                }
-                // You can request transaction confirmation here by providing the payment request global ID provided above as `paymentRequest`
-            }
-        }
-    });
     
     
-
-    
-
 
     return (
         <>
@@ -299,7 +272,7 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType="withdrawal" address={smartAccountAddress} reference={reference!} />}
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType="withdrawal" address={smartAccountAddress} reference={reference!} balance={balance} />}
         </>
       )
 } 

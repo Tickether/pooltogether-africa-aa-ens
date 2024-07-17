@@ -1,10 +1,10 @@
 "use server"
 
-export const postPoolerAction = async (
+export async function postPoolerAction (
         address: string, 
         email: string,  
         ens: string,  
-    ) => {
+    ) {
         try {
             const res = await fetch(`${process.env.BASE_URL}/api/postPooler`, {
                 method: "POST",

@@ -1,12 +1,12 @@
 "use server"
 
-export const postWithdrawAction = async (
+export async function postWithdrawAction (
     address: string, 
     target: string, 
     txn: string, 
     amount: string,  
     txOf: string
-) => {
+) {
     
     try {
         const res = await fetch(`${process.env.BASE_URL}/api/postWithdraw`, {

@@ -1,6 +1,6 @@
 "use server"
 
-export const getTransactionsAction = async (address: string)=>{
+export async function getTransactionsAction (address: string) {
     if (address) {
         try {
             const res = await fetch(`${process.env.BASE_URL}/api/getTransactions`, {

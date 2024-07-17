@@ -1,6 +1,6 @@
 "use server"
 
-export const getPoolerAction = async (address: string)=>{
+export async function getPoolerAction (address: string) {
     if (address) {
         try {
             const res = await fetch(`${process.env.BASE_URL}/api/getPooler`, {

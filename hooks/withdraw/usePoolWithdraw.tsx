@@ -31,13 +31,13 @@ export const usePoolWithdraw = () => {
             console.log("Transaction Hash", transactionHash);
             const userOpReceipt  = await userOpResponse.wait();
             if(userOpReceipt.success == "true") { 
-                postWithdraw( ownerAddress!, receiverAddress, transactionHash!, amountDollar!, "withdraw" )
+                await postWithdraw( ownerAddress!, receiverAddress, transactionHash!, amountDollar!, "withdraw" )
                 console.log("UserOp receipt", userOpReceipt)
                 console.log("Transaction receipt", userOpReceipt.receipt)
         
             }
             setLoading(false)
-            return transactionHash
+            return transactionHash!
         } catch (error) {
             console.log(error) 
             setLoading(false)  

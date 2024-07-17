@@ -1,12 +1,12 @@
 "use server"
 
-export const postDepositAction = async (
+export async function postDepositAction (
     address: string, 
     target: string, 
     txn: string, 
     amount: string,  
     txOf: string
-) => {
+) {
     try {
         const res = await fetch(`${process.env.BASE_URL}/api/postDeposit`, {
             method: "POST",
