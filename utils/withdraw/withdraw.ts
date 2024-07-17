@@ -1,11 +1,11 @@
 import { encodeFunctionData } from "viem";
 import { suPrzUSDC } from "../constants/addresses";
-import { poolABI } from "../abis/poolABI";
+import { vaultABI } from "@generationsoftware/hyperstructure-client-js";
 
 export const withdraw = (amount: bigint, receiverAddress: `0x${string}`,  ownerAddress: `0x${string}`) => {
     const withdrawData = encodeFunctionData({
-        abi: poolABI,
-        functionName: 'withdraw',
+        abi: vaultABI,
+        functionName: "withdraw",
         args: [(amount), (receiverAddress), (ownerAddress)]
     })
 

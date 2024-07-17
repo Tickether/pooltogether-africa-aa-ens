@@ -1,21 +1,16 @@
-import type { Metadata } from 'next'
-import localFont from 'next/font/local'
-import './globals.css'
-import { config } from '@/utils/config'
-import { headers } from 'next/headers' 
-import { cookieToInitialState } from 'wagmi'
-import { WagmiContext } from '@/providers/WagmiContext'
-import { PrivyContext } from '@/providers/PrivyContext'
-import { BiconomyContext } from '@/providers/BiconomyContext'
-import { Toaster } from '@/components/ui/toaster'
-import PlausibleProvider from 'next-plausible'
+import type { Metadata } from "next";
+import localFont from "next/font/local";
+import "./globals.css";
+import { config } from "@/utils/config"
+import { headers } from "next/headers" 
+import { cookieToInitialState } from "wagmi"
+import { WagmiContext } from "@/providers/WagmiContext"
+import { PrivyContext } from "@/providers/PrivyContext"
+import { BiconomyContext } from "@/providers/BiconomyContext"
+import { Toaster } from "@/components/ui/toaster"
+import PlausibleProvider from "next-plausible"
 
-
-
-export const metadata: Metadata = {
-  title: 'susu club',
-  description: 'simple savings accounts for simple people',
-};
+import { cn } from "@/lib/utils"
 
 const satoshi = localFont({
   src: [
@@ -30,7 +25,13 @@ const satoshi = localFont({
       style: "normal",
     },
   ],
+  variable: "--font-satoshi",
 });
+
+export const metadata: Metadata = {
+  title: "susu club",
+  description: "get a susu box, save & win prizes",
+};
 
 export default function RootLayout({
   children,
@@ -39,17 +40,21 @@ export default function RootLayout({
 }>) {
   const initialState = cookieToInitialState( 
     config, 
-    headers().get('cookie') 
+    headers().get("cookie") 
   ) 
-  
   return (
-    <html lang="en" className={satoshi.className}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <PlausibleProvider 
-          domain='susu.club'
+          domain="susu.club"
         />
       </head>
-      <body>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          satoshi.variable
+        )}
+      >
         <WagmiContext initialState={initialState!}>
           <PrivyContext>
             <BiconomyContext>

@@ -1,13 +1,13 @@
-'use client'
+"use client"
 
 
-import { BiconomySmartAccountV2, createSmartAccountClient } from '@biconomy/account'
-import type { ReactNode } from 'react'
-import React, { useContext, useEffect, useState } from 'react'
-import { WalletClient } from 'viem'
-import { base } from 'viem/chains'
-import { usePrivy, useWallets } from '@privy-io/react-auth';
-import { createWalletClient, custom } from 'viem';
+import { BiconomySmartAccountV2, createSmartAccountClient } from "@biconomy/account"
+import type { ReactNode } from "react"
+import React, { useContext, useEffect, useState } from "react"
+import { WalletClient } from "viem"
+import { base } from "viem/chains"
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { createWalletClient, custom } from "viem";
 
 
 type Props = {
@@ -36,11 +36,11 @@ export function BiconomyContext ({ children }: Props) {
 
     const getWalletClient = async () => {
         
-        const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
+        const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === "privy"));
         // Switch your wallet to your target chain before getting the viem WalletClient
         await embeddedWallet?.switchChain(base.id)
 
-        // Get an EIP1193 provider from the user's wallet
+        // Get an EIP1193 provider from the user"s wallet
         const ethereumProvider = await embeddedWallet?.getEthereumProvider()
 
         // Create a Viem wallet client from the EIP1193 provider
@@ -77,7 +77,7 @@ export function BiconomyContext ({ children }: Props) {
         if (!ready || !authenticated) return;
 
         //find privy signer & create/login smart account
-        const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
+        const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === "privy"));
         if (!embeddedWallet) return; 
         const walletClient = await getWalletClient()
         if (embeddedWallet && !smartAccount) createSmartAccount(walletClient);

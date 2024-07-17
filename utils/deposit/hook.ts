@@ -1,6 +1,6 @@
 import { encodeFunctionData } from "viem";
 import { przRedirectHook, suPrzUSDC } from "../constants/addresses";
-import { vaultABI } from '@generationsoftware/hyperstructure-client-js'
+import { vaultABI } from "@generationsoftware/hyperstructure-client-js"
 
 export const hook = () => {
     const hook = {
@@ -10,7 +10,7 @@ export const hook = () => {
     }
     const hookData = encodeFunctionData({
         abi: vaultABI,
-        functionName: 'setHooks',
+        functionName: "setHooks",
         args: [(hook)]
     })
 

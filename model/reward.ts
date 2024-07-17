@@ -23,7 +23,7 @@ const RewardSchema = new mongoose.Schema(
         txOf: {
             type: String,
             required: true,
-            enum: ['deposit', 'withdraw', 'reward', 'incentive']
+            enum: ["deposit", "withdraw", "reward", "incentive"]
         },
     },
     {
@@ -31,6 +31,6 @@ const RewardSchema = new mongoose.Schema(
     }
 )
 
-const Reward = mongoose.models.Reward || mongoose.model('Reward', RewardSchema)
+const Reward = mongoose.models.Reward || mongoose.model("Reward", RewardSchema)
 
 export default Reward

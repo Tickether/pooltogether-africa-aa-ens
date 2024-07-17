@@ -19,6 +19,6 @@ const PoolerSchema = new mongoose.Schema({
     },
 })
 
-const Pooler = mongoose.models.Pooler || mongoose.model('Pooler', PoolerSchema)
+const Pooler = mongoose.models.Pooler || mongoose.model("Pooler", PoolerSchema)
 
 export default Pooler

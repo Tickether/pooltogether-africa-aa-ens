@@ -1,5 +1,6 @@
-import { getPoolerAction } from '@/app/actions/pooler/getPoolerAction'
-import { useState, useEffect } from 'react'
+
+import { getPoolerAction } from "@/actions/pooler/getPoolerAction"
+import { useState, useEffect } from "react"
 
 export interface Pooler {
     address: string

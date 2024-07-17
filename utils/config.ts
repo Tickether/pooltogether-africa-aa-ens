@@ -1,5 +1,5 @@
-import { createConfig, http, cookieStorage, createStorage } from 'wagmi'
-import { base } from 'wagmi/chains'
+import { createConfig, http, cookieStorage, createStorage } from "wagmi"
+import { base } from "wagmi/chains"
 
 //export const chains=
 export const config = createConfig({
@@ -9,7 +9,7 @@ export const config = createConfig({
     storage: cookieStorage, 
   }),
   transports: {
-    [base.id]: http(`https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`),
+    [base.id]: http(),
   },
 })
 

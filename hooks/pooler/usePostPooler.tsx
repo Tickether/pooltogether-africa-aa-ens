@@ -1,9 +1,10 @@
-'use client'
+"use client"
 
-import { postPoolerAction } from '@/app/actions/pooler/postPoolerAction';
-import { toast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react'
+
+import { postPoolerAction } from "@/actions/pooler/postPoolerAction";
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { useState } from "react"
 
 export const usePostPooler = () => {
     
@@ -13,8 +14,8 @@ export const usePostPooler = () => {
     async function giveMeSuccessToast(): Promise<void> {
         return new Promise((resolve) => {
             toast({
-                title: 'Profile Setup Successful!',
-                description: 'You can now make deposit & withdrawals!!',
+                title: "Profile Setup Successful!",
+                description: "You can now make deposit & withdrawals!!",
             });
     
             // Set a timeout of six seconds (6000 milliseconds)
@@ -26,9 +27,9 @@ export const usePostPooler = () => {
     async function giveMeFailedToast(): Promise<void> {
         return new Promise((resolve) => {
             toast({
-                title: 'Profile Setup Failed, Try again!',
-                description: 'Something went wrong, try again, check FAQs, or contact support!!',
-                variant: 'destructive'
+                title: "Profile Setup Failed, Try again!",
+                description: "Something went wrong, try again, check FAQs, or contact support!!",
+                variant: "destructive"
             });
             // Set a timeout of six seconds (6000 milliseconds)
             setTimeout(() => {

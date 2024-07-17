@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
-import { getTransactionsAction } from '@/app/actions/transactions/getTransactionsAction'
-import { useBlockNumber } from 'wagmi'
-import isEqual from 'lodash/isEqual'
+import { useState, useEffect } from "react"
+import { useBlockNumber } from "wagmi"
+import isEqual from "lodash/isEqual"
+import { getTransactionsAction } from "@/actions/transactions/getTransactionsAction"
 
 export interface Transaction {
     address: string

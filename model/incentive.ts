@@ -23,7 +23,7 @@ const IncentiveSchema = new mongoose.Schema(
         txOf: {
             type: String,
             required: true,
-            enum: ['deposit', 'withdraw', 'reward', 'incentive']
+            enum: ["deposit", "withdraw", "reward", "incentive"]
         },
     },
     {
@@ -31,6 +31,6 @@ const IncentiveSchema = new mongoose.Schema(
     }
 )
 
-const Incentive = mongoose.models.Incentive || mongoose.model('Incentive', IncentiveSchema)
+const Incentive = mongoose.models.Incentive || mongoose.model("Incentive", IncentiveSchema)
 
 export default Incentive

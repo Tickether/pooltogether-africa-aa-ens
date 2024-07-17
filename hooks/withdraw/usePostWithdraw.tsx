@@ -1,8 +1,9 @@
-'use client'
+"use client"
 
-import { postWithdrawAction } from '@/app/actions/withdraw/postWithdrawAction';
-import { toast } from '@/components/ui/use-toast';
-import { useState } from 'react'
+
+import { postWithdrawAction } from "@/actions/withdraw/postWithdrawAction";
+import { toast } from "@/components/ui/use-toast";
+import { useState } from "react"
 
 export const usePostWithdraw = () => {
 
@@ -11,8 +12,8 @@ export const usePostWithdraw = () => {
     async function giveMeSuccessToast(): Promise<void> {
         return new Promise((resolve) => {
             toast({
-                title: 'Your Withdraw is Complete',
-                description: 'Come back again soon!!',
+                title: "Your Withdraw is Complete",
+                description: "Come back again soon!!",
             });
             // Set a timeout of six seconds (6000 milliseconds)
             setTimeout(() => {
@@ -23,9 +24,9 @@ export const usePostWithdraw = () => {
     async function giveMeFailedToast(): Promise<void> {
         return new Promise((resolve) => {
             toast({
-                title: 'Withdraw Failed, Try again!',
-                description: 'Something went wrong, try again, or contact support!!',
-                variant: 'destructive'
+                title: "Withdraw Failed, Try again!",
+                description: "Something went wrong, try again, or contact support!!",
+                variant: "destructive"
             });
     
             // Set a timeout of six seconds (6000 milliseconds)

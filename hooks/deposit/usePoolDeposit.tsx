@@ -1,14 +1,14 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { przDepositBot, suPrzUSDC } from '@/utils/constants/addresses'
-import { allowanceUSD } from '@/utils/deposit/allowance'
-import { parseUnits } from 'viem'
-import { PaymasterMode } from '@biconomy/account'
-import { approveLifeTimeSwim } from '@/utils/deposit/approve'
-import { deposit } from '@/utils/deposit/deposit'
-import { useBiconomy } from '@/providers/BiconomyContext'
-import { hook } from '@/utils/deposit/hook'
+import { useState } from "react"
+import { przDepositBot, suPrzUSDC } from "@/utils/constants/addresses"
+import { allowanceUSD } from "@/utils/deposit/allowance"
+import { parseUnits } from "viem"
+import { PaymasterMode } from "@biconomy/account"
+import { approveLifeTimeSwim } from "@/utils/deposit/approve"
+import { deposit } from "@/utils/deposit/deposit"
+import { useBiconomy } from "@/providers/BiconomyContext"
+import { hook } from "@/utils/deposit/hook"
 
 export const usePoolDeposit = () => {
     
@@ -53,7 +53,7 @@ export const usePoolDeposit = () => {
     
             
             const userOpReceipt  = await userOpResponse?.wait();
-            if(userOpReceipt?.success == 'true') { 
+            if(userOpReceipt?.success == "true") { 
                 console.log("UserOp receipt", userOpReceipt)
                 console.log("Transaction receipt", userOpReceipt?.receipt)
             }
@@ -86,7 +86,7 @@ export const usePoolDeposit = () => {
     
             
             const userOpReceipt  = await userOpResponse?.wait();
-            if(userOpReceipt?.success == 'true') { 
+            if(userOpReceipt?.success == "true") { 
                 console.log("UserOp receipt", userOpReceipt)
                 console.log("Transaction receipt", userOpReceipt?.receipt)
             }

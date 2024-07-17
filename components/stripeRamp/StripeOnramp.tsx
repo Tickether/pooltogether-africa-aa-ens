@@ -1,5 +1,5 @@
-import {loadStripeOnramp} from '@stripe/crypto';
-import { CryptoElements, OnrampElement } from './StripeCryptoElements';
+import {loadStripeOnramp} from "@stripe/crypto";
+import { CryptoElements, OnrampElement } from "./StripeCryptoElements";
 
 
 
@@ -13,7 +13,7 @@ export default function StripeOnramp ({ clientSecret } : StripeOnrampProps) {
   
 
   const appearance = {
-    theme: 'light'
+    theme: "light"
   }
 
   return (

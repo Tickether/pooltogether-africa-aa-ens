@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import { postDepositAction } from '@/app/actions/deposit/postDepositAction';
-import { toast } from '@/components/ui/use-toast';
-import { useState } from 'react'
+import { postDepositAction } from "@/actions/deposit/postDepositAction";
+import { toast } from "@/components/ui/use-toast";
+import { useState } from "react"
 
 export const usePostDeposit = () => {
 
@@ -11,8 +11,8 @@ export const usePostDeposit = () => {
     async function giveMeSuccessToast(): Promise<void> {
         return new Promise((resolve) => {
             toast({
-                title: 'Your Depsoit is Successful',
-                description: 'Your can earn rewards for saving!!',
+                title: "Your Depsoit is Successful",
+                description: "Your can earn rewards for saving!!",
             });
             // Set a timeout of six seconds (6000 milliseconds)
             setTimeout(() => {
@@ -23,9 +23,9 @@ export const usePostDeposit = () => {
     async function giveMeFailedToast(): Promise<void> {
         return new Promise((resolve) => {
             toast({
-                title: 'Deposit Failed, Try again!',
-                description: 'Something went wrong, try again, or contact support!!',
-                variant: 'destructive'
+                title: "Deposit Failed, Try again!",
+                description: "Something went wrong, try again, or contact support!!",
+                variant: "destructive"
             });
     
             // Set a timeout of six seconds (6000 milliseconds)

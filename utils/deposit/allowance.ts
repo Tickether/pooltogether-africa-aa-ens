@@ -7,7 +7,7 @@ export const allowanceUSD = async (owner: `0x${string}`, spender: `0x${string}`)
     const allowanceData = await publicClient.readContract({
         address: USDC,
         abi: erc20Abi,
-        functionName: 'allowance',
+        functionName: "allowance",
         args: [(owner), (spender)]
     })
 

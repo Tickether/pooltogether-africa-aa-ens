@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query' 
-import type { ReactNode } from 'react'
-import { type State, WagmiProvider } from 'wagmi'
-import { config } from '@/utils/config'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query" 
+import type { ReactNode } from "react"
+import { type State, WagmiProvider } from "wagmi"
+import { config } from "@/utils/config"
 
 
 type Props = {

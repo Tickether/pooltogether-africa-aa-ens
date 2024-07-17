@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useBiconomy } from '@/providers/BiconomyContext'
-import { withdraw } from '@/utils/withdraw/withdraw'
-import { parseUnits } from 'viem'
-import { PaymasterMode } from '@biconomy/account'
-import { usePostWithdraw } from './usePostWithdraw'
-import { transfer } from '@/utils/withdraw/transfer'
+import { useState } from "react"
+import { useBiconomy } from "@/providers/BiconomyContext"
+import { withdraw } from "@/utils/withdraw/withdraw"
+import { parseUnits } from "viem"
+import { PaymasterMode } from "@biconomy/account"
+import { usePostWithdraw } from "./usePostWithdraw"
+import { transfer } from "@/utils/withdraw/transfer"
 
 export const usePoolWithdraw = () => {
     
@@ -30,8 +30,8 @@ export const usePoolWithdraw = () => {
             const { transactionHash } = await userOpResponse.waitForTxHash();
             console.log("Transaction Hash", transactionHash);
             const userOpReceipt  = await userOpResponse.wait();
-            if(userOpReceipt.success == 'true') { 
-                postWithdraw( ownerAddress!, receiverAddress, transactionHash!, amountDollar!, 'withdraw' )
+            if(userOpReceipt.success == "true") { 
+                postWithdraw( ownerAddress!, receiverAddress, transactionHash!, amountDollar!, "withdraw" )
                 console.log("UserOp receipt", userOpReceipt)
                 console.log("Transaction receipt", userOpReceipt.receipt)
         

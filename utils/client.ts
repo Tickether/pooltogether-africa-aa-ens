@@ -1,5 +1,5 @@
-import { createPublicClient, createWalletClient, http } from 'viem'
-import { base, mainnet} from 'viem/chains'
+import { createPublicClient, http } from "viem"
+import { base, mainnet} from "viem/chains"
 
 
 

@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import connectDB from '@/utils/db/mongodb'
-import Reward from '@/model/reward'
-import { middleware } from '@/utils/middleware';
+import connectDB from "@/utils/db/mongodb"
+import Reward from "@/model/reward"
+import { middleware } from "@/utils/middleware";
 
 
 export  async function POST(

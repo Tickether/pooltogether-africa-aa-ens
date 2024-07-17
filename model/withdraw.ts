@@ -23,7 +23,7 @@ const WithdrawSchema = new mongoose.Schema(
         txOf: {
             type: String,
             required: true,
-            enum: ['deposit', 'withdraw', 'reward', 'incentive']
+            enum: ["deposit", "withdraw", "reward", "incentive"]
         },
     },
     {
@@ -31,6 +31,6 @@ const WithdrawSchema = new mongoose.Schema(
     }
 )
 
-const Withdraw = mongoose.models.Withdraw || mongoose.model('Withdraw', WithdrawSchema)
+const Withdraw = mongoose.models.Withdraw || mongoose.model("Withdraw", WithdrawSchema)
 
 export default Withdraw

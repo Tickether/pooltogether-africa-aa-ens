@@ -1,11 +1,11 @@
-import { encodeFunctionData, erc20Abi } from 'viem';
-import { USDC } from '../constants/addresses';
+import { encodeFunctionData, erc20Abi } from "viem";
+import { USDC } from "../constants/addresses";
 
 
 export const transfer = (to: `0x${string}`, amount: bigint ) => {
     const transferData = encodeFunctionData({
         abi: erc20Abi,
-        functionName: 'transfer',
+        functionName: "transfer",
         args: [(to), (amount)]
     })
 

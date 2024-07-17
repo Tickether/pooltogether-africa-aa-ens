@@ -22,7 +22,7 @@ const DepositSchema = new mongoose.Schema(
         txOf: {
             type: String,
             required: true,
-            enum: ['deposit', 'withdraw']
+            enum: ["deposit", "withdraw"]
         },
     },
     {
@@ -30,6 +30,6 @@ const DepositSchema = new mongoose.Schema(
     }
 )
 
-const Deposit = mongoose.models.Deposit || mongoose.model('Deposit', DepositSchema)
+const Deposit = mongoose.models.Deposit || mongoose.model("Deposit", DepositSchema)
 
 export default Deposit

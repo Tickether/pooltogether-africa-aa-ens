@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from "react";
 
 // ReactContext to simplify access of StripeOnramp object
 const CryptoElementsContext = React.createContext(null);
@@ -48,7 +48,7 @@ export const OnrampElement = ({
   React.useEffect(() => {
     const containerRef = onrampElementRef.current;
     if (containerRef) {
-      containerRef.innerHTML = '';
+      containerRef.innerHTML = "";
 
       if (clientSecret && stripeOnramp) {
         stripeOnramp
