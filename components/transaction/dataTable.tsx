@@ -34,8 +34,7 @@ export function DataTable<TData, TValue> ({
             pagination:{
                 pageSize: 5
             }
-        }
-        
+        }  
     })
 
     return (
@@ -87,7 +86,7 @@ export function DataTable<TData, TValue> ({
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {/**will find some content for here // empty now*/}
+                    <p><span className="font-black">{(table.getState().pagination.pageIndex) + (1)}</span> of {table.getPageCount()}</p>
                 </div>
                 <div className="space-x-2">
                     <Button
