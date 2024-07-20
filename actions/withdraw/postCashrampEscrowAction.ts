@@ -6,19 +6,29 @@ type ConfirmEscrowResponse = {
 
 export async function postCashrampEscrowAction( paymentRequest: string, transactionHash: string ) {
     try {
-        const res = await fetch(`${process.env.BASE_URL}/api/postCashrampEscrow`, {
+        const query = `
+            mutation {
+                confirmTransaction(
+                    paymentRequest: "${paymentRequest}",
+                    transactionHash: "${transactionHash}",
+                ) 
+            }
+        `;
+
+        const resposne = await fetch(`https://api.useaccrue.com/cashramp/api/graphql`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
+                "Authorization": `Bearer ${process.env.CASHRAMP_API_SECRET_KEY}`
             },
+            
             body: JSON.stringify({
-                paymentRequest,
-                transactionHash,
+                query
             })
         }) 
-        const data =  await res.json()
-        console.log(data)
-        return data //as ConfirmEscrowResponse
+        const result =  await resposne.json()
+        console.log(result.data)
+        return result.data as ConfirmEscrowResponse
     } catch (error) {
         console.log(error)
     }

@@ -9,7 +9,7 @@ export const config = createConfig({
     storage: cookieStorage, 
   }),
   transports: {
-    [base.id]: http(),
+    [base.id]: http(`https://api.developer.coinbase.com/rpc/v1/base/${process.env.NEXT_PUBLIC_BASE_NODE_API_KEY}`),
   },
 })
 

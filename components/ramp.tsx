@@ -18,17 +18,14 @@ export function Ramp({ setOpenRamp, paymentType, address, reference, balance } :
     async function checkTransactionConfirmation (paymentRequest: any, txnHash: string) {
         const intervalId = setInterval(async () => {
             try {
-                console.log(txnHash, paymentRequest)
+                console.log(paymentRequest, txnHash )
                 const confirmEscrow = await postCashrampEscrowAction(paymentRequest, txnHash);
                 console.log(confirmEscrow);
                 
-                /*
                 if (confirmEscrow!.confirmTransaction) {
                     console.log("Transaction confirmed");
                     clearInterval(intervalId);
                 }
-                */
-                
                 
             } catch (error) {
                 console.error("Error confirming transaction:", error);
@@ -89,7 +86,7 @@ export function Ramp({ setOpenRamp, paymentType, address, reference, balance } :
             <div className="w-full h-full relative">
                 <div
                     onClick={async()=>{
-                        setOpenRamp(false)        
+                        setOpenRamp(false)
                     }}
                     className="absolute cursor-pointer p-5 top-0 right-0"
                 >
@@ -116,5 +113,3 @@ export function Ramp({ setOpenRamp, paymentType, address, reference, balance } :
         </main>
     );
 }
-
-//&currency=${currency}
