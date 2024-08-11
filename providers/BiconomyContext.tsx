@@ -6,7 +6,7 @@ import type { ReactNode } from "react"
 import React, { useContext, useEffect, useState } from "react"
 import { WalletClient } from "viem"
 import { base } from "viem/chains"
-import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { ConnectedWallet, usePrivy, useWallets } from "@privy-io/react-auth";
 import { createWalletClient, custom } from "viem";
 
 
@@ -29,14 +29,25 @@ export function useBiconomy () {
 };
 
 export function BiconomyContext ({ children }: Props) {
-    const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | undefined>()
-    const [smartAccountAddress, setSmartAccountAddress] = useState<string | undefined>()
-    const {wallets} = useWallets();
-    const {ready, authenticated} = usePrivy();
+    const [ smartAccount, setSmartAccount ] = useState<BiconomySmartAccountV2 | undefined>()
+    const [ smartAccountAddress, setSmartAccountAddress ] = useState<string | undefined>()
+    const [ embeddedWallet, setEmbeddedWallet ] = useState<ConnectedWallet | undefined>()
 
+    const { wallets } = useWallets();
+    const { user, ready, authenticated } = usePrivy();
+
+    // make sure connected walltet == privy user before setting embed
+    useEffect(() => {
+        const connectedWalletBase = wallets[0]
+        const connectedWalletPrivy = wallets.find((wallet) => (wallet.walletClientType === "privy"));
+        const connectedUserWallet = user?.wallet
+        if (connectedWalletBase?.walletClientType === connectedUserWallet?.walletClientType) {
+            setEmbeddedWallet(connectedWalletPrivy)
+        }
+    }, [ wallets, user ]);
+    
     const getWalletClient = async () => {
         
-        const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === "privy"));
         // Switch your wallet to your target chain before getting the viem WalletClient
         await embeddedWallet?.switchChain(base.id)
 
@@ -72,20 +83,20 @@ export function BiconomyContext ({ children }: Props) {
         if (ready && !authenticated){
             setSmartAccountAddress(undefined);
             setSmartAccount(undefined);   
+            setEmbeddedWallet(undefined);
         }
         
         //not ready or not logged in
         if (!ready || !authenticated) return;
 
         //find privy signer & create/login smart account
-        const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === "privy"));
         if (!embeddedWallet) return; 
         const walletClient = await getWalletClient()
         if (embeddedWallet && !smartAccount) createSmartAccount(walletClient);
     }
     useEffect(() => {
         readyOrNot()
-    }, [wallets, ready, authenticated]);
+    }, [ wallets, ready, authenticated, embeddedWallet ]);
 
     return (
         <>
@@ -93,5 +104,3 @@ export function BiconomyContext ({ children }: Props) {
         </>
     )
 }
-
-
