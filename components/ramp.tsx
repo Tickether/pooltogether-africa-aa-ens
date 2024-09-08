@@ -42,7 +42,9 @@ export function Ramp({ setOpenRamp, pooler, paymentType, address, reference, bal
     };
     async function makeSunbath (amount: string, destinationAddress: `0x${string}`, paymentRequest: any) {
         const txnHash = await poolWithdraw(amount, destinationAddress, address)
-        await sendEmail(pooler.email, pooler.ens, Number(amount).toFixed(2), 'Cashramp')
+        if (txnHash) {
+            await sendEmail(pooler.email, pooler.ens, Number(amount).toFixed(2), 'Cashramp')
+        }
         if (txnHash) {
             console.log(txnHash)
             await checkTransactionConfirmation(paymentRequest, txnHash)
