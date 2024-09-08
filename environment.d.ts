@@ -14,6 +14,8 @@ declare global {
             CASHRAMP_WEBHOOK_TOKEN: string
             MONGO: string
             BASE_URL: string
+            USER: string
+            PASS: string
             
         }
     }

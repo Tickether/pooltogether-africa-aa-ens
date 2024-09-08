@@ -2,16 +2,19 @@ import Image from "next/image";
 import { postCashrampEscrowAction } from "@/actions/withdraw/postCashrampEscrowAction";
 import { usePoolWithdraw } from "@/hooks/withdraw/usePoolWithdraw";
 import { useEffect } from "react";
+import { Pooler } from "@/hooks/pooler/useGetPooler";
+import { sendEmail } from "@/actions/mail/sendEmail";
 
 interface RampProps {
     setOpenRamp: (openRamp : boolean) => void
+    pooler: Pooler
     paymentType: string
     address: `0x${string}`
     reference: string
     balance: string
 }
 
-export function Ramp({ setOpenRamp, paymentType, address, reference, balance } : RampProps) {
+export function Ramp({ setOpenRamp, pooler, paymentType, address, reference, balance } : RampProps) {
 
     const { loading: loadingWithdraw, poolWithdraw } = usePoolWithdraw()
 
@@ -39,6 +42,7 @@ export function Ramp({ setOpenRamp, paymentType, address, reference, balance } :
     };
     async function makeSunbath (amount: string, destinationAddress: `0x${string}`, paymentRequest: any) {
         const txnHash = await poolWithdraw(amount, destinationAddress, address)
+        await sendEmail(pooler.email, pooler.ens, Number(amount).toFixed(2), 'Cashramp')
         if (txnHash) {
             console.log(txnHash)
             await checkTransactionConfirmation(paymentRequest, txnHash)

@@ -20,6 +20,7 @@ import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Ramp } from "./ramp";
+import { sendEmail } from "@/actions/mail/sendEmail";
 
 
 
@@ -241,6 +242,7 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                             disabled={!valid || parseFloat(amountDollar) == 0 || amountDollar == "" || loadingWithdraw}
                                             onClick={async ()=>{
                                                 await poolWithdraw(amountDollar, receiverAddressResolved as `0x${string}`, smartAccountAddress)
+                                                await sendEmail(pooler.email, pooler.ens, Number(amountDollar).toFixed(2), 'direct withdrawal to a wallet of your choice')
                                                 setReceiverAddress("")
                                                 setAmountDollar("")
                                             }}
@@ -272,7 +274,7 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType="withdrawal" address={smartAccountAddress} reference={reference!} balance={balance} />}
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} pooler={pooler} paymentType="withdrawal" address={smartAccountAddress} reference={reference!} balance={balance} />}
         </>
       )
 } 

@@ -288,7 +288,7 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                     </div>
                 </DrawerContent>
             </Drawer>
-            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} paymentType="deposit" address={smartAccountAddress} reference={reference!} balance={'0'}/>}
+            {openCashRamp && <Ramp setOpenRamp={setOpenCashRamp} pooler={pooler} paymentType="deposit" address={smartAccountAddress} reference={reference!} balance={'0'}/>}
             
             {openStripeRamp && <StripeOnrampModal setOpenRamp={setOpenStripeRamp} client_secret={client_secret!} />}
         </>
