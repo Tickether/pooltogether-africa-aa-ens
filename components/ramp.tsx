@@ -16,7 +16,7 @@ interface RampProps {
 
 export function Ramp({ setOpenRamp, pooler, paymentType, address, reference, balance } : RampProps) {
 
-    const { loading: loadingWithdraw, poolWithdraw } = usePoolWithdraw()
+    const { poolWithdraw } = usePoolWithdraw()
 
     async function checkTransactionConfirmation (paymentRequest: any, txnHash: string) {
         const intervalId = setInterval(async () => {

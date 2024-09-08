@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Pooler } from "@/hooks/pooler/useGetPooler"
@@ -13,6 +13,8 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, Dr
 import { normalize } from "viem/ens"
 import { usePoolDeposit } from "@/hooks/deposit/usePoolDeposit"
 import { Label } from "./ui/label"
+import { motion } from "framer-motion";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 
 
@@ -108,7 +110,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
                     data.susuTag,
                 )
                 getBackPooler()
-                
+                setLoading(false)
             } else {
                 //update
             }
@@ -118,7 +120,11 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
         }
         setLoading(false)
     }
-
+    useEffect(()=>{
+        if (pooler && !loading) {
+            setOpen(false)
+        }
+    }, [pooler, loading])
     return (
         <>
             <Drawer
@@ -171,7 +177,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
                                                 <div className="flex w-full max-w-sm items-center space-x-2">
                                                     <FormLabel className="text-right">Username</FormLabel>
                                                     <FormControl >
-                                                        <Input disabled={!!pooler} className="col-span-3" placeholder={!pooler ? "vitalik" : pooler.ens} {...field} onChange={handleSusuTagChange}/>
+                                                        <Input disabled={!!pooler || loading!} className="col-span-3" placeholder={!pooler ? "vitalik" : pooler.ens} {...field} onChange={handleSusuTagChange}/>
                                                     </FormControl>
                                                 </div>
                                             </FormItem>
@@ -181,8 +187,33 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
                             
                                     <div className="flex justify-end">
                                         <Button
+                                            className="w-36"
                                             disabled={!!pooler || loading!}
-                                            type="submit">Save changes
+                                            type="submit"
+                                        >
+                                            {
+                                                loading
+                                                ? (
+                                                    <>
+                                                        <motion.div
+                                                        initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                                        animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                                        transition={{
+                                                            duration: 1, // Animation duration in seconds
+                                                            repeat: Infinity, // Infinity will make it rotate indefinitely
+                                                            ease: "linear", // Animation easing function (linear makes it constant speed)
+                                                        }}
+                                                    >
+                                                            <DotsHorizontalIcon/>
+                                                        </motion.div>
+                                                    </>
+                                                )
+                                                : (
+                                                    <>
+                                                        Save changes
+                                                    </>
+                                                )
+                                            }
                                         </Button>
                                     </div>
                                 </form>

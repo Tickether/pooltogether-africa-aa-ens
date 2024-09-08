@@ -10,11 +10,9 @@ export const usePoolWithdraw = () => {
     
     const { smartAccount } = useBiconomy()
     const { postWithdraw } = usePostWithdraw()
-    const [loading, setLoading] = useState<boolean>(false)
     
     const poolWithdraw = async (amountDollar: string, receiverAddress: `0x${string}`, ownerAddress: `0x${string}`) => {
         try {
-            setLoading(true)
             const amountParsed = parseUnits(amountDollar!, 6)
             let tx = []
 
@@ -35,14 +33,13 @@ export const usePoolWithdraw = () => {
                 console.log("UserOp receipt", userOpReceipt)
                 console.log("Transaction receipt", userOpReceipt.receipt)
                 return transactionHash!
+                
             }
-            setLoading(false)
             
         } catch (error) {
             console.log(error) 
-            setLoading(false)  
         }
         
     }
-    return { loading, poolWithdraw }
+    return { poolWithdraw }
 }

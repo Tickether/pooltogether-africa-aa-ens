@@ -21,6 +21,8 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Ramp } from "./ramp";
 import { sendEmail } from "@/actions/mail/sendEmail";
+import { motion } from "framer-motion";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 
 
@@ -32,9 +34,10 @@ interface WithdrawProps {
 
 export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawProps) {
 
-    const { loading: loadingWithdraw, poolWithdraw } = usePoolWithdraw()
+    const { poolWithdraw } = usePoolWithdraw()
     
     const [open, setOpen] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean | null>(null)
     
     
     //const [reference, setReference] = useState<string | null>(null)
@@ -201,7 +204,7 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                                 <Input 
                                                     id="address"
                                                     value={receiverAddress}
-                                                    disabled={loadingWithdraw}
+                                                    disabled={loading!}
                                                     className="text-[13px]"
                                                     onChange={(e) => {
                                                         try {
@@ -232,24 +235,50 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                                     className="text-xs"
                                                     id="amount"
                                                     value={amountDollar}
-                                                    disabled={loadingWithdraw}
+                                                    disabled={loading!}
                                                     onChange={handleUSDChange} 
                                                 />
                                                 
                                             </div>
                                         </div>
                                         <Button
-                                            disabled={!valid || parseFloat(amountDollar) == 0 || amountDollar == "" || loadingWithdraw}
+                                            className="w-full"
+                                            disabled={!valid || parseFloat(amountDollar) == 0 || amountDollar == "" || loading!}
                                             onClick={async ()=>{
+                                                setLoading(true)
                                                 const txn = await poolWithdraw(amountDollar, receiverAddressResolved as `0x${string}`, smartAccountAddress)
                                                 if (txn) {
                                                     await sendEmail(pooler.email, pooler.ens, Number(amountDollar).toFixed(2), 'direct withdrawal to a wallet of your choice')
+                                                    setReceiverAddress("")
+                                                    setAmountDollar("")
                                                 }
-                                                setReceiverAddress("")
-                                                setAmountDollar("")
+                                                setLoading(false)
                                             }}
                                         >
-                                            Withdraw
+                                            {
+                                                loading
+                                                ? (
+                                                    <>
+                                                        <motion.div
+                                                        initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                                        animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                                        transition={{
+                                                            duration: 1, // Animation duration in seconds
+                                                            repeat: Infinity, // Infinity will make it rotate indefinitely
+                                                            ease: "linear", // Animation easing function (linear makes it constant speed)
+                                                        }}
+                                                    >
+                                                            <DotsHorizontalIcon/>
+                                                        </motion.div>
+                                                    </>
+                                                )
+                                                : (
+                                                    <>
+                                                        Withdraw
+                                                    </>
+                                                )
+                                            }
+                                            
                                         </Button>
                                     </div>
                                 </>
