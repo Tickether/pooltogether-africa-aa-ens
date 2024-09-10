@@ -31,9 +31,6 @@ const satoshi = localFont({
 export const metadata: Metadata = {
   title: "susu club",
   description: "get a susu box, save & win prizes",
-  twitter: {
-    card: "summary_large_image",
-  },
 };
 
 export default function RootLayout({
