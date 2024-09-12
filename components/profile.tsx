@@ -129,8 +129,9 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
         <>
             <Drawer
                 open={open}
+                onOpenChange={setOpen}
                 onClose={()=>{
-                    setOpen(false)
+                    //
                 }}
             >
                 <DrawerTrigger asChild>

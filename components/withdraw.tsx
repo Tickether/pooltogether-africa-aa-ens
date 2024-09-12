@@ -102,8 +102,8 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
         <>
             <Drawer 
                 open={open}
+                onOpenChange={setOpen}
                 onClose={()=>{
-                    setOpen(false)
                     setPaymentService(null)
                     setReceiverAddress("")
                     setAmountDollar("")
