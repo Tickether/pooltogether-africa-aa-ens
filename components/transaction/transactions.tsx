@@ -4,14 +4,17 @@ import { Transaction } from "@/hooks/transactions/useGetTransactions"
 import { DataTable } from "./dataTable"
 import { Columns } from "./columns"
 import { SocialShare } from "./socialShare"
+import { Referrals } from "./referrals"
+import { Pooler } from "@/hooks/pooler/useGetPooler"
 
 
 
 interface TransactionsProps {
     transactions: Transaction[]
+    pooler: Pooler
 }
 
-export function Transactions ({ transactions } : TransactionsProps) {
+export function Transactions ({ transactions, pooler } : TransactionsProps) {
     
     console.log( transactions )
     return (
@@ -20,7 +23,12 @@ export function Transactions ({ transactions } : TransactionsProps) {
                 {
                     transactions?.length! >= 1 && (
                         <div className="flex flex-col gap-3">
-                            <SocialShare/>
+                           <div className="flex justify-end">
+                                <div className="flex gap-3">   
+                                    <Referrals pooler={pooler}/>
+                                    <SocialShare/>
+                                </div>
+                           </div>
                             <DataTable columns={Columns} data={transactions!} />
                         </div>
                         

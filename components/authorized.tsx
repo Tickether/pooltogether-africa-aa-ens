@@ -131,7 +131,7 @@ export function Authorized() {
                 </div>
                 { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`}/>  }
                 <div className="flex w-full items-center justify-center">
-                    { smartAccount && pooler && !loading && <Transactions transactions={transactions!}/>}
+                    { smartAccount && pooler && !loading && <Transactions transactions={transactions!} pooler={pooler}/>}
                 </div>
             </main>    
         </>

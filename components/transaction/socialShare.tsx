@@ -3,6 +3,8 @@ import Image from "next/image"
 import { Button } from "../ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Share1Icon } from "@radix-ui/react-icons"
+
+
 export function SocialShare () {
 
     const warpcast = `
@@ -16,7 +18,7 @@ export function SocialShare () {
 
     return (
         <>
-            <div className="flex w-full justify-end">
+            <div className="flex w-full">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline">
