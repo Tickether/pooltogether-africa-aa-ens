@@ -248,7 +248,7 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                                 setLoading(true)
                                                 const txn = await poolWithdraw(amountDollar, receiverAddressResolved as `0x${string}`, smartAccountAddress)
                                                 if (txn) {
-                                                    await sendEmail(pooler.email, pooler.ens, Number(amountDollar).toFixed(2), 'direct withdrawal to a wallet of your choice')
+                                                    await sendEmail(pooler.email, pooler.ens, Number(amountDollar).toFixed(2), "direct withdrawal to a wallet of your choice", "withdrawal")
                                                     setReceiverAddress("")
                                                     setAmountDollar("")
                                                 }

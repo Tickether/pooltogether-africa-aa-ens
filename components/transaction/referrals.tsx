@@ -29,7 +29,7 @@ export function Referrals ({ pooler } : ReferralsProp) {
         <>
             <div className="flex">        
                 <Drawer>
-                    <DrawerTrigger>
+                    <DrawerTrigger asChild>
                         <Button>
                             <div className="flex">
                                 <PersonIcon/>

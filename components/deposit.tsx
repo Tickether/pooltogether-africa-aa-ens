@@ -8,23 +8,24 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { DoubleArrowDownIcon } from "@radix-ui/react-icons"
+import { DotsHorizontalIcon, DoubleArrowDownIcon } from "@radix-ui/react-icons"
 import { CheckCircle, Copy, SkipBack, Terminal, Vault } from "lucide-react"
 import { Pooler } from "@/hooks/pooler/useGetPooler"
 import { useEffect, useState } from "react"
-import { usePostDeposit } from "@/hooks/deposit/usePostDeposit"
-import { formatUnits } from "viem"
+import { erc20Abi, formatUnits } from "viem"
 import { Separator } from "./ui/separator"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Switch } from "./ui/switch"
-import { useBalance, useBlockNumber } from "wagmi"
-import { USDC } from "@/utils/constants/addresses"
+import { useBalance, useBlockNumber, useReadContract } from "wagmi"
+import { przDepositBot, USDC } from "@/utils/constants/addresses"
 import { usePoolDeposit } from "@/hooks/deposit/usePoolDeposit"
 import { useQueryClient } from "@tanstack/react-query"
 import { base } from "viem/chains"
 import { createOnrampSession } from "@/actions/createStripeSession/createOnrampSession"
 import { Ramp } from "./ramp"
 import { StripeOnrampModal } from "./stripeRamp/StripeOnrampModal"
+import { motion } from "framer-motion";
+import { sendEmail } from "@/actions/mail/sendEmail"
 
 
 interface DepositProps {
@@ -36,12 +37,15 @@ interface DepositProps {
 
 export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
 
-    const { postDeposit } = usePostDeposit()
-    const { loading, poolDeposit } = usePoolDeposit()
+   
+    const { loading, poolDeposit, poolApproveHook } = usePoolDeposit()
+
 
     
     const [open, setOpen] = useState<boolean>(false)
     const [copied, setCopied] = useState<boolean>(false)
+    
+    const [allowed, setAllowed] = useState<boolean | null>(null)
     const [showAddress, setShowAddress] = useState<boolean | null>()
 
     const [openCashRamp, setOpenCashRamp] = useState<boolean>(false)
@@ -52,6 +56,7 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
 
 
     const queryClient = useQueryClient() 
+    const allowanceQueryClient = useQueryClient() 
     const { data: blockNumber } = useBlockNumber({ watch: true }) 
 
     const {data: balance, queryKey} = useBalance({
@@ -90,6 +95,31 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
         setOpen(false)
     }
 
+    //const queryClientAllo = useQueryClient() 
+    //const { data: blockNumber } = useBlockNumber({ watch: true }) 
+
+    const {data: allowance, queryKey: allowanceQueryKey} = useReadContract({
+        address: USDC,
+        abi: erc20Abi,
+        chainId: base.id,
+        functionName: "allowance",
+        args: [(smartAccountAddress),(przDepositBot)]
+    })
+    useEffect(() => { 
+        allowanceQueryClient.invalidateQueries({ queryKey: allowanceQueryKey }) 
+    }, [blockNumber, allowanceQueryClient, allowanceQueryKey]) 
+    console.log(allowance)
+    console.log(allowed)
+    console.log(blockNumber)
+
+    useEffect(() => { 
+        if (allowance! > BigInt(0)) {
+            setAllowed(true)
+        } else {
+            setAllowed(false)
+        }
+    }, [allowance]) 
+
     return (
         <>
             <Drawer 
@@ -118,138 +148,182 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                     <div className="mx-auto w-full max-w-sm">
                         <DrawerHeader>
                             {
-                                !paymentService && (
-                                    <>
-                                        <DrawerTitle>Deposit</DrawerTitle>
-                                        <DrawerDescription>Choose out of the options & deposit to boost rewards</DrawerDescription>
-                                    </>
-                                )
-                            }  
-                            {
-                                paymentService == "direct" && (
-                                    <>
-                                        <DrawerTitle>Direct Deposit</DrawerTitle>
-                                        <DrawerDescription>Transfer USDC on Base to deposit</DrawerDescription>
-                                    </>
-                                )
-                            }   
-                        </DrawerHeader>                    
+                                allowed 
+                                ? (<>
+                                    {
+                                        !paymentService && (
+                                            <>
+                                                <DrawerTitle>Deposit</DrawerTitle>
+                                                <DrawerDescription>Choose out of the options & deposit to boost rewards</DrawerDescription>
+                                            </>
+                                        )
+                                    }  
+                                    {
+                                        paymentService == "direct" && (
+                                            <>
+                                                <DrawerTitle>Direct Deposit</DrawerTitle>
+                                                <DrawerDescription>Transfer USDC on Base to deposit</DrawerDescription>
+                                            </>
+                                        )
+                                    }   
+                                </>) 
+                                : (<>
+                                    <DrawerTitle>Deposit</DrawerTitle>
+                                    <DrawerDescription>Something went wrong during signup, dont fret, simply click below to Deposit</DrawerDescription>
+                                </>)
+                            }
+                            
+                        </DrawerHeader>    
                         {
-                            !paymentService && (
-                                <>
-                                    <div className="flex flex-col p-4 pb-0">
-                                        <div className="flex flex-col gap-3">
-                                            <Button
-                                                className="gap-2"
-                                                onClick={()=>{
-                                                    setPaymentService("direct")
-                                                }}
-                                            >
-                                                <div className="flex items-center">
-                                                    <DoubleArrowDownIcon/>
-                                                    <Vault size={17}/>
+                            allowed 
+                            ? (<>
+                                {
+                                    !paymentService && (
+                                        <>
+                                            <div className="flex flex-col p-4 pb-0">
+                                                <div className="flex flex-col gap-3">
+                                                    <Button
+                                                        className="gap-2"
+                                                        onClick={()=>{
+                                                            setPaymentService("direct")
+                                                        }}
+                                                    >
+                                                        <div className="flex items-center">
+                                                            <DoubleArrowDownIcon/>
+                                                            <Vault size={17}/>
+                                                        </div>
+                                                        <p>Direct Deposit</p>
+                                                    </Button>
                                                 </div>
-                                                <p>Direct Deposit</p>
-                                            </Button>
-                                        </div>
-                                        <p className="text-center">or</p>
-                                        <Separator orientation="horizontal" />
-                                        <p className="text-center">third party exchanges</p>
-                                        <div className="flex flex-col gap-3">
-                                            <Button
-                                                className="gap-2"
-                                                onClick={doCashRampPay}
-                                            >
-                                                <div className="flex items-center">
-                                                    <DoubleArrowDownIcon/>
-                                                    <Vault size={17}/>
+                                                <p className="text-center">or</p>
+                                                <Separator orientation="horizontal" />
+                                                <p className="text-center">third party exchanges</p>
+                                                <div className="flex flex-col gap-3">
+                                                    <Button
+                                                        className="gap-2"
+                                                        onClick={doCashRampPay}
+                                                    >
+                                                        <div className="flex items-center">
+                                                            <DoubleArrowDownIcon/>
+                                                            <Vault size={17}/>
+                                                        </div>
+                                                        <p>Cashramp</p>
+                                                    </Button>
+                                                    <Button
+                                                        className="gap-2"
+                                                        onClick={doStripePay}
+                                                    >
+                                                        <div className="flex items-center">
+                                                            <DoubleArrowDownIcon/>
+                                                            <Vault size={17}/>
+                                                        </div>
+                                                        <p>Link by Stripe</p>
+                                                    </Button>
                                                 </div>
-                                                <p>Cashramp</p>
-                                            </Button>
-                                            <Button
-                                                className="gap-2"
-                                                onClick={doStripePay}
-                                            >
-                                                <div className="flex items-center">
-                                                    <DoubleArrowDownIcon/>
-                                                    <Vault size={17}/>
-                                                </div>
-                                                <p>Link by Stripe</p>
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </>
-                            )
-                        }
-                        {
-                            paymentService == "direct" && (
-                                <>
-                                    <div className="flex flex-col p-4 pb-0">
-                                        <span className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                                            <div className="space-y-0.5">
-                                                <span>Reveal Wallet Address</span>
                                             </div>
-                                            <div>
-                                                <Switch
-                                                    checked={showAddress!}
-                                                    onCheckedChange={()=>{
-                                                        setShowAddress(!showAddress)
-                                                    }}
-                                                />
-                                            </div>
-                                        </span>
-                                        <Alert>
-                                            <Terminal className="h-4 w-4" />
-                                            <AlertTitle className="font-bold">
-                                                <div className="flex items-center justify-between">
-                                                    
-                                                    
-                                                    {
-                                                        !showAddress
-                                                        ? <><p className="text-base">{pooler.ens}.susu.box</p></>
-                                                        : <><p className="text-[12px] max-[360px]:text-[11px]">{pooler.address}</p></>
-                                                    }
-                                                    
-                                                </div>
-                                            </AlertTitle>
-                                            <AlertDescription className="text-xs">
-                                                
-                                                <div className="flex items-center justify-between">
-                                                    <p>Send USDC to this wallet. Do not close this window until magic deposit done.</p>
-                                                    {
-                                                        showAddress && (
-                                                            copied 
-                                                            ?
-                                                                <>
-                                                                    <CheckCircle 
-                                                                        className="h-9 w-9 cursor-none"
-                                                                        //onClick={handleCopy}
-                                                                    />
-                                                                </>
-                                                            :
-                                                                <>
-                                                                    <Copy 
-                                                                        className="h-9 w-9 cursor-pointer"
-                                                                        onClick={handleCopy}
-                                                                    />
-                                                                </>
-                                                        )
-                                                    }
-                                                </div>
-                                            </AlertDescription>
-                                        </Alert>
+                                        </>
+                                    )
+                                }
+                                {
+                                    paymentService == "direct" && (
+                                        <>
+                                            <div className="flex flex-col p-4 pb-0">
+                                                <span className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                                    <div className="space-y-0.5">
+                                                        <span>Reveal Wallet Address</span>
+                                                    </div>
+                                                    <div>
+                                                        <Switch
+                                                            checked={showAddress!}
+                                                            onCheckedChange={()=>{
+                                                                setShowAddress(!showAddress)
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </span>
+                                                <Alert>
+                                                    <Terminal className="h-4 w-4" />
+                                                    <AlertTitle className="font-bold">
+                                                        <div className="flex items-center justify-between">
+                                                            
+                                                            
+                                                            {
+                                                                !showAddress
+                                                                ? <><p className="text-base">{pooler.ens}.susu.box</p></>
+                                                                : <><p className="text-[12px] max-[360px]:text-[11px]">{pooler.address}</p></>
+                                                            }
+                                                            
+                                                        </div>
+                                                    </AlertTitle>
+                                                    <AlertDescription className="text-xs">
+                                                        
+                                                        <div className="flex items-center justify-between">
+                                                            <p>Send USDC to this wallet. Do not close this window until magic deposit done.</p>
+                                                            {
+                                                                showAddress && (
+                                                                    copied 
+                                                                    ?
+                                                                        <>
+                                                                            <CheckCircle 
+                                                                                className="h-9 w-9 cursor-none"
+                                                                                //onClick={handleCopy}
+                                                                            />
+                                                                        </>
+                                                                    :
+                                                                        <>
+                                                                            <Copy 
+                                                                                className="h-9 w-9 cursor-pointer"
+                                                                                onClick={handleCopy}
+                                                                            />
+                                                                        </>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    </AlertDescription>
+                                                </Alert>
 
-                                        <p className="text-center"></p>
-                                    </div>
-                                </>
-                            )
-                        }
-                        {
-                            paymentService == "stripe" && (
-                                <>
-                                </>
-                            )
-                        }
+                                                <p className="text-center"></p>
+                                            </div>
+                                        </>
+                                    )
+                                }
+                            </>) 
+                            : (<>
+                                <div className="flex flex-col p-4 pb-0 justify-end">
+                                    <Button
+                                        onClick={async()=>{
+                                            await poolApproveHook()
+                                        }}
+                                    >
+                                        {
+                                            loading
+                                            ? (
+                                                <>
+                                                    <motion.div
+                                                    initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                                    animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                                    transition={{
+                                                        duration: 1, // Animation duration in seconds
+                                                        repeat: Infinity, // Infinity will make it rotate indefinitely
+                                                        ease: "linear", // Animation easing function (linear makes it constant speed)
+                                                    }}
+                                                >
+                                                        <DotsHorizontalIcon/>
+                                                    </motion.div>
+                                                </>
+                                            )
+                                            : (
+                                                <>
+                                                    Activate Magic Deposits
+                                                </>
+                                            )
+                                        }
+                                    </Button>
+                                </div>
+                                
+                            </>)
+                        }                
+                        
                     <DrawerFooter>
                         {
                             paymentService == "direct" && (
@@ -266,19 +340,40 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
                                 <div className="flex items-center justify-center gap-2">
                                     <p className="text-center text-xs text-gray-500">Missing some magic deposits, no worries...</p>
                                     <Button
+                                        className="w-24"
                                         disabled={loading! || parseFloat(formatedBalance) == 0}
                                         onClick={async()=>{
                                             const poolTxn = await poolDeposit(formatedBalance, smartAccountAddress!)
-                                            await postDeposit(
-                                                smartAccountAddress,
-                                                smartAccountAddress,
-                                                poolTxn!,
-                                                formatedBalance,
-                                                "deposit"
-                                            )
+                                            if (poolTxn) {
+                                                
+                                                await sendEmail(pooler.email, pooler.ens, Number(formatedBalance).toFixed(2), "", "deposit")
+                                            }
+                                            
                                         }}
                                     >
-                                        click here
+                                        {
+                                            loading
+                                            ? (
+                                                <>
+                                                    <motion.div
+                                                    initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                                    animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                                    transition={{
+                                                        duration: 1, // Animation duration in seconds
+                                                        repeat: Infinity, // Infinity will make it rotate indefinitely
+                                                        ease: "linear", // Animation easing function (linear makes it constant speed)
+                                                    }}
+                                                >
+                                                        <DotsHorizontalIcon/>
+                                                    </motion.div>
+                                                </>
+                                            )
+                                            : (
+                                                <>
+                                                    click here
+                                                </>
+                                            )
+                                        }
                                     </Button>
                                 </div>
                                 </>

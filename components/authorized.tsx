@@ -31,6 +31,7 @@ export function Authorized() {
 
 
     const queryClient = useQueryClient() 
+    const boostQueryClient = useQueryClient() 
     const { data: blockNumber } = useBlockNumber({ watch: true }) 
 
     const {data: balance, queryKey} = useBalance({
@@ -52,8 +53,8 @@ export function Authorized() {
         args: [(suPrzUSDC), (smartAccountAddress! as `0x${string}`)]
     })
     useEffect(() => { 
-        queryClient.invalidateQueries({ queryKey: boostQueryKey }) 
-    }, [blockNumber, queryClient, boostQueryKey]) 
+        boostQueryClient.invalidateQueries({ queryKey: boostQueryKey }) 
+    }, [blockNumber, boostQueryClient, boostQueryKey]) 
     
     const boostedtBalance = boostBalance && typeof boostBalance === "bigint" 
     ? boostBalance - (balance?.value !== undefined ? BigInt(balance.value) : BigInt(0)) 

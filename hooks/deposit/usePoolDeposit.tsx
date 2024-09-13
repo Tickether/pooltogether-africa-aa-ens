@@ -9,11 +9,30 @@ import { approveLifeTimeSwim } from "@/utils/deposit/approve"
 import { deposit } from "@/utils/deposit/deposit"
 import { useBiconomy } from "@/providers/BiconomyContext"
 import { hook } from "@/utils/deposit/hook"
+import { usePostDeposit } from "./usePostDeposit"
+import { toast } from "@/components/ui/use-toast"
 
 export const usePoolDeposit = () => {
     
+
     const [loading, setLoading] = useState<boolean>(false)
     const { smartAccount } = useBiconomy()
+    const { postDeposit } = usePostDeposit()
+
+    async function giveMeFailedToast(): Promise<void> {
+        return new Promise((resolve) => {
+            toast({
+                title: "Deposit Failed, Try again!",
+                description: "Something went wrong, no missing deposits!!",
+                variant: "destructive"
+            });
+    
+            // Set a timeout of six seconds (6000 milliseconds)
+            setTimeout(() => {
+                resolve();
+            }, 3666);
+        });
+    }
 
     const poolDeposit = async (amountDollar: string, smartAccountAddress: `0x${string}`) => {
         
@@ -56,9 +75,17 @@ export const usePoolDeposit = () => {
             if(userOpReceipt?.success == "true") { 
                 console.log("UserOp receipt", userOpReceipt)
                 console.log("Transaction receipt", userOpReceipt?.receipt)
+                await postDeposit(
+                    smartAccountAddress,
+                    smartAccountAddress,
+                    txnHash!,
+                    amountDollar,
+                    "deposit"
+                )
+                setLoading(false)
+                return txnHash 
             }
-            setLoading(false)
-            return txnHash 
+            
         } catch (error) {
             console.log(error)
             setLoading(false)
@@ -69,7 +96,7 @@ export const usePoolDeposit = () => {
     const poolApproveHook = async () => {
         
         try {
-            //setLoading(true)
+            setLoading(true)
             let tx = []
             const approveTx = approveLifeTimeSwim(przDepositBot)
             tx.push(approveTx)
@@ -89,12 +116,15 @@ export const usePoolDeposit = () => {
             if(userOpReceipt?.success == "true") { 
                 console.log("UserOp receipt", userOpReceipt)
                 console.log("Transaction receipt", userOpReceipt?.receipt)
+                setLoading(false)
+                return transactionHash 
+            } else {
+                giveMeFailedToast()
             }
-            //setLoading(false)
-            return transactionHash 
+            
         } catch (error) {
             console.log(error)
-            //setLoading(false)
+            setLoading(false)
         }
         
         
