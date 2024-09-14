@@ -18,7 +18,7 @@ export function Referrals ({ pooler } : ReferralsProp) {
     const [copied, setCopied] = useState<boolean>(false)
     
     const handleCopy = async () => {
-        const clipboardText = await navigator.clipboard.writeText(`susu.club/${pooler.ens}`);
+        const clipboardText = await navigator.clipboard.writeText(`susu.club/i/${pooler.ens}`);
         setCopied(true);
         setTimeout(() => {
             setCopied(false);
@@ -54,7 +54,7 @@ export function Referrals ({ pooler } : ReferralsProp) {
                                             </div>
                                             <div className="flex w-full items-center justify-between">
                                                 <span className="font-bold">
-                                                    {`susu.club/${pooler.ens}`}
+                                                    {`susu.club/i/${pooler.ens}`}
                                                 </span>
                                                 <div>
                                                 {
