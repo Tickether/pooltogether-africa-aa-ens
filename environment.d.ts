@@ -18,7 +18,7 @@ declare global {
             D_PASS: string
             W_USER: string
             W_PASS: string
-            PRIVATE_KEY: string
+            PRIVATE_KEY: `0x${string}`
             
         }
     }
