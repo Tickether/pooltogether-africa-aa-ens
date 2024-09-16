@@ -1,7 +1,7 @@
 "use server"
 
 
-import { BiconomySmartAccountV2, createSmartAccountClient, PaymasterMode } from "@biconomy/account";
+//import { BiconomySmartAccountV2, createSmartAccountClient, PaymasterMode } from "@biconomy/account";
 import { walletClient } from "./clientReferrer";
 import { claimInvite } from "./refs/claimInvite";
 
@@ -43,6 +43,7 @@ export async function createSmartAccountClaimInvite (referrer: `0x${string}`, in
        //EOA config
         const tx = claimInvite(referrer, invited)
         const hash = await walletClient.sendTransaction(tx)
+        console.log(hash)
         return hash
         
     } catch (error) {

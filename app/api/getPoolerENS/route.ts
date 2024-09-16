@@ -1,8 +1,6 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import connectDB from "@/utils/db/mongodb"
-import Pooler from "@/model/pooler"
+import Pooler from "@/model/pooler";
+import connectDB from "@/utils/db/mongodb";
 import { middleware } from "@/utils/middleware";
-
 
 export async function POST(
     req: Request,
@@ -14,8 +12,8 @@ export async function POST(
     const { ens } = await req.json()
     try {
         await connectDB()
-        const pooler = await Pooler.findOne({ ens: ens })
-        return new Response(JSON.stringify(pooler))
+        const poolerByENS = await Pooler.findOne({ ens: ens })
+        return new Response(JSON.stringify(poolerByENS))
     } catch (error) {
         return new Response(JSON.stringify(error))
     }

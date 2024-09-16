@@ -64,7 +64,7 @@ export function Authorized() {
     
     return (
         <>
-            <main className="flex min-h-screen flex-col items-center gap-8 p-24 max-md:p-6">
+            <main className="flex min-h-screen flex-col items-center gap-8 p-24 max-md:p-6 bg-white">
                 <div className="flex w-full items-center justify-between">
                     <div className="flex">
                         <Image

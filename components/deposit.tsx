@@ -1,3 +1,4 @@
+import * as React from "react"
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -123,8 +124,8 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     return (
         <>
             <Drawer 
-                open={open}
-                onOpenChange={setOpen}
+                //open={open}
+                //onOpenChange={setOpen}
                 onClose={()=>{
                     setPaymentService(null)
                 }}

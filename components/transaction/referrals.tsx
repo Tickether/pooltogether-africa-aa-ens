@@ -4,7 +4,11 @@ import { CheckCircle, Copy } from "lucide-react"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Pooler } from "@/hooks/pooler/useGetPooler";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useBlockNumber, useReadContract } from "wagmi";
+import { baseSepolia } from "viem/chains";
+import { SusuClubOnchainRef } from "@/utils/constants/addresses";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 interface ReferralsProp {
@@ -25,6 +29,7 @@ export function Referrals ({ pooler } : ReferralsProp) {
         }, 2000);
     };
 
+    
     return (
         <>
             <div className="flex">        
@@ -80,8 +85,11 @@ export function Referrals ({ pooler } : ReferralsProp) {
                                     </AlertTitle>
                                 </Alert>
                             </div>
-                            <div className="flex w-full">
-                                {/** */}
+                            <div className="flex w-full justify-end">
+                                {/** list of invites */}
+                                <Button disabled>
+                                    Check Invite Leaderboard
+                                </Button>
                             </div>
                         </div>
                     </div>

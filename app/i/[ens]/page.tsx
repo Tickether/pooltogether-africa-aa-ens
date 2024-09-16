@@ -1,5 +1,7 @@
 
+import { getPoolerENSAction } from "@/actions/pooler/getPoolerENSAction";
 import { LoginInvite } from "@/components/loginInvite";
+import { Pooler } from "@/hooks/pooler/useGetPooler";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +17,8 @@ export default async function Invite({
 }: { 
     params: { ens: string } 
 }) {
+    const poolerENS: Pooler = await getPoolerENSAction(params.ens)
+    console.log(poolerENS)
     return (
         <main className="flex flex-col items-center justify-between">
           <div className="flex w-full h-screen max-md:h-full flex-col">
@@ -47,7 +51,7 @@ export default async function Invite({
                     <p className="text-center z-20">Introducing Susu Club</p>
                 </div>
                 <p className="font-bold text-center text-6xl z-20">A new <span className="text-blue-700 bg-blue-100 rounded-lg px-2 pb-2">way</span> to <span className="bg-green-400 rounded-lg px-2 pb-2">save</span> in <span className="text-blue-700">dollars</span></p>
-                <LoginInvite ens={params.ens}/>
+                <LoginInvite poolerENS={poolerENS}/>
               </div>
     
               <div className="flex w-full h-2/5 px-36 items-center justify-center bg-howItWorksGray max-md:pt-8 max-md:flex-col">

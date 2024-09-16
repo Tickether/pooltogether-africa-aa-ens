@@ -8,35 +8,34 @@ import { Button } from "./ui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBiconomy } from "@/providers/BiconomyContext";
-import { useGetPoolerByENS } from "@/hooks/pooler/useGetPoolerByENS";
 import { createSmartAccountClaimInvite } from "@/utils/aaClientReferrer";
+import { Pooler } from "@/hooks/pooler/useGetPooler";
 
 
 
 interface LoginInviteProps {
-    ens: string
+    poolerENS: Pooler
 }
 
 
-export function LoginInvite({ ens } : LoginInviteProps) {
+export function LoginInvite({ poolerENS } : LoginInviteProps) {
     const router = useRouter()
     const plausible = usePlausible()
     
-    
-    const { poolerByENS, loading } = useGetPoolerByENS( ens! )
+
     const { smartAccountAddress } = useBiconomy()
     const { ready, authenticated } = usePrivy()
     const { login } = useLogin({
         onComplete:( wasAlreadyAuthenticated, isNewUser  ) => {
             console.log( isNewUser )
             if (isNewUser) {
-                createSmartAccountClaimInvite(poolerByENS?.address! as `0x${string}`, smartAccountAddress! as `0x${string}`)
+                createSmartAccountClaimInvite(poolerENS.address as `0x${string}`, smartAccountAddress! as `0x${string}`)
             }     
             setWasAuthenticated(wasAlreadyAuthenticated); 
               
         }
     })
-    console.log(poolerByENS)
+    //console.log(poolerByENS)
     const [logging, setLogging] = useState<boolean>(false);
     const [wasAuthenticated, setWasAuthenticated] = useState<User | null>(null);
 
@@ -60,19 +59,12 @@ export function LoginInvite({ ens } : LoginInviteProps) {
         }
     }, [wasAuthenticated, logging, router]);
 
-    useEffect(() => {
-        //get inviter profile
-        //get new user
-        //send claim
-        //redirect
-    }, []);
-
     
     return (
         <Button 
             onClick={Login} 
             className="w-48 rounded-full bg-blue-600 cursor-pointer z-20 hover:bg-green-400"
-            disabled={!ready || authenticated}
+            disabled={!ready || authenticated || !poolerENS}
         >
             <div className="flex w-full justify-between">
               <p>Accept Invite</p>
