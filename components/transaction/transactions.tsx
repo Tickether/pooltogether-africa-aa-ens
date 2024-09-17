@@ -26,7 +26,7 @@ export function Transactions ({ transactions, pooler } : TransactionsProps) {
                            <div className="flex justify-end">
                                 <div className="flex gap-3">   
                                     <Referrals pooler={pooler}/>
-                                    <SocialShare/>
+                                    <SocialShare pooler={pooler}/>
                                 </div>
                            </div>
                             <DataTable columns={Columns} data={transactions!} />

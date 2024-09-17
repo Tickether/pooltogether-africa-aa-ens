@@ -3,9 +3,13 @@ import Image from "next/image"
 import { Button } from "../ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Share1Icon } from "@radix-ui/react-icons"
+import { Pooler } from "@/hooks/pooler/useGetPooler"
 
 
-export function SocialShare () {
+interface SocialShareProps{
+    pooler: Pooler
+}
+export function SocialShare ({pooler}: SocialShareProps) {
 
     const warpcast = `
         I've taken the plunge and fully dived into the pool at @susuclub Now you can find me swimming onchain. 🏊‍♂️💸 Ready for the next swim meet? Don’t forget your swim gear, and maybe make a splash with your own deposit. 😉 See you in the deep end! 🌊🏆
@@ -14,7 +18,7 @@ export function SocialShare () {
         I've taken the plunge and fully dived into the pool at @susudotclub Now you can find me swimming onchain. 🏊‍♂️💸 Ready for the next swim meet? Don’t forget your swim gear, and maybe make a splash with your own deposit. 😉 See you in the deep end! 🌊🏆
     `
 
-    const urlEmbedded = "https://susu.club/"
+    const urlEmbedded = `https://susu.club/i/${pooler.ens}`
 
     return (
         <>
