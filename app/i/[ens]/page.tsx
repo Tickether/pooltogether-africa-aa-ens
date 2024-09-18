@@ -5,6 +5,7 @@ import { Pooler } from "@/hooks/pooler/useGetPooler";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "susu club",
@@ -18,6 +19,9 @@ export default async function Invite({
     params: { ens: string } 
 }) {
     const poolerENS: Pooler = await getPoolerENSAction(params.ens)
+    if (!poolerENS) {
+      redirect('/')
+    }
     console.log(poolerENS)
     return (
         <main className="flex flex-col items-center justify-between">

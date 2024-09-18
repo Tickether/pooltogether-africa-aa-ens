@@ -124,8 +124,8 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     return (
         <>
             <Drawer 
-                //open={open}
-                //onOpenChange={setOpen}
+                open={open}
+                onOpenChange={setOpen}
                 onClose={()=>{
                     setPaymentService(null)
                 }}
