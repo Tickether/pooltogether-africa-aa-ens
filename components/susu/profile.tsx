@@ -6,13 +6,13 @@ import { FaceIcon } from "@radix-ui/react-icons"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { usePostPooler } from "@/hooks/pooler/usePostPooler"
 import { usePrivy } from "@privy-io/react-auth"
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "./ui/drawer"
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer"
 import { normalize } from "viem/ens"
 import { usePoolDeposit } from "@/hooks/deposit/usePoolDeposit"
-import { Label } from "./ui/label"
+import { Label } from "../ui/label"
 import { motion } from "framer-motion";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 

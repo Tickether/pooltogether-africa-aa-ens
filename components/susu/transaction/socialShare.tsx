@@ -1,7 +1,7 @@
 
 import Image from "next/image"
-import { Button } from "../ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { Button } from "../../ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../ui/dropdown-menu"
 import { Share1Icon } from "@radix-ui/react-icons"
 import { Pooler } from "@/hooks/pooler/useGetPooler"
 

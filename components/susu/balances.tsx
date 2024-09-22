@@ -1,4 +1,4 @@
-import { Separator } from "./ui/separator"
+import { Separator } from "../ui/separator"
 import { trimDecimals } from "@/utils/trim"
 
 interface BalancesProp{

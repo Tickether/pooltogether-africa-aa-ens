@@ -30,14 +30,14 @@ export function Logout () {
             <AlertDialogTrigger asChild>
                 <Button className="gap-2" variant="outline">
                     <ExitIcon/>
-                    <span className="max-md:hidden">Close Susu</span>
+                    <span className="max-md:hidden">Close Susu Box</span>
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                    This action will log you out of your Susu account. You can no longer view your balances & winning
+                    This action will log you out of your Susu Box. You can no longer view your balances & winnings
                     unless you login again!.
                 </AlertDialogDescription>
                 </AlertDialogHeader>

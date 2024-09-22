@@ -1,5 +1,4 @@
-
-import { SusuComponent } from "@/components/susu/susuComponent";
+import { ClaimComponent } from "@/components/claim/claimComponent";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,10 +6,10 @@ export const metadata: Metadata = {
     description: "get a susu box, save & win prizes",
 };
 
-export default async function Susu() {
+export default async function Claim() {
     return (
         <>
-            <SusuComponent/>
+            <ClaimComponent/>
         </>
     )
 }

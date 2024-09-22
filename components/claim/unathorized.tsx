@@ -2,8 +2,8 @@
 
 
 import { Terminal } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { Button } from "./ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 
 export function Unauthorized() {
