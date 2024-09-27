@@ -9,6 +9,7 @@ export interface Transaction {
     txn: string
     amount: string
     txOf: string
+    createdAt: Date
     
 }
 export const useGetTransactions = (address: string) => {

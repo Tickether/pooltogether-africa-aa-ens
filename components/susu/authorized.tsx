@@ -119,7 +119,6 @@ export function Authorized() {
                                         🥳 You are ready to make deposits. Happy Pooling 🙌🏊
                                     </AlertDescription>
                                 </Alert>
-                                <h2></h2> 
                             </>
                         )
                     }
