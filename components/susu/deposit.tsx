@@ -25,7 +25,7 @@ import { base } from "viem/chains"
 import { createOnrampSession } from "@/actions/createStripeSession/createOnrampSession"
 import { Ramp } from "./ramp"
 import { StripeOnrampModal } from "../stripeRamp/StripeOnrampModal"
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 import { sendEmail } from "@/actions/mail/sendEmail"
 
 

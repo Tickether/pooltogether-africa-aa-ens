@@ -2,7 +2,8 @@
 
 
 //import { BiconomySmartAccountV2, createSmartAccountClient, PaymasterMode } from "@biconomy/account";
-import { walletClient } from "./clientReferrer";
+import { publicClient, walletClient } from "./clientReferrer";
+import { claimBonus } from "./refs/claimBonus";
 import { claimInvite } from "./refs/claimInvite";
 
 
@@ -40,13 +41,44 @@ export async function createSmartAccountClaimInvite (referrer: `0x${string}`, in
         }
         return address
         */
-       //EOA config
+        //EOA config
         const tx = claimInvite(referrer, invited)
         const hash = await walletClient.sendTransaction(tx)
-        console.log(hash)
-        return hash
+        
+        const transaction = await publicClient.waitForTransactionReceipt( 
+            { 
+                hash: hash,
+                confirmations: 2
+            }
+        )
+        if (transaction.status == "success") {
+            console.log(hash)
+            return hash
+        }
+        
         
     } catch (error) {
         console.log(error)
     }
 };
+
+
+export async function claimMemberBonus(member: `0x${string}`) {
+    try {
+        //EOA config
+        const tx = claimBonus(member)
+        const hash = await walletClient.sendTransaction(tx)
+        console.log(hash)
+        const transaction = await publicClient.waitForTransactionReceipt( 
+            { 
+                hash: hash,
+                confirmations: 2
+            }
+        )
+        if (transaction.status == "success") {
+            return hash
+        }
+    } catch (error) {
+        console.log(error)      
+    }
+}

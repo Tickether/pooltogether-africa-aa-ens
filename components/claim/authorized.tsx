@@ -36,11 +36,11 @@ export function Authorized() {
         let initDeposit: Transaction | undefined
         let initWithdraw: Transaction | undefined
         // Reverse the transactions array to iterate from oldest to newest
-        if (transactions) {
+        if (transactions?.length! >= 1) {
             const reversedTransactions = [...transactions!].reverse();
             initDeposit = reversedTransactions.find(transaction => 
                 transaction.txOf === "deposit" && 
-                transaction.target.toLocaleLowerCase() ===cashrampDepositFrom.toLocaleLowerCase()  &&// && "0xf29C9e5b3BD6F192EF709aC010A991BA4a291e9c"
+                transaction.target.toLocaleLowerCase() === cashrampDepositFrom.toLocaleLowerCase() &&// && 
                 parseFloat(transaction.amount) >= 2
             );
             if (initDeposit) {
@@ -139,7 +139,6 @@ export function Authorized() {
         queryClient.invalidateQueries({ queryKey }) 
     }, [blockNumber, queryClient, queryKey]) 
     console.log(memberRewarded)
-
 
 
 

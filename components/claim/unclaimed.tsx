@@ -1,11 +1,15 @@
-import { Terminal } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Pooler } from "@/hooks/pooler/useGetPooler";
-import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { useWriteContract } from "wagmi";
-import { baseSepolia } from "viem/chains";
-import { SusuClubOnchainRef } from "@/utils/constants/addresses";
+import { Terminal } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
+import { Pooler } from "@/hooks/pooler/useGetPooler"
+import { useEffect, useState } from "react"
+import { Button } from "../ui/button"
+import { useWriteContract } from "wagmi"
+import { baseSepolia } from "viem/chains"
+import { SusuClubOnchainRef } from "@/utils/constants/addresses"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { motion } from "framer-motion"
+import { claimMemberBonus } from "@/utils/aaClientReferrer"
+
 
 interface UnclaimedProps {
     pooler: Pooler
@@ -19,6 +23,8 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
 
     const [ hr, setHr ] = useState<number | null>(null)
     const [ min, setMin ] = useState<number | null>(null)
+    
+    const [laoding, setLoading] = useState<boolean>(false)
 
     const getHrsMins = () => {
         // Convert remaining milliseconds into hours and minutes
@@ -35,30 +41,14 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
     }, [cooldownTimer])
 
 
-    const { writeContract } = useWriteContract()
+    const { writeContractAsync } = useWriteContract()
 
-    const claimMemberBonus = () => {
-        writeContract({
-            abi: [
-                {
-                    "inputs": [
-                        {
-                            "internalType": "address",
-                            "name": "member",
-                            "type": "address"
-                        }
-                    ],
-                    "name": "claimMemberBonus",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "function"
-                },
-            ],
-            address: SusuClubOnchainRef,
-            functionName: "claimMemberBonus",
-            args: [(pooler.address! as `0x${string}`)],
-            chainId: baseSepolia.id
-        })
+    const claimBonus = () => {
+        setLoading(true)
+        const res = claimMemberBonus(pooler.address as `0x${string}`)
+        setLoading(false)
+
+
     }
 
     return (
@@ -152,7 +142,31 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
                                                             <p className="text-8xl">2</p>
                                                         </div>
                                                         
-                                                        <Button onClick={claimMemberBonus}>Get Bonus 🎉</Button>
+                                                        <Button className="w-full" onClick={claimBonus}>
+                                                        {
+                                                            laoding
+                                                            ? (
+                                                                <>
+                                                                    <motion.div
+                                                                    initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                                                    animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                                                    transition={{
+                                                                        duration: 1, // Animation duration in seconds
+                                                                        repeat: Infinity, // Infinity will make it rotate indefinitely
+                                                                        ease: "linear", // Animation easing function (linear makes it constant speed)
+                                                                    }}
+                                                                >
+                                                                        <DotsHorizontalIcon/>
+                                                                    </motion.div>
+                                                                </>
+                                                            )
+                                                            : (
+                                                                <>
+                                                                    Get Bonus 🎉
+                                                                </>
+                                                            )
+                                                        }
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             </>
