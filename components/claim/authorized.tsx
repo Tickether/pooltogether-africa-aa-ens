@@ -30,6 +30,7 @@ export function Authorized() {
     const [ cooldownTimer, setCooldownTimer ] = useState<number | null>(null)
 
     const queryClient = useQueryClient()  
+    const boostQueryClient = useQueryClient() 
     const { data: blockNumber } = useBlockNumber({ watch: true }) 
 
     const checkClaimable = () => {
@@ -40,7 +41,7 @@ export function Authorized() {
             const reversedTransactions = [...transactions!].reverse();
             initDeposit = reversedTransactions.find(transaction => 
                 transaction.txOf === "deposit" && 
-                transaction.target.toLocaleLowerCase() === cashrampDepositFrom.toLocaleLowerCase() &&// && 
+                transaction.target.toLocaleLowerCase() === cashrampDepositFrom.toLocaleLowerCase()  &&// "0xf29C9e5b3BD6F192EF709aC010A991BA4a291e9c"
                 parseFloat(transaction.amount) >= 2
             );
             if (initDeposit) {
@@ -142,6 +143,40 @@ export function Authorized() {
 
 
 
+    const {data: getInvitesClaimedFrom, queryKey: boostQueryKey } = useReadContract({
+        abi: [
+            {
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "referrer",
+						"type": "address"
+					}
+				],
+				"name": "getInvitesClaimedFrom",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+        ],
+        address: SusuClubOnchainRef,
+        functionName: "getInvitesClaimedFrom",
+        args: [(smartAccountAddress! as `0x${string}`)],
+        chainId: baseSepolia.id
+    })
+    useEffect(() => { 
+        boostQueryClient.invalidateQueries({ queryKey: boostQueryKey  }) 
+    }, [blockNumber, boostQueryClient, queryKey]) 
+    console.log(getInvitesClaimedFrom)
+
+
+
     return (
         <>
             <main className="flex min-h-screen flex-col items-center gap-8 p-24 max-md:p-6 bg-white">
@@ -174,20 +209,20 @@ export function Authorized() {
                 <div className="flex w-full items-center justify-center">
                     {
                         //member bonus not claimed
-                        memberRewarded == false && (
+                        smartAccountAddress && pooler && memberRewarded == true && (
                             <><Unclaimed pooler={pooler!} deposited={deposited} withdrawn={withdrawn} cooldown={cooldown} cooldownTimer={cooldownTimer}/></>
                         )
                     }
                     {
                         //vs
-                        memberRewarded == undefined && (
+                        smartAccountAddress && pooler && memberRewarded == undefined && (
                             <>loading</>
                         )
                     }
                     {
                         //member bonus claimed
-                        memberRewarded == true && (
-                            <><Claimed/></>
+                        smartAccountAddress && pooler && memberRewarded == false && (
+                            <><Claimed pooler={pooler} invited={getInvitesClaimedFrom! as `0x${string}`[]} /></>
                         )
                     }
                 </div>

@@ -3,9 +3,6 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import { Pooler } from "@/hooks/pooler/useGetPooler"
 import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
-import { useWriteContract } from "wagmi"
-import { baseSepolia } from "viem/chains"
-import { SusuClubOnchainRef } from "@/utils/constants/addresses"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { motion } from "framer-motion"
 import { claimMemberBonus } from "@/utils/aaClientReferrer"
@@ -41,14 +38,10 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
     }, [cooldownTimer])
 
 
-    const { writeContractAsync } = useWriteContract()
-
     const claimBonus = () => {
         setLoading(true)
         const res = claimMemberBonus(pooler.address as `0x${string}`)
         setLoading(false)
-
-
     }
 
     return (
@@ -62,8 +55,8 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
             {
                 //not depsied
                 deposited === false && (
-                    <div className="w-[26rem]">
-                        <Alert className="w-108">
+                    <div className="w-full">
+                        <Alert className="w-[26rem]">
                             <Terminal className="h-4 w-4" />
                             <AlertTitle>Make a Depsoit!</AlertTitle>
                             <AlertDescription>
@@ -81,8 +74,8 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
                         {
                             deposited && withdrawn && (
                                 <>
-                                    <div className="w-[26rem]">
-                                        <Alert className="w-108">
+                                    <div className="w-full">
+                                        <Alert className="w-[26rem]">
                                             <Terminal className="h-4 w-4" />
                                             <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
                                             <AlertDescription>
@@ -101,8 +94,8 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
                                         //still cooling
                                         cooldown == false && (
                                             <>
-                                                <div className="flex flex-col gap-16 w-[26rem]">
-                                                    <Alert>
+                                                <div className="flex flex-col gap-16">
+                                                    <Alert className="w-[26rem]">
                                                         <Terminal className="h-4 w-4" />
                                                         <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
                                                         <AlertDescription>

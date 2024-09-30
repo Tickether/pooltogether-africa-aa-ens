@@ -5,6 +5,7 @@
 import { publicClient, walletClient } from "./clientReferrer";
 import { claimBonus } from "./refs/claimBonus";
 import { claimInvite } from "./refs/claimInvite";
+import { claimInviteReward } from "./refs/claimInviteReward";
 
 
 export async function createSmartAccountClaimInvite (referrer: `0x${string}`, invited: `0x${string}`) {
@@ -68,7 +69,7 @@ export async function claimMemberBonus(member: `0x${string}`) {
         //EOA config
         const tx = claimBonus(member)
         const hash = await walletClient.sendTransaction(tx)
-        console.log(hash)
+        
         const transaction = await publicClient.waitForTransactionReceipt( 
             { 
                 hash: hash,
@@ -76,9 +77,30 @@ export async function claimMemberBonus(member: `0x${string}`) {
             }
         )
         if (transaction.status == "success") {
+            console.log(hash)
             return hash
         }
     } catch (error) {
         console.log(error)      
+    }
+}
+
+export async function claimInviteBonus(invited:  `0x${string}`[]) {
+    try {
+        
+        const tx = claimInviteReward(invited)
+        const hash = await walletClient.sendTransaction(tx)
+        const transaction = await publicClient.waitForTransactionReceipt( 
+            { 
+                hash: hash,
+                confirmations: 2
+            }
+        )
+        if (transaction.status == "success") {
+            console.log(hash)
+            return hash
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
