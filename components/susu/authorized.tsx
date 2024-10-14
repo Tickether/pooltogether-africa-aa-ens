@@ -63,77 +63,75 @@ export function Authorized() {
     const formatedBoostBalance = boostedtBalance ? formatUnits(boostedtBalance, balance?.decimals!) : "0";
     
     return (
-        <>
-            <main className="flex min-h-screen flex-col items-center gap-8 p-24 max-md:p-6 bg-white">
-                <div className="flex w-full items-center justify-between">
-                    <div className="flex">
-                        <Image
-                            src=""
-                            alt=""
-                            width={0}
-                            height={0}
-                        />
-                        <p className="text-3xl font-bold">susu club</p>
-                    </div>
-                    <div className="flex gap-3">
-                        {
-                            pooler && (
-                                <Withdraw pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} balance={formatedBalance!}/>
-                            )
-                        }
-                        <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
-                        <Logout/>
-                    </div>
+        <main className="flex min-h-screen flex-col items-center gap-8 p-24 max-md:p-6 bg-white">
+            <div className="flex w-full items-center justify-between">
+                <div className="flex">
+                    <Image
+                        src=""
+                        alt=""
+                        width={0}
+                        height={0}
+                    />
+                    <p className="text-3xl font-bold">susu club</p>
                 </div>
-                <div className="flex w-full items-center justify-center">
+                <div className="flex gap-3">
                     {
-                        !pooler && loading
-                        && (
-                            <>
-                                <p>loading...</p>
-                            </>
+                        pooler && (
+                            <Withdraw pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`} balance={formatedBalance!}/>
                         )
                     }
-                    {
-                        !pooler && !loading
-                        && (
-                            <>
-                                <Alert className="w-108">
-                                    <Terminal className="h-4 w-4" />
-                                    <AlertTitle>Create a Profile!</AlertTitle>
-                                    <AlertDescription>
-                                        ⚠️Setup your profile & make deposits🚧
-                                    </AlertDescription>
-                                </Alert>
-                            </>
-                        )
-                    }
-                    {
-                        pooler && !loading
-                        && (
-                            <>
-                                <Alert className="w-108">
-                                    <Terminal className="h-4 w-4" />
-                                    <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
-                                    <AlertDescription>
-                                        🥳 You are ready to make deposits. Happy Pooling 🙌🏊
-                                    </AlertDescription>
-                                </Alert>
-                            </>
-                        )
-                    }
+                    <Profile pooler={pooler} smartAccountAddress={smartAccountAddress!} getBackPooler={getBackPooler}/>
+                    <Logout/>
                 </div>
-                <div>
-                    {/** Balances */}
-                    {
-                        smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!} boostBalance={formatedBoostBalance}/>
-                    }
-                </div>
-                { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`}/>  }
-                <div className="flex w-full items-center justify-center">
-                    { smartAccount && pooler && !loading && <Transactions transactions={transactions!} pooler={pooler}/>}
-                </div>
-            </main>    
-        </>
+            </div>
+            <div className="flex w-full items-center justify-center">
+                {
+                    !pooler && loading
+                    && (
+                        <div>
+                            <p>loading...</p>
+                        </div>
+                    )
+                }
+                {
+                    !pooler && !loading
+                    && (
+                        <div>
+                            <Alert className="w-108">
+                                <Terminal className="h-4 w-4" />
+                                <AlertTitle>Create a Profile!</AlertTitle>
+                                <AlertDescription>
+                                    ⚠️Setup your profile & make deposits🚧
+                                </AlertDescription>
+                            </Alert>
+                        </div>
+                    )
+                }
+                {
+                    pooler && !loading
+                    && (
+                        <div>
+                            <Alert className="w-108">
+                                <Terminal className="h-4 w-4" />
+                                <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
+                                <AlertDescription>
+                                    🥳 You are ready to make deposits. Happy Pooling 🙌🏊
+                                </AlertDescription>
+                            </Alert>
+                        </div>
+                    )
+                }
+            </div>
+            <div>
+                {/** Balances */}
+                {
+                    smartAccountAddress && pooler && !loading && <Balances balance={formatedBalance!} boostBalance={formatedBoostBalance}/>
+                }
+            </div>
+            { smartAccountAddress && pooler && !loading && <Deposit pooler={pooler!} smartAccountAddress={smartAccountAddress! as `0x${string}`}/>  }
+            <div className="flex w-full items-center justify-center">
+                { smartAccount && pooler && !loading && <Transactions transactions={transactions!} pooler={pooler}/>}
+            </div>
+        </main>    
     )
 }

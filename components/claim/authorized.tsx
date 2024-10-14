@@ -41,7 +41,7 @@ export function Authorized() {
             const reversedTransactions = [...transactions!].reverse();
             initDeposit = reversedTransactions.find(transaction => 
                 transaction.txOf === "deposit" && 
-                transaction.target.toLocaleLowerCase() === cashrampDepositFrom.toLocaleLowerCase()  &&// "0xf29C9e5b3BD6F192EF709aC010A991BA4a291e9c"
+                transaction.target.toLocaleLowerCase() === cashrampDepositFrom.toLocaleLowerCase() && // "0xf29C9e5b3BD6F192EF709aC010A991BA4a291e9c"  &&
                 parseFloat(transaction.amount) >= 2
             );
             if (initDeposit) {
@@ -209,7 +209,7 @@ export function Authorized() {
                 <div className="flex w-full items-center justify-center">
                     {
                         //member bonus not claimed
-                        smartAccountAddress && pooler && memberRewarded == true && (
+                        smartAccountAddress && pooler && memberRewarded == false && (
                             <><Unclaimed pooler={pooler!} deposited={deposited} withdrawn={withdrawn} cooldown={cooldown} cooldownTimer={cooldownTimer}/></>
                         )
                     }
@@ -221,7 +221,7 @@ export function Authorized() {
                     }
                     {
                         //member bonus claimed
-                        smartAccountAddress && pooler && memberRewarded == false && (
+                        smartAccountAddress && pooler && memberRewarded == true && (
                             <><Claimed pooler={pooler} invited={getInvitesClaimedFrom! as `0x${string}`[]} /></>
                         )
                     }

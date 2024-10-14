@@ -6,6 +6,7 @@ import { Button } from "../ui/button"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { motion } from "framer-motion"
 import { claimMemberBonus } from "@/utils/aaClientReferrer"
+import { preGameList } from "@/utils/constants/preGameList"
 
 
 interface UnclaimedProps {
@@ -44,6 +45,9 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
         setLoading(false)
     }
 
+    const preGamer = preGameList.includes(pooler.address.toLowerCase())
+    console.log("preGamer:", preGamer)
+
     return (
         <>
             {
@@ -55,7 +59,7 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
             {
                 //not depsied
                 deposited === false && (
-                    <div className="w-full">
+                    <div className="flex flex-col gap-16 w-[26rem]">
                         <Alert className="w-[26rem]">
                             <Terminal className="h-4 w-4" />
                             <AlertTitle>Make a Depsoit!</AlertTitle>
@@ -66,16 +70,61 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
                     </div>
                 )        
             }
-            
+            {
+                deposited && preGamer && (
+                    <div className="flex flex-col gap-16 w-[26rem]">
+                        <Alert>
+                            <Terminal className="h-4 w-4" />
+                            <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
+                            <AlertDescription>
+                                🥳 You have a qualifying deposit & have passed the smart saver cooldown❄️. You can claim your bonus and enter the invite game! 🏆🌊
+                            </AlertDescription>
+                        </Alert>
+                        <div className="flex flex-col w-full items-center gap-16">
+                            <p className="font-bold">Click below to claim your Bonus:</p>
+                            <div className="flex">
+                                <span className="text-xl max-md:text-base text-gray-700">$</span>
+                                <p className="text-8xl">2</p>
+                            </div>
+                            
+                            <Button className="w-full" onClick={claimBonus}>
+                            {
+                                laoding
+                                ? (
+                                    <>
+                                        <motion.div
+                                        initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                        animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                        transition={{
+                                            duration: 1, // Animation duration in seconds
+                                            repeat: Infinity, // Infinity will make it rotate indefinitely
+                                            ease: "linear", // Animation easing function (linear makes it constant speed)
+                                        }}
+                                    >
+                                            <DotsHorizontalIcon/>
+                                        </motion.div>
+                                    </>
+                                )
+                                : (
+                                    <>
+                                        Get Bonus 🎉
+                                    </>
+                                )
+                            }
+                            </Button>
+                        </div>
+                    </div>
+                )
+            }
             {
                 //deposited (claimable | unclaimbale)
-                deposited && (
+                deposited && !preGamer && (
                     <>
                         {
                             deposited && withdrawn && (
                                 <>
-                                    <div className="w-full">
-                                        <Alert className="w-[26rem]">
+                                    <div className="flex flex-col gap-16 w-[26rem]">
+                                        <Alert>
                                             <Terminal className="h-4 w-4" />
                                             <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
                                             <AlertDescription>
@@ -88,14 +137,14 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
 
                         }
                         {
-                            deposited && withdrawn == false && (
+                            preGamer || deposited && withdrawn == false && (
                                 <>
                                     {
                                         //still cooling
                                         cooldown == false && (
                                             <>
-                                                <div className="flex flex-col gap-16">
-                                                    <Alert className="w-[26rem]">
+                                                <div className="flex flex-col gap-16 w-[26rem]">
+                                                    <Alert>
                                                         <Terminal className="h-4 w-4" />
                                                         <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
                                                         <AlertDescription>
