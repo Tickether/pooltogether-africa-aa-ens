@@ -174,77 +174,76 @@ export function Claimed({ pooler, invited }: ClaimedProps) {
     
 
     return (
-        <>
-            <div className="flex flex-col gap-16 w-[26rem]">
-                <Alert className="w-[26rem]">
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
-                    <AlertDescription>
-                        🥳 You have entered the invite game🕹️. Tell your friend to get fill their Susu Box & get rewarded 🌊🏆
-                    </AlertDescription>
-                </Alert>
-                <div className="flex flex-col w-full items-center gap-16">
-                    <p className="font-bold">Click below to claim available invite rewards</p>
-                    <div className="flex">
-                        <span className="text-xl max-md:text-base text-gray-700">$</span>
-                        <p className="text-8xl">2</p>
-                    </div>
-                    
-                    <Button className="w-full" 
-                        onClick={claimInviteBonus}                        
-                    >
-                    {
-                        laoding
-                        ? (
-                            <>
-                                <motion.div
-                                initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
-                                animate={{ rotate: 360 }} // Final rotation value (360 degrees)
-                                transition={{
-                                    duration: 1, // Animation duration in seconds
-                                    repeat: Infinity, // Infinity will make it rotate indefinitely
-                                    ease: "linear", // Animation easing function (linear makes it constant speed)
-                                }}
-                            >
-                                    <DotsHorizontalIcon/>
-                                </motion.div>
-                            </>
-                        )
-                        : (
-                            <>
-                                Get Invite Rewards 🎉
-                            </>
-                        )
-                    }
-                    </Button>
+        <div className="flex flex-col gap-16 w-[26rem]">
+            <Alert>
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
+                <AlertDescription>
+                    🥳 You have entered the invite game🕹️. Tell your friend to get fill their Susu Box & get rewarded 🌊🏆
+                </AlertDescription>
+            </Alert>
+            <div className="flex flex-col w-full items-center gap-16">
+                <p className="font-bold">Click below to claim available invite rewards</p>
+                <div className="flex">
+                    <span className="text-xl max-md:text-base text-gray-700">$</span>
+                    <p className="text-8xl">{readyClaims.length}</p>
                 </div>
-                <div>
-                <Table>
-                    <TableCaption>A list of your recent invites and their status.</TableCaption>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-[100px]">Invitee</TableHead>
-                            <TableHead>Status</TableHead>
-                            
-                            <TableHead className="text-right">Rewarded</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {invitedData.map((invitee: InvitedData) => (
-                        <TableRow key={invitee.pooler}>
-                            <TableCell className="font-medium">{invitee.pooler}</TableCell>
-                            <TableCell>{invitee.status}</TableCell>
-                            <TableCell className="text-right">{invitee.rewarded}</TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-                </div>
+                
+                <Button className="w-full" 
+                    disabled={readyClaims.length == 0}
+                    onClick={claimInviteBonus}                        
+                >
+                {
+                    laoding
+                    ? (
+                        <>
+                            <motion.div
+                            initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                            animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                            transition={{
+                                duration: 1, // Animation duration in seconds
+                                repeat: Infinity, // Infinity will make it rotate indefinitely
+                                ease: "linear", // Animation easing function (linear makes it constant speed)
+                            }}
+                        >
+                                <DotsHorizontalIcon/>
+                            </motion.div>
+                        </>
+                    )
+                    : (
+                        <>
+                            Get Invite Rewards 🎉
+                        </>
+                    )
+                }
+                </Button>
             </div>
-        </>
+            <div>
+            <Table>
+                <TableCaption>A list of your recent invites and their status.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[100px]">Invitee</TableHead>
+                        <TableHead>Status</TableHead>
+                        
+                        <TableHead className="text-right">Rewarded</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {invitedData.map((invitee: InvitedData) => (
+                    <TableRow key={invitee.pooler}>
+                        <TableCell className="font-medium">{invitee.pooler}</TableCell>
+                        <TableCell>{invitee.status}</TableCell>
+                        <TableCell className="text-right">{invitee.rewarded}</TableCell>
+                    </TableRow>
+                    ))}
+                </TableBody>
+                <TableFooter>
+                    <TableRow>
+                    </TableRow>
+                </TableFooter>
+            </Table>
+            </div>
+        </div>
     )
 }
