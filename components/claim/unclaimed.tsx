@@ -22,7 +22,7 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
     const [ hr, setHr ] = useState<number | null>(null)
     const [ min, setMin ] = useState<number | null>(null)
     
-    const [laoding, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const getHrsMins = () => {
         // Convert remaining milliseconds into hours and minutes
@@ -89,7 +89,7 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
                             
                             <Button className="w-full" onClick={claimBonus}>
                             {
-                                laoding
+                                loading
                                 ? (
                                     <>
                                         <motion.div
@@ -186,7 +186,7 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
                                                         
                                                         <Button className="w-full" onClick={claimBonus}>
                                                         {
-                                                            laoding
+                                                            loading
                                                             ? (
                                                                 <>
                                                                     <motion.div
