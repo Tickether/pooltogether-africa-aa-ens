@@ -5,6 +5,7 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, Dr
 import { Alert, AlertTitle } from "../../ui/alert";
 import { Pooler } from "@/hooks/pooler/useGetPooler";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 
 interface ReferralsProp {
@@ -16,6 +17,7 @@ export function Referrals ({ pooler } : ReferralsProp) {
 
     
     const [copied, setCopied] = useState<boolean>(false)
+    const router = useRouter() 
     
     const handleCopy = async () => {
         const clipboardText = await navigator.clipboard.writeText(`susu.club/i/${pooler.ens}`);
@@ -83,8 +85,12 @@ export function Referrals ({ pooler } : ReferralsProp) {
                             </div>
                             <div className="flex w-full justify-end">
                                 {/** list of invites */}
-                                <Button disabled>
-                                    Check Invite Leaderboard
+                                <Button
+                                    onClick={()=>{
+                                        router.push("/claim")
+                                    }}
+                                >
+                                    Check Claims Leaderboard
                                 </Button>
                             </div>
                         </div>
