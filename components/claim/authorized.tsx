@@ -7,7 +7,7 @@ import { useBiconomy } from "@/providers/BiconomyContext";
 import { useBlockNumber, useReadContract } from "wagmi";
 import { cashrampDepositFrom, SusuClubOnchainRef, USDC } from "@/utils/constants/addresses";
 import { useEffect, useState } from "react";
-import { baseSepolia } from "viem/chains";
+import { base } from "viem/chains";
 import { useQueryClient } from "@tanstack/react-query";
 import { Claimed } from "./claimed";
 import { Unclaimed } from "./unclaimed";
@@ -134,7 +134,7 @@ export function Authorized() {
         address: SusuClubOnchainRef,
         functionName: "memberRewarded",
         args: [(smartAccountAddress! as `0x${string}`)],
-        chainId: baseSepolia.id
+        chainId: base.id
     })
     useEffect(() => { 
         queryClient.invalidateQueries({ queryKey }) 
@@ -168,7 +168,7 @@ export function Authorized() {
         address: SusuClubOnchainRef,
         functionName: "getInvitesClaimedFrom",
         args: [(smartAccountAddress! as `0x${string}`)],
-        chainId: baseSepolia.id
+        chainId: base.id
     })
     useEffect(() => { 
         boostQueryClient.invalidateQueries({ queryKey: boostQueryKey  }) 

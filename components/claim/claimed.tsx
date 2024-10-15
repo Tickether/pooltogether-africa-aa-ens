@@ -1,20 +1,18 @@
-import { Pooler, useGetPooler } from "@/hooks/pooler/useGetPooler"
+import { Pooler } from "@/hooks/pooler/useGetPooler"
 import { SusuClubOnchainRef } from "@/utils/constants/addresses"
-import { useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
-import { baseSepolia } from "viem/chains"
-import { useBlockNumber, useReadContract } from "wagmi"
+import { useBlockNumber } from "wagmi"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import { Terminal } from "lucide-react"
 import { Button } from "../ui/button"
 import { motion } from "framer-motion"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { claimInviteReward } from "@/utils/refs/claimInviteReward"
-import { Transaction, useGetTransactions } from "@/hooks/transactions/useGetTransactions"
+import { Transaction } from "@/hooks/transactions/useGetTransactions"
 import { getPoolerAction } from "@/actions/pooler/getPoolerAction"
 import { getTransactionsAction } from "@/actions/transactions/getTransactionsAction"
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "../ui/table"
-import { publicClientTest } from "@/utils/client"
+import { publicClient } from "@/utils/client"
 
 interface ClaimedProps {
     pooler: Pooler
@@ -111,7 +109,7 @@ export function Claimed({ pooler, invited }: ClaimedProps) {
                             status = "🧊🫠 cooldown passed"
                         }
                     }
-                    const data = await publicClientTest.readContract({
+                    const data = await publicClient.readContract({
                         address: SusuClubOnchainRef,
                         abi: [
                             {
