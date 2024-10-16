@@ -42,7 +42,11 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
     const claimBonus = () => {
         setLoading(true)
         const res = claimMemberBonus(pooler.address as `0x${string}`)
-        setLoading(false)
+        
+        // Add a 3-second delay
+        setTimeout(() => {
+            setLoading(false);
+        }, 3666);
     }
 
     const preGamer = preGameList.includes(pooler.address.toLowerCase())
@@ -69,6 +73,52 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
                         </Alert>
                     </div>
                 )        
+            }
+            {
+                !deposited && preGamer && (
+                    <div className="flex flex-col gap-16 w-[26rem]">
+                        <Alert>
+                            <Terminal className="h-4 w-4" />
+                            <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
+                            <AlertDescription>
+                                🥳 You have a qualifying deposit & have passed the smart saver cooldown❄️. You can claim your bonus and enter the invite game! 🏆🌊
+                            </AlertDescription>
+                        </Alert>
+                        <div className="flex flex-col w-full items-center gap-16">
+                            <p className="font-bold">Click below to claim your Bonus:</p>
+                            <div className="flex">
+                                <span className="text-xl max-md:text-base text-gray-700">$</span>
+                                <p className="text-8xl">2</p>
+                            </div>
+                            
+                            <Button className="w-full" onClick={claimBonus}>
+                            {
+                                loading
+                                ? (
+                                    <>
+                                        <motion.div
+                                        initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                        animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                        transition={{
+                                            duration: 1, // Animation duration in seconds
+                                            repeat: Infinity, // Infinity will make it rotate indefinitely
+                                            ease: "linear", // Animation easing function (linear makes it constant speed)
+                                        }}
+                                    >
+                                            <DotsHorizontalIcon/>
+                                        </motion.div>
+                                    </>
+                                )
+                                : (
+                                    <>
+                                        Get Bonus 🎉
+                                    </>
+                                )
+                            }
+                            </Button>
+                        </div>
+                    </div>
+                )
             }
             {
                 deposited && preGamer && (

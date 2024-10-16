@@ -1,7 +1,7 @@
 import { Button } from "../../ui/button";
 import { PlusIcon, PersonIcon } from "@radix-ui/react-icons"
 import { CheckCircle, Copy } from "lucide-react"
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "../../ui/drawer";
+import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../../ui/drawer";
 import { Alert, AlertTitle } from "../../ui/alert";
 import { Pooler } from "@/hooks/pooler/useGetPooler";
 import { useState } from "react";
@@ -83,7 +83,7 @@ export function Referrals ({ pooler } : ReferralsProp) {
                                     </AlertTitle>
                                 </Alert>
                             </div>
-                            <div className="flex w-full justify-end">
+                            <div className="flex w-full pb-4 justify-end">
                                 {/** list of invites */}
                                 <Button
                                     onClick={()=>{

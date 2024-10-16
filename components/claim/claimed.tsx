@@ -177,7 +177,7 @@ export function Claimed({ pooler, invited }: ClaimedProps) {
                 <Terminal className="h-4 w-4" />
                 <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
                 <AlertDescription>
-                    🥳 You have entered the invite game🕹️. Tell your friend to get fill their Susu Box & get rewarded 🌊🏆
+                    🥳 You have entered the invite game🕹️. Get your friend to fill their Susu Box & get rewarded 🌊🏆
                 </AlertDescription>
             </Alert>
             <div className="flex flex-col w-full items-center gap-16">
