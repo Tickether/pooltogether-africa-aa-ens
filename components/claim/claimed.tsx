@@ -13,6 +13,7 @@ import { getPoolerAction } from "@/actions/pooler/getPoolerAction"
 import { getTransactionsAction } from "@/actions/transactions/getTransactionsAction"
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "../ui/table"
 import { publicClient } from "@/utils/client"
+import { trimRef } from "@/utils/trim"
 
 interface ClaimedProps {
     pooler: Pooler
@@ -80,30 +81,32 @@ export function Claimed({ pooler, invited }: ClaimedProps) {
                     if (!initWithdraw) {
                         withdrawn = false;
                         //status = "cooldown mode active"
-                    } else if (firstDeposit) {
+                    } else if (firstDeposit && initWithdraw) {
                         const dateDeposit = new Date(firstDeposit.createdAt);
                         const dateWithdraw = new Date(initWithdraw.createdAt);
 
-                        const differenceInMs = dateWithdraw.getTime() - dateDeposit.getTime();
+                        const differenceInMsWithdrawn = dateWithdraw.getTime() - dateDeposit.getTime();
 
-                        if (differenceInMs >= 129600000) {
-                            withdrawn = false;
-                            //status = "cooldown mode active"
+                        if (differenceInMsWithdrawn >= 129600000) {
+                            withdrawn = true;
+                            status = "🧊🫠 cooldown passed"
                         } else {
                             withdrawn = true;
                             status = "🥶 cooldown failed"
                         }
                     }
 
-                    if (firstDeposit && !withdrawn) {
+                    if (firstDeposit && !initWithdraw) {
                         const dateDeposit = new Date(firstDeposit.createdAt);
                         const dateNow = new Date();
-                        const differenceInMs = dateNow.getTime() - dateDeposit.getTime();
-                        cooldownTimer = 129600000 - differenceInMs;
+                        const differenceInMsNotWithdrawn = dateNow.getTime() - dateDeposit.getTime();
+                        cooldownTimer = 129600000 - differenceInMsNotWithdrawn;
+                        const hours = Math.floor(cooldownTimer! / (1000 * 60 * 60));
+                        const minutes = Math.floor((cooldownTimer! % (1000 * 60 * 60)) / (1000 * 60));
 
-                        if (differenceInMs >= 129600000) {
+                        if (differenceInMsNotWithdrawn <= 129600000) {
                             cooldown = true;
-                            status = "❄️ cooldown mode active"
+                            status = `❄️ cooldown in ${hours}:${minutes}`
                         } else {
                             cooldown = false;
                             status = "🧊🫠 cooldown passed"
@@ -141,7 +144,7 @@ export function Claimed({ pooler, invited }: ClaimedProps) {
                 }
 
                 return {
-                    pooler: pooler?.ens || invited,
+                    pooler: pooler?.ens || trimRef(invited),
                     status: status,
                     rewarded,
                     invited: invited

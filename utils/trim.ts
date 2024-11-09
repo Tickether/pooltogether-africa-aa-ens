@@ -20,7 +20,7 @@ export function trimDecimals(amount: string | number) {
 
 export function trimRef(
     addr?: string,
-    frontSlice = 9,
+    frontSlice = 6,
     backSlice = 6
   ): string {
     if (!addr) return "";
