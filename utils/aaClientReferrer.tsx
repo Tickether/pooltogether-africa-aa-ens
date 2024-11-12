@@ -85,7 +85,7 @@ export async function claimMemberBonus(member: `0x${string}`) {
     }
 }
 
-export async function claimInviteBonus(invited:  `0x${string}`[]) {
+export async function claimInviteBonusReward(invited:  `0x${string}`[]) {
     try {
         
         const tx = claimInviteReward(invited)

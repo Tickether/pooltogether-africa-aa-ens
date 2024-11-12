@@ -7,13 +7,13 @@ import { Terminal } from "lucide-react"
 import { Button } from "../ui/button"
 import { motion } from "framer-motion"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { claimInviteReward } from "@/utils/refs/claimInviteReward"
 import { Transaction } from "@/hooks/transactions/useGetTransactions"
 import { getPoolerAction } from "@/actions/pooler/getPoolerAction"
 import { getTransactionsAction } from "@/actions/transactions/getTransactionsAction"
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "../ui/table"
 import { publicClient } from "@/utils/client"
 import { trimRef } from "@/utils/trim"
+import { claimInviteBonusReward } from "@/utils/aaClientReferrer"
 
 interface ClaimedProps {
     pooler: Pooler
@@ -168,8 +168,12 @@ export function Claimed({ pooler, invited }: ClaimedProps) {
 
     const claimInviteBonus = () => {
         setLoading(true)
-        const res = claimInviteReward(readyClaims)
-        setLoading(false)
+        const res = claimInviteBonusReward(readyClaims)
+        
+        // Add a 3-second delay
+        setTimeout(() => {
+            setLoading(false);
+        }, 3666);
     }
 
     
@@ -235,7 +239,13 @@ export function Claimed({ pooler, invited }: ClaimedProps) {
                     <TableRow key={invitee.pooler}>
                         <TableCell className="font-medium">{invitee.pooler}</TableCell>
                         <TableCell>{invitee.status}</TableCell>
-                        <TableCell className="text-right">{invitee.rewarded}</TableCell>
+                        <TableCell className="text-right">
+                            {
+                                invitee.rewarded 
+                                ?<>✅</>
+                                :<>⛔</>
+                            }
+                        </TableCell>
                     </TableRow>
                     ))}
                 </TableBody>
