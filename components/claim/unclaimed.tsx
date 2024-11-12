@@ -7,6 +7,10 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { motion } from "framer-motion"
 import { claimMemberBonus } from "@/utils/aaClientReferrer"
 import { preGameList } from "@/utils/constants/preGameList"
+import { useQueryClient } from "@tanstack/react-query"
+import { useBlockNumber, useReadContract } from "wagmi"
+import { invitedByDead, SusuClubOnchainRef } from "@/utils/constants/addresses"
+import { base } from "viem/chains"
 
 
 interface UnclaimedProps {
@@ -23,6 +27,10 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
     const [ min, setMin ] = useState<number | null>(null)
     
     const [loading, setLoading] = useState<boolean>(false)
+
+    const queryClient = useQueryClient()  
+    const { data: blockNumber } = useBlockNumber({ watch: true }) 
+
 
     const getHrsMins = () => {
         // Convert remaining milliseconds into hours and minutes
@@ -51,6 +59,38 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
 
     const preGamer = preGameList.includes(pooler.address.toLowerCase())
     console.log("preGamer:", preGamer)
+
+    const {data: invitedBy, queryKey} = useReadContract({
+        abi: [
+            {
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "referrerOf",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+        ],
+        address: SusuClubOnchainRef,
+        functionName: "referrerOf",
+        args: [(pooler.address! as `0x${string}`)],
+        chainId: base.id
+    })
+    useEffect(() => { 
+        queryClient.invalidateQueries({ queryKey }) 
+    }, [blockNumber, queryClient, queryKey]) 
+    console.log(invitedBy)
 
     return (
         <>
@@ -187,7 +227,7 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
 
                         }
                         {
-                            preGamer || deposited && withdrawn == false && (
+                            deposited && withdrawn == false && (
                                 <>
                                     {
                                         //still cooling
@@ -231,7 +271,13 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
                                                         <p className="font-bold">Click below to claim your Bonus:</p>
                                                         <div className="flex">
                                                             <span className="text-xl max-md:text-base text-gray-700">$</span>
-                                                            <p className="text-8xl">2</p>
+                                                            <p className="text-8xl">
+                                                                {
+                                                                    invitedBy === invitedByDead 
+                                                                    ?<>{2}</>
+                                                                    :<>{3}</>
+                                                                }
+                                                            </p>
                                                         </div>
                                                         
                                                         <Button className="w-full" onClick={claimBonus}>

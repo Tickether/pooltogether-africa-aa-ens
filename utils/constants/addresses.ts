@@ -5,3 +5,4 @@ export const przRedirectHook: `0x${string}` = "0x24308EB54F041267f893FD1b981519A
 export const przDepositBot: `0x${string}` = "0xE1B9e4c4ef65adAc76e138918f4EC58aBdDAeD67"
 export const SusuClubOnchainRef: `0x${string}` = "0x0CB9Bc80efD7bDf3782A7BccC092A89Bc31332f2"//"0x"
 export const cashrampDepositFrom:`0x${string}` = "0xd40C22D8B81f0d9c5D63607578E20120eBB77835"
+export const invitedByDead:`0x${string}` = "0x0000000000000000000000000000000000000000"
