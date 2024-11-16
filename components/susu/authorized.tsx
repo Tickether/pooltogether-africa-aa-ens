@@ -96,8 +96,8 @@ export function Authorized() {
                 {
                     !pooler && !loading
                     && (
-                        <div>
-                            <Alert className="w-108">
+                        <div className="flex w-[26rem]">
+                            <Alert>
                                 <Terminal className="h-4 w-4" />
                                 <AlertTitle>Create a Profile!</AlertTitle>
                                 <AlertDescription>
@@ -110,8 +110,8 @@ export function Authorized() {
                 {
                     pooler && !loading
                     && (
-                        <div>
-                            <Alert className="w-108">
+                        <div className="flex w-[26rem]">
+                            <Alert>
                                 <Terminal className="h-4 w-4" />
                                 <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
                                 <AlertDescription>

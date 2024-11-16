@@ -57,7 +57,7 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
         }, 3666);
     }
 
-    const preGamer = preGameList.includes(pooler.address.toLowerCase())
+    const preGamer = preGameList.includes(pooler.address)
     console.log("preGamer:", preGamer)
 
     const {data: invitedBy, queryKey} = useReadContract({
@@ -95,225 +95,186 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
     return (
         <>
             {
-                //vs
-                deposited === null && (
-                    <>loading</>
-                )
-            }
-            {
-                //not depsied
-                deposited === false && (
-                    <div className="flex flex-col gap-16 w-[26rem]">
-                        <Alert className="w-[26rem]">
-                            <Terminal className="h-4 w-4" />
-                            <AlertTitle>Make a Depsoit!</AlertTitle>
-                            <AlertDescription>
-                                ⚠️Top up your Susu Box with at least $2 to qualify for bonus rewards🚧
-                            </AlertDescription>
-                        </Alert>
-                    </div>
-                )        
-            }
-            {
-                !deposited && preGamer && (
-                    <div className="flex flex-col gap-16 w-[26rem]">
-                        <Alert>
-                            <Terminal className="h-4 w-4" />
-                            <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
-                            <AlertDescription>
-                                🥳 You have a qualifying deposit & have passed the smart saver cooldown❄️. You can claim your bonus and enter the invite game! 🏆🌊
-                            </AlertDescription>
-                        </Alert>
-                        <div className="flex flex-col w-full items-center gap-16">
-                            <p className="font-bold">Click below to claim your Bonus:</p>
-                            <div className="flex">
-                                <span className="text-xl max-md:text-base text-gray-700">$</span>
-                                <p className="text-8xl">2</p>
+                preGamer 
+                ? (
+                    <>
+                        <div className="flex flex-col gap-16 w-[26rem]">
+                            <Alert>
+                                <Terminal className="h-4 w-4" />
+                                <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
+                                <AlertDescription>
+                                    🥳 You have a qualifying deposit & have passed the smart saver cooldown❄️. You can claim your bonus and enter the invite game! 🏆🌊
+                                </AlertDescription>
+                            </Alert>
+                            <div className="flex flex-col w-full items-center gap-16">
+                                <p className="font-bold">Click below to claim your Bonus:</p>
+                                <div className="flex">
+                                    <span className="text-xl max-md:text-base text-gray-700">$</span>
+                                    <p className="text-8xl">2</p>
+                                </div>
+                                
+                                <Button className="w-full" onClick={claimBonus}>
+                                {
+                                    loading
+                                    ? (
+                                        <>
+                                            <motion.div
+                                            initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                            animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                            transition={{
+                                                duration: 1, // Animation duration in seconds
+                                                repeat: Infinity, // Infinity will make it rotate indefinitely
+                                                ease: "linear", // Animation easing function (linear makes it constant speed)
+                                            }}
+                                        >
+                                                <DotsHorizontalIcon/>
+                                            </motion.div>
+                                        </>
+                                    )
+                                    : (
+                                        <>
+                                            Get Bonus 🎉
+                                        </>
+                                    )
+                                }
+                                </Button>
                             </div>
-                            
-                            <Button className="w-full" onClick={claimBonus}>
-                            {
-                                loading
-                                ? (
-                                    <>
-                                        <motion.div
-                                        initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
-                                        animate={{ rotate: 360 }} // Final rotation value (360 degrees)
-                                        transition={{
-                                            duration: 1, // Animation duration in seconds
-                                            repeat: Infinity, // Infinity will make it rotate indefinitely
-                                            ease: "linear", // Animation easing function (linear makes it constant speed)
-                                        }}
-                                    >
-                                            <DotsHorizontalIcon/>
-                                        </motion.div>
-                                    </>
-                                )
-                                : (
-                                    <>
-                                        Get Bonus 🎉
-                                    </>
-                                )
-                            }
-                            </Button>
                         </div>
-                    </div>
+                    </>
                 )
-            }
-            {
-                deposited && preGamer && (
-                    <div className="flex flex-col gap-16 w-[26rem]">
-                        <Alert>
-                            <Terminal className="h-4 w-4" />
-                            <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
-                            <AlertDescription>
-                                🥳 You have a qualifying deposit & have passed the smart saver cooldown❄️. You can claim your bonus and enter the invite game! 🏆🌊
-                            </AlertDescription>
-                        </Alert>
-                        <div className="flex flex-col w-full items-center gap-16">
-                            <p className="font-bold">Click below to claim your Bonus:</p>
-                            <div className="flex">
-                                <span className="text-xl max-md:text-base text-gray-700">$</span>
-                                <p className="text-8xl">2</p>
-                            </div>
-                            
-                            <Button className="w-full" onClick={claimBonus}>
-                            {
-                                loading
-                                ? (
-                                    <>
-                                        <motion.div
-                                        initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
-                                        animate={{ rotate: 360 }} // Final rotation value (360 degrees)
-                                        transition={{
-                                            duration: 1, // Animation duration in seconds
-                                            repeat: Infinity, // Infinity will make it rotate indefinitely
-                                            ease: "linear", // Animation easing function (linear makes it constant speed)
-                                        }}
-                                    >
-                                            <DotsHorizontalIcon/>
-                                        </motion.div>
-                                    </>
-                                )
-                                : (
-                                    <>
-                                        Get Bonus 🎉
-                                    </>
-                                )
-                            }
-                            </Button>
-                        </div>
-                    </div>
-                )
-            }
-            {
-                //deposited (claimable | unclaimbale)
-                deposited && !preGamer && (
+                : (
                     <>
                         {
-                            deposited && withdrawn && (
-                                <>
-                                    <div className="flex flex-col gap-16 w-[26rem]">
-                                        <Alert>
-                                            <Terminal className="h-4 w-4" />
-                                            <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
-                                            <AlertDescription>
-                                                🙃 You have a qualifying deposit but you have withdrawn too quickly & did not pass the cooldown test🥶. You cannot claim your bonus or enter the invite game 😢
-                                            </AlertDescription>
-                                        </Alert>
-                                    </div>
-                                </>
+                            //vs
+                            deposited === null && (
+                                <>loading</>
                             )
-
                         }
                         {
-                            deposited && withdrawn == false && (
+                            //not depsied
+                            deposited === false && (
+                                <div className="flex flex-col gap-16 w-[26rem]">
+                                    <Alert>
+                                        <Terminal className="h-4 w-4" />
+                                        <AlertTitle>Make a Depsoit!</AlertTitle>
+                                        <AlertDescription>
+                                            ⚠️Top up your Susu Box with at least $2 to qualify for bonus rewards🚧
+                                        </AlertDescription>
+                                    </Alert>
+                                </div>
+                            )        
+                        }
+                        {
+                            //deposited (claimable | unclaimbale)
+                            deposited && (
                                 <>
                                     {
-                                        //still cooling
-                                        cooldown == false && (
+                                        deposited && withdrawn && (
                                             <>
                                                 <div className="flex flex-col gap-16 w-[26rem]">
                                                     <Alert>
                                                         <Terminal className="h-4 w-4" />
                                                         <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
                                                         <AlertDescription>
-                                                            🥳 You have a qualifying deposit & are in smart saver cooldown mode❄️. You can claim your bonus and enter the invite game 36hrs from your qualifying deposit. GL 🤞🙏
+                                                            🙃 You have a qualifying deposit but you have withdrawn too quickly & did not pass the cooldown test🥶. You cannot claim your bonus or enter the invite game 😢
                                                         </AlertDescription>
                                                     </Alert>
-                                                    <div className="flex flex-col w-full items-center gap-16">
-                                                        <p className="font-bold">Cooldown time remaining:</p>
-                                                        <p className="text-xl font-black">
-                                                            <span className="text-8xl">{`${hr}`}</span>
-                                                            <span>{hr! <= 1 ? "hr" : "hrs"}</span>
-                                                            <span className="text-8xl">{`${min}`}</span>
-                                                            <span>{min! <= 1 ? "min" : "mins"}</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )
-                                        
-                                    }
-                                    {
-                                        //cool down
-                                        cooldown && (
-                                            <>
-                                                <div className="flex flex-col gap-16 w-[26rem]">
-                                                    <Alert>
-                                                        <Terminal className="h-4 w-4" />
-                                                        <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
-                                                        <AlertDescription>
-                                                            🥳 You have a qualifying deposit & have passed the smart saver cooldown❄️. You can claim your bonus and enter the invite game! 🏆🌊
-                                                        </AlertDescription>
-                                                    </Alert>
-                                                    <div className="flex flex-col w-full items-center gap-16">
-                                                        <p className="font-bold">Click below to claim your Bonus:</p>
-                                                        <div className="flex">
-                                                            <span className="text-xl max-md:text-base text-gray-700">$</span>
-                                                            <p className="text-8xl">
-                                                                {
-                                                                    invitedBy === invitedByDead 
-                                                                    ?<>{2}</>
-                                                                    :<>{3}</>
-                                                                }
-                                                            </p>
-                                                        </div>
-                                                        
-                                                        <Button className="w-full" onClick={claimBonus}>
-                                                        {
-                                                            loading
-                                                            ? (
-                                                                <>
-                                                                    <motion.div
-                                                                    initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
-                                                                    animate={{ rotate: 360 }} // Final rotation value (360 degrees)
-                                                                    transition={{
-                                                                        duration: 1, // Animation duration in seconds
-                                                                        repeat: Infinity, // Infinity will make it rotate indefinitely
-                                                                        ease: "linear", // Animation easing function (linear makes it constant speed)
-                                                                    }}
-                                                                >
-                                                                        <DotsHorizontalIcon/>
-                                                                    </motion.div>
-                                                                </>
-                                                            )
-                                                            : (
-                                                                <>
-                                                                    Get Bonus 🎉
-                                                                </>
-                                                            )
-                                                        }
-                                                        </Button>
-                                                    </div>
                                                 </div>
                                             </>
                                         )
 
                                     }
+                                    {
+                                        deposited && withdrawn == false && (
+                                            <>
+                                                {
+                                                    //still cooling
+                                                    cooldown == false && (
+                                                        <>
+                                                            <div className="flex flex-col gap-16 w-[26rem]">
+                                                                <Alert>
+                                                                    <Terminal className="h-4 w-4" />
+                                                                    <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
+                                                                    <AlertDescription>
+                                                                        🥳 You have a qualifying deposit & are in smart saver cooldown mode❄️. You can claim your bonus and enter the invite game 36hrs from your qualifying deposit. GL 🤞🙏
+                                                                    </AlertDescription>
+                                                                </Alert>
+                                                                <div className="flex flex-col w-full items-center gap-16">
+                                                                    <p className="font-bold">Cooldown time remaining:</p>
+                                                                    <p className="text-xl font-black">
+                                                                        <span className="text-8xl">{`${hr}`}</span>
+                                                                        <span>{hr! <= 1 ? "hr" : "hrs"}</span>
+                                                                        <span className="text-8xl">{`${min}`}</span>
+                                                                        <span>{min! <= 1 ? "min" : "mins"}</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )
+                                                    
+                                                }
+                                                {
+                                                    //cool down
+                                                    cooldown && (
+                                                        <>
+                                                            <div className="flex flex-col gap-16 w-[26rem]">
+                                                                <Alert>
+                                                                    <Terminal className="h-4 w-4" />
+                                                                    <AlertTitle>Hi 👋🏄 <span className="italic font-semibold">{pooler?.ens}</span>.susu.box</AlertTitle>
+                                                                    <AlertDescription>
+                                                                        🥳 You have a qualifying deposit & have passed the smart saver cooldown❄️. You can claim your bonus and enter the invite game! 🏆🌊
+                                                                    </AlertDescription>
+                                                                </Alert>
+                                                                <div className="flex flex-col w-full items-center gap-16">
+                                                                    <p className="font-bold">Click below to claim your Bonus:</p>
+                                                                    <div className="flex">
+                                                                        <span className="text-xl max-md:text-base text-gray-700">$</span>
+                                                                        <p className="text-8xl">
+                                                                            {
+                                                                                invitedBy === invitedByDead 
+                                                                                ?<>{2}</>
+                                                                                :<>{3}</>
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                    
+                                                                    <Button className="w-full" onClick={claimBonus}>
+                                                                    {
+                                                                        loading
+                                                                        ? (
+                                                                            <>
+                                                                                <motion.div
+                                                                                initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                                                                animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                                                                transition={{
+                                                                                    duration: 1, // Animation duration in seconds
+                                                                                    repeat: Infinity, // Infinity will make it rotate indefinitely
+                                                                                    ease: "linear", // Animation easing function (linear makes it constant speed)
+                                                                                }}
+                                                                            >
+                                                                                    <DotsHorizontalIcon/>
+                                                                                </motion.div>
+                                                                            </>
+                                                                        )
+                                                                        : (
+                                                                            <>
+                                                                                Get Bonus 🎉
+                                                                            </>
+                                                                        )
+                                                                    }
+                                                                    </Button>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )
+
+                                                }
+                                            </>
+                                        )
+                                    }   
                                 </>
                             )
-                        }   
+                        }
                     </>
                 )
             }
