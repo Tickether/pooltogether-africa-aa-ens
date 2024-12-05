@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useBlockNumber, useReadContract } from "wagmi"
 import { invitedByDead, SusuClubOnchainRef } from "@/utils/constants/addresses"
 import { base } from "viem/chains"
+import { usePlausible } from "next-plausible"
 
 
 interface UnclaimedProps {
@@ -22,6 +23,8 @@ interface UnclaimedProps {
 }
 
 export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTimer }: UnclaimedProps) {
+
+    const plausible = usePlausible()
 
     const [ hr, setHr ] = useState<number | null>(null)
     const [ min, setMin ] = useState<number | null>(null)
@@ -50,7 +53,7 @@ export function Unclaimed({ pooler, deposited, withdrawn, cooldown, cooldownTime
     const claimBonus = () => {
         setLoading(true)
         const res = claimMemberBonus(pooler.address as `0x${string}`)
-        
+        plausible("claimBonus")
         // Add a 3-second delay
         setTimeout(() => {
             setLoading(false);

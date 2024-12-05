@@ -27,6 +27,7 @@ import { Ramp } from "./ramp"
 import { StripeOnrampModal } from "../stripeRamp/StripeOnrampModal"
 import { motion } from "framer-motion"
 import { sendEmail } from "@/actions/mail/sendEmail"
+import { usePlausible } from "next-plausible"
 
 
 interface DepositProps {
@@ -38,7 +39,8 @@ interface DepositProps {
 
 export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
 
-   
+    const plausible = usePlausible()
+
     const { loading, poolDeposit, poolApproveHook } = usePoolDeposit()
 
 
@@ -75,6 +77,7 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
     const handleCopy = async () => {
         const clipboardText = await navigator.clipboard.writeText(pooler.address);
         setCopied(true);
+        plausible("withdrawWithDirect")
         setTimeout(() => {
             setCopied(false);
         }, 2000);
@@ -84,6 +87,7 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
         setOpenCashRamp(true)
         const ref = `${smartAccountAddress}-${(new Date()).getTime().toString()}`
         setReference(ref)
+        plausible("depositWithStripe")
         setOpen(false)
     }
 
@@ -93,6 +97,7 @@ export function Deposit ({ pooler, smartAccountAddress } : DepositProps) {
         console.log(res?.client_secret!)
         setClientSecret(res?.client_secret!)
         setOpenStripeRamp(true)
+        plausible("depositWithCashramp")
         setOpen(false)
     }
 

@@ -6,6 +6,7 @@ import { Alert, AlertTitle } from "../../ui/alert";
 import { Pooler } from "@/hooks/pooler/useGetPooler";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { usePlausible } from "next-plausible";
 
 
 interface ReferralsProp {
@@ -18,10 +19,12 @@ export function Referrals ({ pooler } : ReferralsProp) {
     
     const [copied, setCopied] = useState<boolean>(false)
     const router = useRouter() 
+    const plausible = usePlausible()
     
     const handleCopy = async () => {
         const clipboardText = await navigator.clipboard.writeText(`susu.club/i/${pooler.ens}`);
         setCopied(true);
+        plausible("copyInvite")
         setTimeout(() => {
             setCopied(false);
         }, 2000);

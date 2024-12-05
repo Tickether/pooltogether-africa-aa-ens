@@ -46,8 +46,8 @@ export function Logout () {
                 <AlertDialogAction asChild>
                     <Button
                         onClick={async ()=>{
-                            plausible("logoutEvent")
                             await logout()
+                            plausible("logoutEvent")
                             router.push("/")
                         }}
                         className="gap-2"

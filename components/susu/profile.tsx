@@ -15,6 +15,7 @@ import { usePoolDeposit } from "@/hooks/deposit/usePoolDeposit"
 import { Label } from "../ui/label"
 import { motion } from "framer-motion";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { usePlausible } from "next-plausible"
 
 
 
@@ -38,6 +39,8 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
     const { postPooler } = usePostPooler()
     const { poolApproveHook } = usePoolDeposit()
     const { user } = usePrivy()
+    const plausible = usePlausible()
+
     console.log(user?.linkedAccounts)
     const linkedIndexAccount = user?.linkedAccounts[0]!
      
@@ -110,6 +113,7 @@ export function Profile ({ pooler, smartAccountAddress, getBackPooler } : Profil
                     data.susuTag,
                 )
                 getBackPooler()
+                plausible("saveProfile")
                 setLoading(false)
             } else {
                 //update

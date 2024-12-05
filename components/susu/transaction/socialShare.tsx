@@ -4,12 +4,15 @@ import { Button } from "../../ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../ui/dropdown-menu"
 import { Share1Icon } from "@radix-ui/react-icons"
 import { Pooler } from "@/hooks/pooler/useGetPooler"
+import { usePlausible } from "next-plausible"
 
 
 interface SocialShareProps{
     pooler: Pooler
 }
 export function SocialShare ({pooler}: SocialShareProps) {
+
+    const plausible = usePlausible()
 
     const warpcast = `
         I've taken the plunge and fully dived into the pool at @susuclub Now you can find me swimming onchain. 🏊‍♂️💸 Ready for the next swim meet? Don’t forget your swim gear, and maybe make a splash with your own deposit. 😉 See you in the deep end! 🌊🏆
@@ -35,6 +38,7 @@ export function SocialShare ({pooler}: SocialShareProps) {
                             onSelect={()=>{
                                 const cast = encodeURIComponent(warpcast.trim());
                                 const shareUrl = `https://warpcast.com/~/compose?text=${cast}&embeds[]=${urlEmbedded}`
+                                plausible("shareOnWarp")
                                 window.open(shareUrl, "_blank");
                             }}
                         >
@@ -53,6 +57,7 @@ export function SocialShare ({pooler}: SocialShareProps) {
                             onSelect={()=>{
                                 const tweet = encodeURIComponent(twitter.trim());
                                 const shareUrl = `https://twitter.com/intent/tweet?text=${tweet}&url=${encodeURIComponent(urlEmbedded)}`;
+                                plausible("shareOnX")
                                 window.open(shareUrl, "_blank");
                             }}
                         >

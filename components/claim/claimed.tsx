@@ -14,6 +14,7 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import { publicClient } from "@/utils/client"
 import { trimRef } from "@/utils/trim"
 import { claimInviteBonusReward } from "@/utils/aaClientReferrer"
+import { usePlausible } from "next-plausible"
 
 interface ClaimedProps {
     pooler: Pooler
@@ -28,7 +29,7 @@ interface InvitedData {
 
 export function Claimed({ pooler, invited }: ClaimedProps) {
 
-    
+    const plausible = usePlausible()
     
     const [laoding, setLoading] = useState<boolean>(false)
     // State for the current page number
@@ -169,7 +170,7 @@ export function Claimed({ pooler, invited }: ClaimedProps) {
     const claimInviteBonus = () => {
         setLoading(true)
         const res = claimInviteBonusReward(readyClaims)
-        
+        plausible("claimInviteBonus")
         // Add a 3-second delay
         setTimeout(() => {
             setLoading(false);

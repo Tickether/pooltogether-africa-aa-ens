@@ -23,6 +23,7 @@ import { Ramp } from "./ramp";
 import { sendEmail } from "@/actions/mail/sendEmail";
 import { motion } from "framer-motion";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { usePlausible } from "next-plausible";
 
 
 
@@ -35,6 +36,7 @@ interface WithdrawProps {
 export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawProps) {
 
     const { poolWithdraw } = usePoolWithdraw()
+    const plausible = usePlausible()
     
     const [open, setOpen] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean | null>(null)
@@ -169,6 +171,7 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                                 const ref = `${smartAccountAddress}-${(new Date()).getTime().toString()}`
                                                 setReference(ref)
                                                 setOpenCashRamp(true)
+                                                plausible("withdrawWithCashramp")
                                                 setOpen(false)
                                             }}
                                         >
@@ -248,6 +251,7 @@ export function Withdraw ({ pooler, smartAccountAddress, balance } : WithdrawPro
                                                 setLoading(true)
                                                 const txn = await poolWithdraw(amountDollar, receiverAddressResolved as `0x${string}`, smartAccountAddress)
                                                 if (txn) {
+                                                    plausible("withdrawWithDirect")
                                                     await sendEmail(pooler.email, pooler.ens, Number(amountDollar).toFixed(2), "direct withdrawal to a wallet of your choice", "withdrawal")
                                                     setReceiverAddress("")
                                                     setAmountDollar("")
