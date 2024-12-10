@@ -28,7 +28,15 @@ export default async function Invite({
           <div className="flex w-full h-screen max-md:h-full flex-col">
     
             <div className="flex w-full px-36 py-8 justify-between max-md:px-4">
-              <p className="font-bold text-2xl">susu club</p>
+              <div className="flex">
+                  <Image
+                      src="/logo.png"
+                      alt=""
+                      width={36}
+                      height={36}
+                  />
+                  <p className="text-2xl font-bold whitespace-nowrap">susu club</p>
+              </div>
               <div className="flex gap-1 items-center">
                 <p>How it Works</p>
                   <Image 

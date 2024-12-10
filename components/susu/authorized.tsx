@@ -65,14 +65,14 @@ export function Authorized() {
     return (
         <main className="flex min-h-screen flex-col items-center gap-8 p-24 max-md:p-6 bg-white">
             <div className="flex w-full items-center justify-between">
-                <div className="flex">
+                <div className="flex text-center">
                     <Image
-                        src=""
+                        src="/logo.png"
                         alt=""
-                        width={0}
-                        height={0}
+                        width={36}
+                        height={36}
                     />
-                    <p className="text-3xl font-bold">susu club</p>
+                    <p className="text-2xl font-bold whitespace-nowrap max-sm:hidden">susu club</p>
                 </div>
                 <div className="flex gap-3">
                     {
